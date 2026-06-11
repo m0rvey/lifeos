@@ -5,3 +5,4 @@ dist/
 mimo
 .env
 *.log
+*.local
