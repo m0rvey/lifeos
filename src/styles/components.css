@@ -1106,38 +1106,83 @@ tr:nth-child(even) td { background: color-mix(in srgb, var(--surface) 50%, trans
   flex-direction: column;
   gap: 8px;
   z-index: 9999;
+  pointer-events: none;
 }
 
 .toast {
-  padding: 12px 18px;
+  padding: 12px 16px;
   border-radius: var(--radius-sm);
   background: var(--bg-secondary);
   border: 1px solid var(--border);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-lg);
   color: var(--text-primary);
-  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
-  min-width: 240px;
-  animation: toastAnimation 3.5s ease-out forwards;
+  gap: 10px;
+  min-width: 280px;
+  max-width: 400px;
+  animation: slideInRight 0.3s var(--ease-spring) forwards;
+  pointer-events: auto;
+  cursor: default;
+  transition: transform 0.2s var(--ease-spring), opacity 0.2s ease;
+}
+
+.toast:hover {
+  transform: translateX(-4px);
+}
+
+.toast-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.toast-message {
+  flex: 1;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: var(--lh-snug);
+}
+
+.toast-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background: transparent;
+  border: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: background var(--duration-fast), color var(--duration-fast);
+  flex-shrink: 0;
+}
+
+.toast-close:hover {
+  background: var(--surface-hover);
+  color: var(--text-primary);
 }
 
 .toast--success {
   border-left: 4px solid var(--success);
 }
+.toast--success .toast-icon { color: var(--success); }
 
 .toast--error {
   border-left: 4px solid var(--error);
 }
+.toast--error .toast-icon { color: var(--error); }
 
 .toast--warning {
   border-left: 4px solid var(--warning);
 }
+.toast--warning .toast-icon { color: var(--warning); }
 
 .toast--info {
   border-left: 4px solid var(--primary);
 }
+.toast--info .toast-icon { color: var(--primary); }
 
 /* ========== RESPONSIVE MODAL ROWS & SETTINGS (Update #8) ========== */
 .form-row-4 {

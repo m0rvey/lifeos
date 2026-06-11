@@ -1,10 +1,12 @@
 import { type ReactNode, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useLocation, Link } from 'react-router-dom';
+import { CheckCircle, XCircle, AlertTriangle, Info, X } from 'lucide-react';
 import AppHeader from './AppHeader';
 import AppSidebar from './AppSidebar';
 import SettingsModal from './SettingsModal';
 import { useApp } from '../context/AppContext';
+import { ShortcutsHelp } from '../ui';
 
 interface AppShellProps {
   children: ReactNode;
@@ -93,16 +95,27 @@ export default function AppShell({ children }: AppShellProps) {
       {/* Toast notifications portal */}
       {createPortal(
         <div className="toast-container">
-          {toasts.map(toast => (
-            <div
-              key={toast.id}
-              className={`toast toast--${toast.type}`}
-              onClick={() => removeToast(toast.id)}
-            >
-              <span style={{ fontSize: '13px', fontWeight: 500 }}>{toast.message}</span>
-              <span style={{ marginLeft: 'auto', opacity: 0.5, fontSize: '14px' }}>&times;</span>
-            </div>
-          ))}
+          {toasts.map(toast => {
+            const icons = {
+              success: <CheckCircle size={16} />,
+              error: <XCircle size={16} />,
+              warning: <AlertTriangle size={16} />,
+              info: <Info size={16} />,
+            };
+            return (
+              <div
+                key={toast.id}
+                className={`toast toast--${toast.type}`}
+                onClick={() => removeToast(toast.id)}
+              >
+                <span className="toast-icon">{icons[toast.type]}</span>
+                <span className="toast-message">{toast.message}</span>
+                <button className="toast-close" onClick={() => removeToast(toast.id)} aria-label="Закрыть">
+                  <X size={14} />
+                </button>
+              </div>
+            );
+          })}
         </div>,
         document.body
       )}
@@ -111,6 +124,9 @@ export default function AppShell({ children }: AppShellProps) {
       {showSettings && (
         <SettingsModal onClose={() => setShowSettings(false)} />
       )}
+
+      {/* Keyboard shortcuts help */}
+      <ShortcutsHelp />
     </div>
   );
 }
