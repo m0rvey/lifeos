@@ -1,0 +1,391 @@
+/* ========== THEME: mindveyz (Glasswind — Dark Purple) ========== */
+.theme-mindveyz {
+  --bg-primary: #08070c;
+  --bg-secondary: #0e0d14;
+  --bg-tertiary: #14131c;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-hover: rgba(255, 255, 255, 0.08);
+  --surface-active: rgba(255, 255, 255, 0.12);
+
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-blur: 24px;
+  --glass-saturate: 1.4;
+
+  --primary: #d0bcff;
+  --primary-dim: rgba(208, 188, 255, 0.15);
+  --primary-glow: rgba(208, 188, 255, 0.25);
+  --on-primary: #1d192b;
+  --accent: #d0bcff;
+  --accent-dim: rgba(208, 188, 255, 0.08);
+
+  --text-primary: #e6e1e5;
+  --text-secondary: #cac4d0;
+  --text-tertiary: #938f99;
+  --text-inverse: #1d192b;
+
+  --success: #81c784;
+  --success-dim: rgba(129, 199, 132, 0.15);
+  --error: #f2b8b5;
+  --error-dim: rgba(242, 184, 181, 0.15);
+  --warning: #fbbf24;
+  --warning-dim: rgba(251, 191, 36, 0.15);
+  --blue: #82b1ff;
+  --blue-dim: rgba(130, 177, 255, 0.15);
+
+  --color-purple: #8b5cf6;
+  --color-red: #ef4444;
+  --color-blue: #3b82f6;
+  --color-yellow: #f59e0b;
+  --color-grey: #64748b;
+
+  --border: rgba(255, 255, 255, 0.08);
+  --border-light: rgba(255, 255, 255, 0.04);
+
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 24px var(--primary-glow);
+
+  --font-heading: 'Onest', 'Inter', sans-serif;
+  --font-ui: 'Inter', system-ui, sans-serif;
+  --font-quote: 'Playfair Display', Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+
+  --sidebar-width: 230px;
+  --header-height: 56px;
+  --noise-opacity: 0.035;
+  --blob-1-color: rgba(208, 188, 255, 0.08);
+  --blob-2-color: rgba(79, 55, 139, 0.06);
+  --blob-3-color: rgba(239, 184, 200, 0.05);
+  --grid-color: rgba(208, 188, 255, 0.025);
+  --scrollbar-thumb: rgba(255, 255, 255, 0.1);
+  --scrollbar-track: transparent;
+}
+
+/* ========== THEME: cyclist (Orgin — Dark Orange) ========== */
+.theme-cyclist {
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #0f0f12;
+  --bg-tertiary: #141418;
+  --surface: #1a1a1e;
+  --surface-hover: #222226;
+  --surface-active: #2a2a2e;
+
+  --glass-bg: #1a1a1e;
+  --glass-border: #2a2a2e;
+  --glass-blur: 0px;
+  --glass-saturate: 1;
+
+  --primary: #ff6b35;
+  --primary-dim: rgba(255, 107, 53, 0.12);
+  --primary-glow: rgba(255, 107, 53, 0.25);
+  --on-primary: #ffffff;
+  --accent: #ff6b35;
+  --accent-dim: rgba(255, 107, 53, 0.08);
+
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a8;
+  --text-tertiary: #6b6b73;
+  --text-inverse: #0a0a0a;
+
+  --success: #34c759;
+  --success-dim: rgba(52, 199, 89, 0.12);
+  --error: #ff3b30;
+  --error-dim: rgba(255, 59, 48, 0.12);
+  --warning: #ffd60a;
+  --warning-dim: rgba(255, 214, 10, 0.12);
+  --blue: #007aff;
+  --blue-dim: rgba(0, 122, 255, 0.12);
+
+  --color-purple: #8b5cf6;
+  --color-red: #ef4444;
+  --color-blue: #3b82f6;
+  --color-yellow: #f59e0b;
+  --color-grey: #64748b;
+
+  --border: #2a2a2e;
+  --border-light: #1a1a1e;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 16px var(--primary-glow);
+
+  --font-heading: 'Inter', system-ui, sans-serif;
+  --font-ui: 'Inter', system-ui, sans-serif;
+  --font-quote: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+
+  --sidebar-width: 230px;
+  --header-height: 56px;
+  --noise-opacity: 0;
+  --blob-1-color: rgba(255, 107, 53, 0.06);
+  --blob-2-color: rgba(255, 162, 0, 0.04);
+  --blob-3-color: rgba(255, 90, 0, 0.03);
+  --grid-color: rgba(255, 107, 53, 0.025);
+  --scrollbar-thumb: rgba(255, 255, 255, 0.15);
+  --scrollbar-track: transparent;
+}
+
+/* ========== THEME: reflect (Ant — Minimal Light) ========== */
+.theme-reflect {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f8f8;
+  --bg-tertiary: #f0f0f0;
+  --surface: #ffffff;
+  --surface-hover: #f5f5f5;
+  --surface-active: #ebebeb;
+
+  --glass-bg: rgba(255, 255, 255, 0.92);
+  --glass-border: #e8e8e8;
+  --glass-blur: 12px;
+  --glass-saturate: 1;
+
+  --primary: #3b3b3b;
+  --primary-dim: rgba(59, 59, 59, 0.08);
+  --primary-glow: rgba(59, 59, 59, 0.05);
+  --on-primary: #ffffff;
+  --accent: #3b3b3b;
+  --accent-dim: rgba(59, 59, 59, 0.05);
+
+  --text-primary: #1a1a1a;
+  --text-secondary: #6b6b6b;
+  --text-tertiary: #a0a0a0;
+  --text-inverse: #ffffff;
+
+  --success: #2d7a2d;
+  --success-dim: rgba(45, 122, 45, 0.08);
+  --error: #cc0000;
+  --error-dim: rgba(204, 0, 0, 0.08);
+  --warning: #a06000;
+  --warning-dim: rgba(160, 96, 0, 0.08);
+  --blue: #1565c0;
+  --blue-dim: rgba(21, 101, 192, 0.08);
+
+  --color-purple: #8b5cf6;
+  --color-red: #ef4444;
+  --color-blue: #3b82f6;
+  --color-yellow: #f59e0b;
+  --color-grey: #64748b;
+
+  --border: #e8e8e8;
+  --border-light: #f0f0f0;
+
+  --radius-sm: 0px;
+  --radius-md: 2px;
+  --radius-lg: 4px;
+  --radius-xl: 6px;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.08);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,0.1);
+  --shadow-glow: none;
+
+  --font-heading: -apple-system, 'SF Pro Text', system-ui, sans-serif;
+  --font-ui: -apple-system, 'SF Pro Text', system-ui, sans-serif;
+  --font-quote: Georgia, 'Times New Roman', serif;
+  --font-mono: 'SF Mono', 'JetBrains Mono', monospace;
+
+  --sidebar-width: 230px;
+  --header-height: 56px;
+  --noise-opacity: 0;
+  --blob-1-color: rgba(59, 130, 246, 0.03);
+  --blob-2-color: rgba(139, 92, 246, 0.02);
+  --blob-3-color: rgba(236, 72, 153, 0.02);
+  --grid-color: rgba(59, 59, 59, 0.015);
+  --scrollbar-thumb: #d0d0d0;
+  --scrollbar-track: transparent;
+}
+
+/* ========== THEME: slate (Hub — Neutral Dark) ========== */
+.theme-slate {
+  --bg-primary: #0d0d10;
+  --bg-secondary: #121215;
+  --bg-tertiary: #18181c;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-hover: rgba(255, 255, 255, 0.07);
+  --surface-active: rgba(255, 255, 255, 0.11);
+
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.07);
+  --glass-blur: 20px;
+  --glass-saturate: 1.2;
+
+  --primary: #7c8cf8;
+  --primary-dim: rgba(124, 140, 248, 0.15);
+  --primary-glow: rgba(124, 140, 248, 0.25);
+  --on-primary: #ffffff;
+  --accent: #7c8cf8;
+  --accent-dim: rgba(124, 140, 248, 0.08);
+
+  --text-primary: #e8e8ed;
+  --text-secondary: #a8a8b3;
+  --text-tertiary: #68687a;
+  --text-inverse: #0d0d10;
+
+  --success: #34c759;
+  --success-dim: rgba(52, 199, 89, 0.12);
+  --error: #ff453a;
+  --error-dim: rgba(255, 69, 58, 0.12);
+  --warning: #ffd60a;
+  --warning-dim: rgba(255, 214, 10, 0.12);
+  --blue: #3b82f6;
+  --blue-dim: rgba(59, 130, 246, 0.12);
+
+  --color-purple: #8b5cf6;
+  --color-red: #ef4444;
+  --color-blue: #3b82f6;
+  --color-yellow: #f59e0b;
+  --color-grey: #64748b;
+
+  --border: rgba(255, 255, 255, 0.08);
+  --border-light: rgba(255, 255, 255, 0.04);
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 24px var(--primary-glow);
+
+  --font-heading: 'Onest', 'Inter', sans-serif;
+  --font-ui: 'Inter', system-ui, sans-serif;
+  --font-quote: 'Playfair Display', Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+
+  --sidebar-width: 230px;
+  --header-height: 56px;
+  --noise-opacity: 0.02;
+  --blob-1-color: rgba(124, 140, 248, 0.06);
+  --blob-2-color: rgba(60, 80, 200, 0.04);
+  --blob-3-color: rgba(200, 140, 248, 0.04);
+  --grid-color: rgba(124, 140, 248, 0.025);
+  --scrollbar-thumb: rgba(255, 255, 255, 0.1);
+  --scrollbar-track: transparent;
+}
+
+/* ── Smooth theme transitions ── */
+button, input, select, textarea, .card, .glass-panel, .stat-card, .sidebar-nav-item, .app-header, .app-sidebar, body, .app-shell, .app-shell::before {
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease,
+    background-image 0.3s ease,
+    opacity 0.3s ease;
+}
+
+/* ── MindVeyZ animated background blobs ── */
+.theme-mindveyz::before,
+.theme-slate::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: var(--noise-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 512px 512px;
+  animation: noise-shift 30s linear infinite;
+}
+
+.bg-blob {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform;
+}
+.bg-blob-1 {
+  width: 500px; height: 500px;
+  top: -150px; right: -100px;
+  background: radial-gradient(circle, var(--blob-1-color) 0%, transparent 70%);
+  animation: blob-drift 25s ease-in-out infinite;
+}
+.bg-blob-2 {
+  width: 350px; height: 350px;
+  bottom: -50px; left: -80px;
+  background: radial-gradient(circle, var(--blob-2-color) 0%, transparent 70%);
+  animation: blob-drift-2 30s ease-in-out infinite;
+}
+.bg-blob-3 {
+  width: 250px; height: 250px;
+  top: 50%; left: 60%;
+  background: radial-gradient(circle, var(--blob-3-color) 0%, transparent 70%);
+  animation: blob-drift 20s ease-in-out infinite reverse;
+}
+
+/* ========== ACCENT COLOR OVERRIDES ========== */
+.accent-purple {
+  --primary: #bb86fc;
+  --primary-dim: rgba(187, 134, 252, 0.15);
+  --primary-glow: rgba(187, 134, 252, 0.25);
+  --accent: #bb86fc;
+}
+.accent-orange {
+  --primary: #ff6d00;
+  --primary-dim: rgba(255, 109, 0, 0.15);
+  --primary-glow: rgba(255, 109, 0, 0.25);
+  --accent: #ff6d00;
+}
+.accent-green {
+  --primary: #81c784;
+  --primary-dim: rgba(129, 199, 132, 0.15);
+  --primary-glow: rgba(129, 199, 132, 0.25);
+  --accent: #81c784;
+}
+.accent-blue {
+  --primary: #82b1ff;
+  --primary-dim: rgba(130, 177, 255, 0.15);
+  --primary-glow: rgba(130, 177, 255, 0.25);
+  --accent: #82b1ff;
+}
+.accent-rose {
+  --primary: #ff4081;
+  --primary-dim: rgba(255, 64, 129, 0.15);
+  --primary-glow: rgba(255, 64, 129, 0.25);
+  --accent: #ff4081;
+}
+
+/* For light theme (reflect) let's make accent colors slightly darker for readability */
+.theme-reflect.accent-purple {
+  --primary: #7c4dff;
+  --primary-dim: rgba(124, 77, 255, 0.1);
+  --accent: #7c4dff;
+}
+.theme-reflect.accent-orange {
+  --primary: #e65100;
+  --primary-dim: rgba(230, 81, 0, 0.1);
+  --accent: #e65100;
+}
+.theme-reflect.accent-green {
+  --primary: #2e7d32;
+  --primary-dim: rgba(46, 125, 50, 0.1);
+  --accent: #2e7d32;
+}
+.theme-reflect.accent-blue {
+  --primary: #1565c0;
+  --primary-dim: rgba(21, 101, 192, 0.1);
+  --accent: #1565c0;
+}
+.theme-reflect.accent-rose {
+  --primary: #c2185b;
+  --primary-dim: rgba(194, 24, 91, 0.1);
+  --accent: #c2185b;
+}
+
