@@ -2,9 +2,9 @@ import { type ReactNode } from 'react';
 import { Trash2 } from 'lucide-react';
  
 interface Column<T> {
-  key: string;
+  key: keyof T & string;
   label: string;
-  render?: (val: unknown, row: T) => ReactNode;
+  render?: (val: T[keyof T], row: T) => ReactNode;
 }
  
 interface DataTableProps<T> {
@@ -39,7 +39,7 @@ export default function DataTable<T extends { id: string }>({
           {data.map((row) => (
             <tr key={row.id}>
               {columns.map((col) => {
-                const cellValue = (row as Record<string, unknown>)[col.key];
+                const cellValue = row[col.key];
                 return (
                   <td key={col.key}>
                     {col.render ? col.render(cellValue, row) : String(cellValue ?? '')}

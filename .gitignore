@@ -6,3 +6,4 @@ mimo
 .env
 *.log
 *.local
+push.sh

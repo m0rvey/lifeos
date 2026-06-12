@@ -1,13 +1,13 @@
-import React, { Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-const Dashboard = React.lazy(() => import('./Dashboard'));
-const JournalPage = React.lazy(() => import('./JournalPage'));
-const KnowledgePage = React.lazy(() => import('./KnowledgePage'));
-const SchedulePage = React.lazy(() => import('./SchedulePage'));
-const HabitsPage = React.lazy(() => import('./HabitsPage'));
-const MuseumPage = React.lazy(() => import('./MuseumPage'));
-const WorkoutsPage = React.lazy(() => import('./WorkoutsPage'));
+const Dashboard = lazy(() => import('./Dashboard'));
+const JournalPage = lazy(() => import('./JournalPage'));
+const KnowledgePage = lazy(() => import('./KnowledgePage'));
+const SchedulePage = lazy(() => import('./SchedulePage'));
+const HabitsPage = lazy(() => import('./HabitsPage'));
+const MuseumPage = lazy(() => import('./MuseumPage'));
+const WorkoutsPage = lazy(() => import('./WorkoutsPage'));
 
 export default function ReflectModule() {
   return (

@@ -5,6 +5,7 @@ import { type RideRecord } from '../../types';
 import { Plus, Bike, Route, Gauge, TrendingUp, Mountain, Clock, Award, Edit2, Trash2 } from 'lucide-react';
 import { EmptyState, ConfirmDialog } from '../../ui';
 import { formatDate, formatDistance, formatDuration, uid, nowISO } from '../../cognitive/helpers';
+import { useRideStats } from '../../hooks/useRideStats';
 import RideModal from './RideModal';
 
 export default function RidesPage() {
@@ -16,31 +17,7 @@ export default function RidesPage() {
   const [filter, setFilter] = useState<'all' | 'recent'>('all');
   const [rideToDelete, setRideToDelete] = useState<string | null>(null);
 
-  // Overall calculations
-  const totalDistance = useMemo(() => {
-    return data.rides.reduce((acc, r) => acc + r.distanceKm, 0);
-  }, [data.rides]);
-
-  const totalDuration = useMemo(() => {
-    return data.rides.reduce((acc, r) => acc + r.durationMin, 0);
-  }, [data.rides]);
-
-  const averageSpeed = useMemo(() => {
-    if (totalDuration === 0) return 0;
-    return (totalDistance / (totalDuration / 60));
-  }, [totalDistance, totalDuration]);
-
-  const recordSpeed = useMemo(() => {
-    return data.rides.reduce((max, r) => Math.max(max, r.maxSpeedKmh), 0);
-  }, [data.rides]);
-
-  const totalElevation = useMemo(() => {
-    return data.rides.reduce((acc, r) => acc + r.elevationGainM, 0);
-  }, [data.rides]);
-
-  const maxDistance = useMemo(() => {
-    return data.rides.reduce((max, r) => Math.max(max, r.distanceKm), 0);
-  }, [data.rides]);
+  const { totalDistance, totalDuration, avgSpeed: averageSpeed, maxSpeed: recordSpeed, totalElevation, maxDistance } = useRideStats(data.rides);
 
   const filteredRides = useMemo(() => {
     const sorted = [...data.rides].sort(

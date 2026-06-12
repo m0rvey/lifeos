@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, type MouseEvent } from 'react';
 import { useData } from '../../context/DataContext';
 import { useApp } from '../../context/AppContext';
 import { type KnowledgeItem } from '../../types';
@@ -46,7 +46,7 @@ export default function KnowledgePage() {
     setIsOpen(true);
   };
 
-  const handleEdit = (e: React.MouseEvent, item: KnowledgeItem) => {
+  const handleEdit = (e: MouseEvent, item: KnowledgeItem) => {
     e.stopPropagation();
     setEditingItem(item);
     setIsOpen(true);
@@ -83,7 +83,7 @@ export default function KnowledgePage() {
     setIsOpen(false);
   }, [editingItem, dispatch, addToast]);
 
-  const handleDeleteTrigger = (e: React.MouseEvent, id: string) => {
+  const handleDeleteTrigger = (e: MouseEvent, id: string) => {
     e.stopPropagation();
     setItemToDelete(id);
     setIsDeleteOpen(true);

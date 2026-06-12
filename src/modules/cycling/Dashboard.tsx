@@ -3,6 +3,7 @@ import { useData } from '../../context/DataContext';
 import { Route, Gauge, TrendingUp, Clock, Bike, Wrench, AlertTriangle, ArrowRight, Mountain } from 'lucide-react';
 import { StatCard } from '../../ui';
 import { formatDistance, formatDuration, formatDate } from '../../cognitive/helpers';
+import { useRideStats } from '../../hooks/useRideStats';
 
 interface DashboardProps {
   onNavigateTab: (tab: string) => void;
@@ -11,28 +12,7 @@ interface DashboardProps {
 export default function Dashboard({ onNavigateTab }: DashboardProps) {
   const { data } = useData();
   const { rides, maintenance, routes } = data;
-  // Statistics calculations
-  const totalDist = useMemo(() => {
-    return rides.reduce((acc, r) => acc + r.distanceKm, 0);
-  }, [rides]);
-
-  const totalTime = useMemo(() => {
-    return rides.reduce((acc, r) => acc + r.durationMin, 0);
-  }, [rides]);
-
-  const avgSpeed = useMemo(() => {
-    if (totalTime === 0) return 0;
-    return (totalDist / (totalTime / 60));
-  }, [totalDist, totalTime]);
-
-  const maxSpeed = useMemo(() => {
-    if (rides.length === 0) return 0;
-    return Math.max(...rides.map(r => r.maxSpeedKmh));
-  }, [rides]);
-
-  const totalElevation = useMemo(() => {
-    return rides.reduce((acc, r) => acc + r.elevationGainM, 0);
-  }, [rides]);
+  const { totalDistance: totalDist, totalDuration: totalTime, avgSpeed, maxSpeed, totalElevation } = useRideStats(rides);
 
   const pendingMaintenance = useMemo(() => {
     return maintenance.filter(m => !m.isDone);

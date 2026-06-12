@@ -4,7 +4,7 @@ import { useApp } from '../../context/AppContext';
 import { type JournalEntry } from '../../types';
 import { Plus, BookOpen, Smile, Edit2, Trash2 } from 'lucide-react';
 import { StatCard, EmptyState, ConfirmDialog } from '../../ui';
-import { formatDate, uid, nowISO } from '../../cognitive/helpers';
+import { formatDate, uid, nowISO, getMoodEmoji } from '../../cognitive/helpers';
 import JournalModal from './JournalModal';
 
 export default function JournalPage() {
@@ -84,14 +84,6 @@ export default function JournalPage() {
     }
     setIsDeleteOpen(false);
   }, [entryToDelete, dispatch, addToast]);
-
-  const getMoodEmoji = (moodVal: number) => {
-    if (moodVal >= 80) return { emoji: '😁', color: 'var(--success, #16a34a)' };
-    if (moodVal >= 60) return { emoji: '🙂', color: 'var(--accent)' };
-    if (moodVal >= 40) return { emoji: '😐', color: 'var(--text-secondary)' };
-    if (moodVal >= 20) return { emoji: '🙁', color: 'var(--warning, #f59e0b)' };
-    return { emoji: '😢', color: 'var(--error, #ef4444)' };
-  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }} className="fade-in-entry">

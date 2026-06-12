@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, memo, type FormEvent } from 'react';
 import { type Habit } from '../../types';
 import { useData } from '../../context/DataContext';
 import { useApp } from '../../context/AppContext';
@@ -46,7 +46,7 @@ interface HabitRowProps {
   onDelete: (id: string) => void;
 }
 
-const HabitRow = React.memo(function HabitRow({
+const HabitRow = memo(function HabitRow({
   habit,
   last7Days,
   catColors,
@@ -122,7 +122,7 @@ export default function HabitsPage() {
   // 30 days dates list for heatmap
   const last30Days = useMemo(() => getLastNDates(30), []);
 
-  const handleAddNew = (e: React.FormEvent) => {
+  const handleAddNew = (e: FormEvent) => {
     e.preventDefault();
     if (!newTitle.trim()) return;
 

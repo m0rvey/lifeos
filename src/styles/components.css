@@ -349,6 +349,14 @@ a:focus-visible {
   padding-bottom: var(--sp-2);
 }
 .modal-footer { display: flex; justify-content: flex-end; gap: var(--sp-2); margin-top: var(--sp-6); }
+.modal-form-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+  margin-top: 8px;
+}
 
 /* ========== FORM ========== */
 .form-field { margin-bottom: var(--sp-4); }
@@ -446,95 +454,12 @@ tr { transition: background var(--duration-fast) var(--ease-out); }
 tr:hover td { background: var(--surface-hover); }
 tr:nth-child(even) td { background: color-mix(in srgb, var(--surface) 50%, transparent); }
 
-/* ========== METER BAR ========== */
-.meter-bar { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
-.meter-bar-fill { height: 100%; border-radius: 3px; transition: width 0.9s var(--ease-spring); }
 
-/* ========== FATIGUE RING ========== */
-.fatigue-ring { position: relative; flex-shrink: 0; }
-.fatigue-ring svg { transform: rotate(-90deg); animation: ring-glow 3.5s ease-in-out infinite; }
-.fatigue-ring-text {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 1px;
-}
-.fatigue-ring-value { font-size: 0.95rem; font-weight: 800; font-family: var(--font-heading); }
-.fatigue-ring-label { font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: var(--ls-caps); }
 
-/* ========== HABIT GRID ========== */
-.habit-checkbox {
-  aspect-ratio: 1;
-  border: 1.5px solid var(--border);
-  border-radius: 5px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  transition: all var(--duration-normal) var(--ease-spring);
-  background: var(--surface);
-}
-.habit-checkbox.checked {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: var(--on-primary);
-  transform: scale(1.07);
-  box-shadow: 0 0 8px var(--primary-glow);
-}
-.habit-checkbox:hover:not(.checked) {
-  border-color: var(--primary);
-  transform: scale(1.1);
-  background: var(--primary-dim);
-}
 
-/* ========== HEATMAP ========== */
-.heatmap-cell {
-  aspect-ratio: 1;
-  border-radius: 3px;
-  background: var(--border-light);
-  cursor: pointer;
-  transition: transform var(--duration-fast), background var(--duration-fast);
-}
-.heatmap-cell:hover { transform: scale(1.35); }
-.heatmap-cell.lv0 { background: var(--border-light); }
-.heatmap-cell.lv1 { background: var(--primary-dim); }
-.heatmap-cell.lv2 { background: color-mix(in srgb, var(--primary) 55%, transparent); }
-.heatmap-cell.lv3 { background: var(--primary); }
 
-/* ========== STREAK ========== */
-.streak-flame { display: inline-flex; align-items: center; gap: 2px; font-size: var(--text-sm); font-weight: 700; }
-.streak-flame.hot  { color: var(--error);   animation: flame-flicker 1.8s ease-in-out infinite; }
-.streak-flame.warm { color: var(--warning); }
-.streak-flame.cool { color: var(--primary); }
 
-/* ========== CHART BAR ========== */
-.chart-bar { display: flex; align-items: flex-end; gap: 5px; }
-.chart-bar-col {
-  flex: 1;
-  background: var(--primary-dim);
-  border-radius: 4px 4px 2px 2px;
-  min-height: 4px;
-  position: relative; cursor: pointer;
-  transition: height 0.7s var(--ease-spring), background var(--duration-normal);
-}
-.chart-bar-col:hover { background: var(--primary); }
-.chart-bar-col .chart-tip {
-  display: none; position: absolute;
-  bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
-  background: var(--bg-secondary); border: 1px solid var(--border);
-  padding: 4px 9px; border-radius: var(--radius-sm);
-  font-size: var(--text-xs); white-space: nowrap; z-index: 20;
-  box-shadow: var(--shadow-md);
-}
-.chart-bar-col:hover .chart-tip { display: block; }
-.chart-bar-label { font-size: var(--text-xs); color: var(--text-tertiary); text-align: center; margin-top: 4px; }
 
-/* ========== TIMELINE ========== */
-.timeline-bar { display: flex; height: 28px; border-radius: var(--radius-sm); overflow: hidden; background: var(--border); }
-.timeline-seg {
-  display: flex; align-items: center; justify-content: center;
-  font-size: var(--text-xs); font-weight: 600;
-  color: rgba(255,255,255,0.9);
-  transition: width var(--duration-slow) var(--ease-spring), flex var(--duration-slow) var(--ease-spring);
-  min-width: 0; overflow: hidden;
-}
 
 /* ========== DEPTH / SCORE ========== */
 .depth-core      { color: var(--error); }
@@ -542,55 +467,10 @@ tr:nth-child(even) td { background: color-mix(in srgb, var(--surface) 50%, trans
 .depth-social    { color: var(--primary); }
 .depth-periphery { color: var(--text-tertiary); }
 
-/* ========== PERIOD SWITCHER ========== */
-.period-switcher { display: flex; gap: 3px; background: var(--surface); border-radius: var(--radius-sm); padding: 3px; }
-.period-btn {
-  padding: 4px 11px;
-  border-radius: calc(var(--radius-sm) - 2px);
-  font-size: var(--text-sm); font-weight: 500;
-  color: var(--text-secondary);
-  transition: all var(--duration-normal) var(--ease-out);
-  cursor: pointer; border: none; background: none;
-}
-.period-btn.active { background: var(--primary); color: var(--on-primary); }
-.period-btn:hover:not(.active) { color: var(--text-primary); background: var(--surface-hover); }
 
-/* ========== SCORE RING (Social Graph) ========== */
-.score-ring { display: inline-flex; align-items: center; justify-content: center; position: relative; }
-.score-ring svg { transform: rotate(-90deg); }
-.score-ring .ring-value {
-  position: absolute;
-  font-size: 0.8rem; font-weight: 800;
-  font-family: var(--font-heading);
-}
 
-/* ========== PERSON NODE (SVG Graph) ========== */
-.person-node { cursor: pointer; }
-.person-node circle { transition: r var(--duration-normal) var(--ease-spring), opacity var(--duration-normal); }
-.person-node:hover circle { opacity: 0.9; }
-.person-edge { stroke: var(--border); stroke-width: 1; opacity: 0.5; }
-.person-edge.strong { stroke: var(--primary-dim); stroke-width: 2; opacity: 0.8; }
 
-/* ========== CONTACT OVERDUE ALERT ========== */
-.overdue-alert {
-  display: flex; align-items: center; gap: var(--sp-2);
-  padding: var(--sp-2) var(--sp-3);
-  border-radius: var(--radius-sm);
-  background: var(--error-dim);
-  color: var(--error);
-  font-size: var(--text-sm);
-  font-weight: 500;
-  border-left: 3px solid var(--error);
-}
 
-/* ========== MOOD MINI BAR ========== */
-.mood-bar { display: flex; align-items: flex-end; gap: 2px; }
-.mood-bar-seg {
-  flex: 1;
-  border-radius: 2px 2px 0 0;
-  transition: height var(--duration-slow) var(--ease-spring), background var(--duration-normal);
-  min-height: 3px;
-}
 
 /* ========== THEME TOGGLE ========== */
 .theme-toggle-container {

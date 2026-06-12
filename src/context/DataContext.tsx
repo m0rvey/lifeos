@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useReducer, useEffect, useRef, useState, type ReactNode } from 'react';
+import { createContext, useContext, useReducer, useEffect, useRef, useState, type ReactNode, type Dispatch } from 'react';
 import type { AppData } from '../types';
 import { loadData, saveData } from '../storage/engine';
 import { getDefaultData } from '../storage/defaults';
@@ -92,7 +92,7 @@ function dataReducer(state: AppData, action: DataAction): AppData {
 }
 
 const DataStateContext = createContext<AppData | null>(null);
-const DataDispatchContext = createContext<React.Dispatch<DataAction> | null>(null);
+const DataDispatchContext = createContext<Dispatch<DataAction> | null>(null);
 
 export function DataProvider({ children }: { children: ReactNode }) {
   const [data, dispatch] = useReducer(dataReducer, null, () => loadData());

@@ -1,10 +1,10 @@
-import React, { Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 
-const Dashboard = React.lazy(() => import('./Dashboard'));
-const RidesPage = React.lazy(() => import('./RidesPage'));
-const RoutePlanner = React.lazy(() => import('./RoutePlanner'));
-const MaintenancePage = React.lazy(() => import('./MaintenancePage'));
+const Dashboard = lazy(() => import('./Dashboard'));
+const RidesPage = lazy(() => import('./RidesPage'));
+const RoutePlanner = lazy(() => import('./RoutePlanner'));
+const MaintenancePage = lazy(() => import('./MaintenancePage'));
 
 export default function CyclingModule() {
   const navigate = useNavigate();

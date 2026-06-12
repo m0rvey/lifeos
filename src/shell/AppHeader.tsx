@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, type ComponentType } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Home, Share2, Wallet, Bike, BrainCircuit, BarChart3, Settings, Menu } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useData } from '../context/DataContext';
 import type { ModuleKey } from '../types';
 import { isDecaying } from '../cognitive/social';
-import '../styles/header_dropdown.css';
+import '../styles/header-dropdown.css';
 
 interface AppHeaderProps {
   onOpenSettings: () => void;
@@ -14,7 +14,7 @@ interface AppHeaderProps {
 interface ModuleTab {
   key: ModuleKey;
   label: string;
-  icon: React.ComponentType<{ size?: number }>;
+  icon: ComponentType<{ size?: number }>;
   route: string;
 }
 

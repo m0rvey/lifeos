@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback, type FormEvent } from 'react';
 import { type BillReminder } from '../../types';
 import { useData } from '../../context/DataContext';
 import { useApp } from '../../context/AppContext';
@@ -64,7 +64,7 @@ export default function ReminderList() {
     }
   }, [reminderToDelete, handleDelete]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -266,7 +266,7 @@ export default function ReminderList() {
                 </FormField>
               </div>
 
-              <div className="modal-footer" style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', borderTop: '1px solid var(--border)', paddingTop: '16px', marginTop: '12px' }}>
+              <div className="modal-form-footer">
                 <button type="button" className="btn btn--secondary" onClick={() => setIsOpen(false)}>Отмена</button>
                 <button type="submit" className="btn btn--primary">Сохранить</button>
               </div>

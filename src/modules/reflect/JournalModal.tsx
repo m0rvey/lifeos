@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 import { type JournalEntry } from '../../types';
 import { Modal, FormField } from '../../ui';
-import { todayISO } from '../../cognitive/helpers';
+import { todayISO, getMoodEmoji } from '../../cognitive/helpers';
 
 interface JournalModalProps {
   isOpen: boolean;
@@ -17,7 +17,7 @@ export default function JournalModal({ isOpen, onClose, entry, onSave }: Journal
   const [dateISO, setDateISO] = useState(entry?.dateISO ? entry.dateISO.slice(0, 10) : todayISO());
   const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -78,7 +78,7 @@ export default function JournalModal({ isOpen, onClose, entry, onSave }: Journal
         <FormField label="Ваше настроение">
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <span style={{ fontSize: '1.2rem' }}>
-              {mood >= 80 ? '😁' : mood >= 60 ? '🙂' : mood >= 40 ? '😐' : mood >= 20 ? '🙁' : '😢'}
+              {getMoodEmoji(mood).emoji}
             </span>
             <input
               type="range"
@@ -103,7 +103,7 @@ export default function JournalModal({ isOpen, onClose, entry, onSave }: Journal
           />
         </FormField>
 
-        <div className="modal__footer" style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', borderTop: '1px solid var(--border)', paddingTop: '16px', marginTop: '12px' }}>
+        <div className="modal-form-footer">
           <button type="button" className="btn btn--secondary" onClick={onClose}>
             Отмена
           </button>

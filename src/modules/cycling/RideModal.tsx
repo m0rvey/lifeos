@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 import { type RideRecord, type CycleRoute } from '../../types';
 import { Modal, FormField } from '../../ui';
 import { todayISO, calcAvgSpeed } from '../../cognitive/helpers';
@@ -24,7 +24,7 @@ export default function RideModal({ isOpen, onClose, ride, routes, onSave }: Rid
   const [routeId, setRouteId] = useState<string | ''>(ride?.routeId || '');
   const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -181,7 +181,7 @@ export default function RideModal({ isOpen, onClose, ride, routes, onSave }: Rid
           />
         </FormField>
 
-        <div className="modal__footer" style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', borderTop: '1px solid var(--border)', paddingTop: '16px', marginTop: '12px' }}>
+        <div className="modal-form-footer">
           <button type="button" className="btn btn--secondary" onClick={onClose}>
             Отмена
           </button>

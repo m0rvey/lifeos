@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 import { type KnowledgeItem } from '../../types';
 import { Modal, FormField } from '../../ui';
 
@@ -18,7 +18,7 @@ export default function KnowledgeModal({ isOpen, onClose, item, onSave }: Knowle
   const [tagsText, setTagsText] = useState(item?.tags ? item.tags.join(', ') : '');
   const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -127,7 +127,7 @@ export default function KnowledgeModal({ isOpen, onClose, item, onSave }: Knowle
           </span>
         </FormField>
 
-        <div className="modal__footer" style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', borderTop: '1px solid var(--border)', paddingTop: '16px', marginTop: '12px' }}>
+        <div className="modal-form-footer">
           <button type="button" className="btn btn--secondary" onClick={onClose}>
             Отмена
           </button>

@@ -144,3 +144,19 @@ export function calcAvgSpeed(distanceKm: number, durationMin: number): number {
   if (durationMin === 0) return 0;
   return Math.round((distanceKm / (durationMin / 60)) * 10) / 10;
 }
+
+export function getMoodEmoji(mood: number): { emoji: string; color: string } {
+  if (mood >= 80) return { emoji: '😁', color: 'var(--success, #16a34a)' };
+  if (mood >= 60) return { emoji: '🙂', color: 'var(--accent)' };
+  if (mood >= 40) return { emoji: '😐', color: 'var(--text-secondary)' };
+  if (mood >= 20) return { emoji: '🙁', color: 'var(--warning, #f59e0b)' };
+  return { emoji: '😢', color: 'var(--error, #ef4444)' };
+}
+
+export function getMoodLabel(mood: number): string {
+  if (mood >= 80) return '😁 Великолепно';
+  if (mood >= 60) return '🙂 Хорошо';
+  if (mood >= 40) return '😐 Нормально';
+  if (mood >= 20) return '🙁 Плохо';
+  return '😢 Тяжело';
+}

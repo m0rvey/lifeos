@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useRef, useState, useMemo, type MouseEvent } from 'react';
 import { type Person, type AppSettings, Depth } from '../../types';
 import { computeConnectionScore, isDecaying } from '../../cognitive/social';
 import { EmptyState } from '../../ui';
@@ -231,7 +231,7 @@ export default function SocialGraph({ people, settings, activeId, onSelectNode }
   }, [initialData, settings.graphSensitivity, centerX, centerY]);
 
   // Handle Dragging
-  const handleMouseDown = (e: React.MouseEvent<SVGElement>, nodeId: string) => {
+  const handleMouseDown = (e: MouseEvent<SVGElement>, nodeId: string) => {
     e.preventDefault();
     setDraggedNodeId(nodeId);
     wasDraggedRef.current = false;
@@ -252,7 +252,7 @@ export default function SocialGraph({ people, settings, activeId, onSelectNode }
     }
   };
 
-  const handleMouseMove = (e: React.MouseEvent<SVGElement>) => {
+  const handleMouseMove = (e: MouseEvent<SVGElement>) => {
     if (!draggedNodeId || !containerRef.current || !workerRef.current) return;
     wasDraggedRef.current = true;
 

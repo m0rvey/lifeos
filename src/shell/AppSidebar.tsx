@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, type ComponentType } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { useData } from '../context/DataContext';
@@ -11,7 +11,7 @@ import {
 interface SidebarItem {
   route: string;
   label: string;
-  icon: React.ComponentType<{ size?: number }>;
+  icon: ComponentType<{ size?: number }>;
   countFn?: (data: ReturnType<typeof useData>['data']) => number;
 }
 

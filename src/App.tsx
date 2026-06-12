@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { DataProvider, useData } from './context/DataContext';
 import { AppProvider, useApp } from './context/AppContext';
@@ -11,12 +11,12 @@ import { exportBackup } from './storage/backup';
 
 
 // Lazy load module components
-const HubPage = React.lazy(() => import('./modules/hub/HubPage'));
-const SocialModule = React.lazy(() => import('./modules/social/SocialModule'));
-const FinanceModule = React.lazy(() => import('./modules/finance/FinanceModule'));
-const CyclingModule = React.lazy(() => import('./modules/cycling/CyclingModule'));
-const ReflectModule = React.lazy(() => import('./modules/reflect/ReflectModule'));
-const StatisticsPage = React.lazy(() => import('./modules/analytics/StatisticsPage'));
+const HubPage = lazy(() => import('./modules/hub/HubPage'));
+const SocialModule = lazy(() => import('./modules/social/SocialModule'));
+const FinanceModule = lazy(() => import('./modules/finance/FinanceModule'));
+const CyclingModule = lazy(() => import('./modules/cycling/CyclingModule'));
+const ReflectModule = lazy(() => import('./modules/reflect/ReflectModule'));
+const StatisticsPage = lazy(() => import('./modules/analytics/StatisticsPage'));
 
 function AppInner() {
   const navigate = useNavigate();

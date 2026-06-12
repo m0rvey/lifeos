@@ -14,7 +14,7 @@ import {
   Clock 
 } from 'lucide-react';
 import { StatCard } from '../../ui';
-import { formatDate, todayISO } from '../../cognitive/helpers';
+import { formatDate, todayISO, getMoodLabel } from '../../cognitive/helpers';
 
 export default function Dashboard() {
   const { data } = useData();
@@ -63,14 +63,6 @@ export default function Dashboard() {
     return data.thoughts[index];
   }, [data.thoughts]);
 
-  const getMoodEmoji = (mood: number) => {
-    if (mood >= 80) return '😁 Великолепно';
-    if (mood >= 60) return '🙂 Хорошо';
-    if (mood >= 40) return '😐 Нормально';
-    if (mood >= 20) return '🙁 Плохо';
-    return '😢 Тяжело';
-  };
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }} className="fade-in-entry">
       <div>
@@ -87,7 +79,7 @@ export default function Dashboard() {
         <StatCard
           label="Индекс настроения"
           value={journalStats.total > 0 ? `${journalStats.avgMood}%` : '—'}
-          subtitle={journalStats.total > 0 ? getMoodEmoji(journalStats.avgMood) : 'Нет записей'}
+          subtitle={journalStats.total > 0 ? getMoodLabel(journalStats.avgMood) : 'Нет записей'}
           icon={<Smile size={20} />}
           accent
         />
