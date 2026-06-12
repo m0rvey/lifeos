@@ -25,7 +25,7 @@ export default function Dashboard({ onNavigateTab }: DashboardProps) {
   }, [rides]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div className="flex-col-24">
       {/* Overview Stat Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
         <StatCard
@@ -59,7 +59,7 @@ export default function Dashboard({ onNavigateTab }: DashboardProps) {
       {/* Grid: Recent Rides vs Pending Maintenance */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
         {/* Recent Rides */}
-        <div className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div className="glass-panel padding-20-flex-col-12">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h3 style={{ fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Clock size={16} />
@@ -75,7 +75,7 @@ export default function Dashboard({ onNavigateTab }: DashboardProps) {
             </button>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
+          <div className="flex-col-8" style={{ flex: 1 }}>
             {recentRides.map((ride) => (
               <div 
                 key={ride.id}
@@ -110,7 +110,7 @@ export default function Dashboard({ onNavigateTab }: DashboardProps) {
         </div>
 
         {/* Maintenance Alerts & Routes */}
-        <div className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div className="glass-panel padding-20-flex-col-16">
           {/* Maintenance */}
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
@@ -127,7 +127,7 @@ export default function Dashboard({ onNavigateTab }: DashboardProps) {
               </button>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <div className="flex-col-6">
               {pendingMaintenance.map((m) => (
                 <div 
                   key={m.id}

@@ -61,9 +61,9 @@ export default function RideModal({ isOpen, onClose, ride, routes, onSave }: Rid
       title={ride ? 'Редактировать заезд' : 'Записать велотренировку'}
       maxWidth="md"
     >
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <form onSubmit={handleSubmit} className="flex-col-16">
         {error && (
-          <div style={{ color: 'var(--error, #ef4444)', fontSize: '0.85rem', fontWeight: 'bold' }}>
+          <div className="text-error-bold">
             {error}
           </div>
         )}

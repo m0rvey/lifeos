@@ -114,7 +114,7 @@ export default function ReminderList() {
   });
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+    <div className="flex-col-12">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h4 style={{ fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
           <Bell size={14} />
@@ -201,8 +201,8 @@ export default function ReminderList() {
 
         {isOpen && (
           <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title="Запланировать платеж" maxWidth="sm">
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {error && <div style={{ color: 'var(--error, #ef4444)', fontSize: '0.85rem', fontWeight: 'bold' }}>{error}</div>}
+            <form onSubmit={handleSubmit} className="flex-col-16">
+              {error && <div className="text-error-bold">{error}</div>}
 
               <FormField label="Название платежа / Назначение" htmlFor="rem-title" required>
                 <input

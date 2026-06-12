@@ -198,7 +198,6 @@
   flex-direction: column;
   gap: 2px;
 }
-.sidebar-bottom { padding: var(--sp-2); margin-top: auto; border-top: 1px solid var(--border); }
 
 .sidebar-group-label {
   display: flex;
@@ -275,8 +274,6 @@
   color: var(--on-primary);
 }
 
-.sidebar-divider { height: 1px; background: var(--border); margin: var(--sp-1) var(--sp-3); }
-
 /* ========== MAIN CONTENT ========== */
 .app-main {
   flex: 1;
@@ -285,13 +282,6 @@
   position: relative;
   z-index: 1;
 }
-
-.content-wide   { max-width: 1200px; margin: 0 auto; }
-.content-narrow { max-width: 780px;  margin: 0 auto; }
-
-/* ── Section ── */
-.page-section { margin-bottom: var(--sp-8); }
-.page-section + .page-section { border-top: 1px solid var(--border-light); padding-top: var(--sp-6); }
 
 .mobile-menu-btn {
   display: none;

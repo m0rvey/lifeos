@@ -86,7 +86,7 @@ export default function JournalPage() {
   }, [entryToDelete, dispatch, addToast]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }} className="fade-in-entry">
+    <div className="flex-col-24 fade-in-entry">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
@@ -121,7 +121,7 @@ export default function JournalPage() {
       </div>
 
       {/* Journal Cards List */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div className="flex-col-16">
         {sortedEntries.length > 0 ? (
           sortedEntries.map((entry) => {
             const moodInfo = getMoodEmoji(entry.mood);
@@ -154,7 +154,7 @@ export default function JournalPage() {
                     <button className="btn btn--secondary" style={{ padding: '6px' }} onClick={() => handleEdit(entry)}>
                       <Edit2 size={12} />
                     </button>
-                    <button className="btn btn--secondary" style={{ padding: '6px', color: 'var(--error, #ef4444)' }} onClick={() => handleDeleteTrigger(entry.id)}>
+                    <button className="btn btn--secondary btn-padding-4-6-red" onClick={() => handleDeleteTrigger(entry.id)}>
                       <Trash2 size={12} />
                     </button>
                   </div>

@@ -38,9 +38,9 @@ export default function MuseumModal({ isOpen, onClose, thought, onSave }: Museum
       title={thought ? 'Редактировать мысль' : 'Зафиксировать инсайт / Цитату'}
       maxWidth="sm"
     >
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <form onSubmit={handleSubmit} className="flex-col-16">
         {error && (
-          <div style={{ color: 'var(--error, #ef4444)', fontSize: '0.85rem', fontWeight: 'bold' }}>
+          <div className="text-error-bold">
             {error}
           </div>
         )}

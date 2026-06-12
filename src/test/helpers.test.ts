@@ -106,3 +106,14 @@ describe('getMoodLabel', () => {
     expect(getMoodLabel(50)).toContain('Нормально');
   });
 });
+
+describe('getDaysSince', () => {
+  it('returns 0 for empty string', () => {
+    expect(getDaysSince('')).toBe(0);
+  });
+
+  it('returns non-negative for valid date', () => {
+    const result = getDaysSince('2026-01-01');
+    expect(result).toBeGreaterThanOrEqual(0);
+  });
+});

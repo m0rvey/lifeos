@@ -64,7 +64,7 @@ export default function Dashboard() {
   }, [data.thoughts]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }} className="fade-in-entry">
+    <div className="flex-col-24 fade-in-entry">
       <div>
         <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
           Панель самоанализа и рефлексии
@@ -107,7 +107,7 @@ export default function Dashboard() {
       {/* Dashboard sections details */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
         {/* Recent Journal Entry */}
-        <div className="glass-panel" style={{ padding: '20px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div className="glass-panel padding-20-flex-col-12" style={{ border: '1px solid var(--border)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h3 style={{ fontSize: '0.95rem', fontWeight: 700, margin: 0, display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)' }}>
               <BookOpen size={16} /> Последняя запись дневника
@@ -119,7 +119,7 @@ export default function Dashboard() {
           </div>
 
           {journalStats.lastEntry ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
+            <div className="flex-col-8" style={{ flex: 1 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <strong style={{ fontSize: '0.85rem', color: 'var(--text-primary)' }}>
                   {journalStats.lastEntry.title}
@@ -143,7 +143,7 @@ export default function Dashboard() {
         </div>
 
         {/* Schedule & Habits summary */}
-        <div className="glass-panel" style={{ padding: '20px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div className="glass-panel padding-20-flex-col-12" style={{ border: '1px solid var(--border)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h3 style={{ fontSize: '0.95rem', fontWeight: 700, margin: 0, display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)' }}>
               <Calendar size={16} /> Продуктивность сегодня
@@ -158,7 +158,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1, justifyContent: 'center' }}>
+          <div className="flex-col-12" style={{ flex: 1, justifyContent: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{ width: '40px', height: '40px', borderRadius: '8px', backgroundColor: 'rgba(99, 102, 241, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent)' }}>
                 <Clock size={20} />

@@ -16,8 +16,6 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
     setTheme,
     themeMode,
     setThemeMode,
-    isAdaptive,
-    setIsAdaptive,
     accentColor,
     setAccentColor,
     fontSizeScale,

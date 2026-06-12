@@ -45,9 +45,9 @@ export default function JournalModal({ isOpen, onClose, entry, onSave }: Journal
       title={entry ? 'Редактировать запись в дневнике' : 'Новая запись рефлексии'}
       maxWidth="sm"
     >
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <form onSubmit={handleSubmit} className="flex-col-16">
         {error && (
-          <div style={{ color: 'var(--error, #ef4444)', fontSize: '0.85rem', fontWeight: 'bold' }}>
+          <div className="text-error-bold">
             {error}
           </div>
         )}

@@ -102,7 +102,7 @@ export default function MuseumPage() {
   }, [thoughtToDelete, dispatch, addToast]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }} className="fade-in-entry">
+    <div className="flex-col-24 fade-in-entry">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
@@ -190,7 +190,7 @@ export default function MuseumPage() {
                     <button className="btn btn--secondary" style={{ padding: '4px 6px' }} onClick={() => handleEdit(thought)}>
                       <Edit2 size={12} />
                     </button>
-                    <button className="btn btn--secondary" style={{ padding: '4px 6px', color: 'var(--error, #ef4444)' }} onClick={() => handleDeleteTrigger(thought.id)}>
+                    <button className="btn btn--secondary btn-padding-4-6-red" onClick={() => handleDeleteTrigger(thought.id)}>
                       <Trash2 size={12} />
                     </button>
                   </div>

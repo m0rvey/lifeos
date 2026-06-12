@@ -42,7 +42,7 @@ export default function ShortcutsHelp() {
       </button>
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title="Горячие клавиши" maxWidth="sm">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div className="flex-col-12">
           {SHORTCUTS.map((shortcut, i) => (
             <div
               key={i}

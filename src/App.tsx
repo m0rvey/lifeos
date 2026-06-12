@@ -15,23 +15,6 @@ const CyclingModule = lazy(() => import('./modules/cycling/CyclingModule'));
 const ReflectModule = lazy(() => import('./modules/reflect/ReflectModule'));
 const StatisticsPage = lazy(() => import('./modules/analytics/StatisticsPage'));
 
-function ModuleErrorFallback({ moduleName }: { moduleName: string }) {
-  return (
-    <div className="error-boundary-container">
-      <h2 className="error-boundary-title">Ошибка в модуле «{moduleName}»</h2>
-      <p className="error-boundary-desc">
-        Произошла ошибка. Попробуйте перезагрузить страницу или вернуться на главную.
-      </p>
-      <button
-        className="btn btn--primary"
-        onClick={() => window.location.reload()}
-      >
-        Перезагрузить
-      </button>
-    </div>
-  );
-}
-
 function AppInner() {
   const navigate = useNavigate();
   const { data } = useData();

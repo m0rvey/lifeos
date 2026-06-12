@@ -237,7 +237,7 @@ export default function StatisticsPage() {
             <Compass size={18} /> Сводный радар баланса ресурсов
           </h3>
           
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div className="flex-col-16">
             {[
               { label: 'Когнитивный ресурс', val: resourceScores.cognitive, color: 'var(--primary)', desc: 'Уровень бодрости и запас ментальных сил' },
               { label: 'Социальный баланс', val: resourceScores.social, color: 'var(--blue, #82b1ff)', desc: 'Поддержание контактов в теплом состоянии' },
@@ -245,7 +245,7 @@ export default function StatisticsPage() {
               { label: 'Физический тонус', val: resourceScores.physical, color: 'var(--warning, #fbbf24)', desc: 'Выполнение нормы кардио- и фитнес-нагрузок' },
               { label: 'Ментальный фокус', val: resourceScores.mindful, color: 'var(--error, #f2b8b5)', desc: 'Регулярность привычек и дневника рефлексии' },
             ].map(item => (
-              <div key={item.label} style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <div className="flex-col-6">
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', fontWeight: 600 }}>
                   <span style={{ color: 'var(--text-primary)' }}>{item.label}</span>
                   <span style={{ color: item.color }}>{item.val}%</span>

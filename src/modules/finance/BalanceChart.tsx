@@ -14,7 +14,7 @@ export default function BalanceChart({ transactions }: BalanceChartProps) {
     );
 
     let runningBalance = 0;
-    const history = [];
+    const history: { date: string; balance: number }[] = [];
     for (const tx of sorted) {
       runningBalance += tx.type === 'income' ? tx.amount : -tx.amount;
       history.push({

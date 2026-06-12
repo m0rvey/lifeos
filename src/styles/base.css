@@ -8,6 +8,14 @@
   --text-xl:   1.375rem;  /* 22px */
   --text-2xl:  1.75rem;   /* 28px */
   --text-3xl:  2.25rem;   /* 36px */
+  --text-4xl:  2.5rem;    /* 40px */
+
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-extrabold: 800;
+  --weight-black: 900;
 
   --sp-1:  4px;
   --sp-2:  8px;
@@ -154,27 +162,6 @@
 .animate-slide-l  { animation: slideInLeft var(--duration-slow) var(--ease-spring) both; }
 .animate-slide-r  { animation: slideInRight var(--duration-slow) var(--ease-spring) both; }
 
-/* Stagger animations for lists */
-.stagger-list > * {
-  animation: staggerFadeIn 0.3s var(--ease-spring) both;
-}
-.stagger-list > *:nth-child(1) { animation-delay: 0ms; }
-.stagger-list > *:nth-child(2) { animation-delay: 40ms; }
-.stagger-list > *:nth-child(3) { animation-delay: 80ms; }
-.stagger-list > *:nth-child(4) { animation-delay: 120ms; }
-.stagger-list > *:nth-child(5) { animation-delay: 160ms; }
-.stagger-list > *:nth-child(6) { animation-delay: 200ms; }
-.stagger-list > *:nth-child(7) { animation-delay: 240ms; }
-.stagger-list > *:nth-child(8) { animation-delay: 280ms; }
-
-/* Legacy stagger classes */
-.stagger-1 { animation-delay: 40ms; }
-.stagger-2 { animation-delay: 80ms; }
-.stagger-3 { animation-delay: 120ms; }
-.stagger-4 { animation-delay: 160ms; }
-.stagger-5 { animation-delay: 200ms; }
-.stagger-6 { animation-delay: 240ms; }
-
 /* ========== SKELETON LOADING ========== */
 .skeleton {
   background: linear-gradient(90deg, var(--surface) 25%, var(--surface-hover) 50%, var(--surface) 75%);
@@ -276,6 +263,11 @@ input, textarea, select {
 input:focus, textarea:focus, select:focus {
   border-color: var(--primary);
   box-shadow: 0 0 0 3px var(--primary-dim);
+  outline: none;
+}
+input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 input::placeholder, textarea::placeholder { color: var(--text-tertiary); }
 textarea { resize: vertical; min-height: 90px; line-height: var(--lh-relaxed); }

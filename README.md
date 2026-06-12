@@ -20,6 +20,7 @@
 - React Router 7 (маршрутизация)
 - Lucide React (иконки)
 - Zod (валидация схем)
+- Vitest (тесты)
 - CSS Custom Properties (дизайн-система)
 
 ## Быстрый старт
@@ -30,6 +31,9 @@ npm install
 
 # Запуск dev-сервера
 npm run dev
+
+# Запуск тестов
+npm run test
 
 # Сборка для продакшена
 npm run build
@@ -45,6 +49,8 @@ npm run preview
 | `npm run dev` | Dev-сервер с HMR |
 | `npm run build` | Production сборка |
 | `npm run preview` | Предпросмотр сборки |
+| `npm run test` | Запуск тестов |
+| `npm run test:watch` | Тесты в watch-режиме |
 | `npm run lint` | ESLint проверка |
 | `npm run typecheck` | TypeScript проверка |
 | `npm run format` | Prettier форматирование |
@@ -61,10 +67,9 @@ npm run preview
 
 ```
 src/
-├── cognitive/      # Бизнес-логика (расчёты, хелперы)
+├── cognitive/      # Бизнес-логика (расчёты, хелперы) + barrel index
 ├── context/        # React Context (AppContext, DataContext)
-├── data/           # Данные (workouts JSON)
-├── hooks/          # Кастомные хуки (useRideStats, useCrudEntity, useKeyPress)
+├── hooks/          # Кастомные хуки + barrel index
 ├── modules/        # Модули приложения
 │   ├── hub/        # Главный дашборд
 │   ├── social/     # Социальный граф
@@ -73,8 +78,9 @@ src/
 │   ├── reflect/    # Рефлексия
 │   └── analytics/  # Аналитика
 ├── shell/          # Оболочка приложения (Header, Sidebar, Settings)
-├── storage/        # Персистентность (localStorage, миграции)
+├── storage/        # Персистентность + barrel index
 ├── styles/         # CSS (темы, компоненты, layouts)
+├── test/           # Vitest тесты
 ├── types/          # TypeScript типы
 ├── ui/             # Переиспользуемые компоненты
 └── validation/     # Zod-схемы
@@ -84,16 +90,20 @@ src/
 
 Все данные хранятся в `localStorage` браузера. Поддерживается:
 - Экспорт/импорт JSON-резервных копий
+- Экспорт в CSV (транзакции, поездки, контакты)
 - Автоматическое сохранение (debounce 2.5с)
 - Миграции между версиями
+- Режим темы: ручной / авто по модулям / по системным настройкам
 
 ## Темы
 
-4 встроенных темы:
+4 встроенных темы + 3 режима:
 - **mindveyz** — тёмная фиолетовая (Glasswind)
 - **cyclist** — тёмная оранжевая
 - **reflect** — светлая минималистичная
 - **slate** — тёмная нейтральная
+
+Режимы: ручной выбор, авто по модулям, по системным настройкам (prefers-color-scheme).
 
 ## Лицензия
 
