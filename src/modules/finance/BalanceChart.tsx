@@ -1,12 +1,14 @@
 import { useMemo } from 'react';
 import { type Transaction } from '../../types';
 import { formatCurrency } from '../../cognitive/helpers';
+import { useI18n } from '../../i18n';
 
 interface BalanceChartProps {
   transactions: Transaction[];
 }
 
 export default function BalanceChart({ transactions }: BalanceChartProps) {
+  const { t } = useI18n();
   const chartData = useMemo(() => {
     // Sort transactions by date ascending
     const sorted = [...transactions].sort(
@@ -76,7 +78,7 @@ export default function BalanceChart({ transactions }: BalanceChartProps) {
         borderRadius: '8px',
         border: '1px dashed var(--border)'
       }}>
-        Недостаточно транзакций для построения графика баланса (требуется как минимум 2).
+        {t('finance.chart.insufficientData')}
       </div>
     );
   }
@@ -84,7 +86,7 @@ export default function BalanceChart({ transactions }: BalanceChartProps) {
   return (
     <div className="glass-panel" style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
       <span style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-secondary)' }}>
-        Динамика баланса
+        {t('finance.chart.balanceDynamics')}
       </span>
       <div style={{ position: 'relative', width: '100%', height: `${height}px` }}>
         <svg viewBox={`0 0 ${width} ${height}`} width="100%" height="100%">

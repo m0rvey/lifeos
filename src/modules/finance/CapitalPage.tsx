@@ -20,11 +20,11 @@ export default function CapitalPage() {
   const [txToDelete, setTxToDelete] = useState<string | null>(null);
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('Все');
+  const [selectedCategory, setSelectedCategory] = useState('ALL');
 
   const categories = useMemo(() => {
     const cats = new Set(data.transactions.map((t) => t.category));
-    return ['Все', ...Array.from(cats)];
+    return ['ALL', ...Array.from(cats)];
   }, [data.transactions]);
 
   const totalIncome = useMemo(() => {
@@ -49,7 +49,7 @@ export default function CapitalPage() {
         t.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
         t.description.toLowerCase().includes(searchQuery.toLowerCase());
       
-      const matchesCategory = selectedCategory === 'Все' || t.category === selectedCategory;
+      const matchesCategory = selectedCategory === 'ALL' || t.category === selectedCategory;
       
       return matchesSearch && matchesCategory;
     });
@@ -196,8 +196,8 @@ export default function CapitalPage() {
                   onChange={(e) => setSelectedCategory(e.target.value)}
                   style={{ height: '40px', padding: '0 12px', fontSize: '0.85rem', background: 'var(--bg-secondary)', border: '1px solid var(--border)', color: 'var(--text-primary)', borderRadius: 'var(--radius-sm)', outline: 'none' }}
                 >
-                  <option value="Все">{t('filter.all')}</option>
-                  {categories.filter((cat) => cat !== 'Все').map((cat) => (
+                  <option value="ALL">{t('filter.all')}</option>
+                  {categories.filter((cat) => cat !== 'ALL').map((cat) => (
                     <option key={cat} value={cat}>{cat}</option>
                   ))}
                 </select>

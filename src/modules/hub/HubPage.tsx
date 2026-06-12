@@ -171,7 +171,7 @@ export default function HubPage() {
           <button 
             className="hub-card-action-btn" 
             onClick={() => navigate('/social')}
-            aria-label="Открыть модуль социального графа"
+            aria-label={t('hub.aria.openSocial')}
           >
             <span>{t('hub.open')}</span>
             <ArrowRight size={14} />
@@ -219,7 +219,7 @@ export default function HubPage() {
           <button 
             className="hub-card-action-btn" 
             onClick={() => navigate('/finance')}
-            aria-label="Открыть модуль финансов"
+            aria-label={t('hub.aria.openFinance')}
           >
             <span>{t('hub.open')}</span>
             <ArrowRight size={14} />
@@ -266,7 +266,7 @@ export default function HubPage() {
           <button 
             className="hub-card-action-btn" 
             onClick={() => navigate('/cycling')}
-            aria-label="Открыть модуль велоспорта"
+            aria-label={t('hub.aria.openCycling')}
           >
             <span>{t('hub.open')}</span>
             <ArrowRight size={14} />
@@ -300,7 +300,7 @@ export default function HubPage() {
           <button 
             className="hub-card-action-btn" 
             onClick={() => navigate('/reflect')}
-            aria-label="Открыть модуль рефлексии"
+            aria-label={t('hub.aria.openReflection')}
           >
             <span>{t('hub.open')}</span>
             <ArrowRight size={14} />

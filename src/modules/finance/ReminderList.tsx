@@ -5,11 +5,13 @@ import { useApp } from '../../context/AppContext';
 import { Plus, Bell, CheckSquare, Square, Trash2, Calendar } from 'lucide-react';
 import { formatDate, formatCurrency, uid, nowISO, todayISO } from '../../cognitive/helpers';
 import { Modal, FormField, ConfirmDialog } from '../../ui';
+import { useI18n } from '../../i18n';
 
 export default function ReminderList() {
   const { data, dispatch } = useData();
   const reminders = data.reminders;
   const { addToast } = useApp();
+  const { t } = useI18n();
   const nowMs = new Date().getTime();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -17,7 +19,7 @@ export default function ReminderList() {
   const [title, setTitle] = useState('');
   const [amount, setAmount] = useState(0);
   const [dueDateISO, setDueDateISO] = useState(todayISO());
-  const [category, setCategory] = useState('Аренда');
+  const [category, setCategory] = useState('Rent');
   const [remindDaysBefore, setRemindDaysBefore] = useState(3);
   const [error, setError] = useState('');
 
@@ -38,15 +40,15 @@ export default function ReminderList() {
         type: 'expense',
         amount: reminder.amount,
         category: reminder.category,
-        description: `Оплата счета: ${reminder.title}`,
+        description: t('finance.reminder.paidDescription', { title: reminder.title }),
         dateISO: todayISO(),
         createdAt: nowISO(),
         updatedAt: nowISO()
       }
     });
 
-    addToast(`Оплата по счету "${reminder.title}" зафиксирована в расходах`, 'success');
-  }, [dispatch, addToast]);
+    addToast(t('finance.reminder.paidToast', { title: reminder.title }), 'success');
+  }, [dispatch, addToast, t]);
 
   const handleDelete = useCallback((id: string) => {
     dispatch({
@@ -54,8 +56,8 @@ export default function ReminderList() {
       entity: 'reminders',
       id
     });
-    addToast('Напоминание о платеже удалено', 'warning');
-  }, [dispatch, addToast]);
+    addToast(t('finance.reminder.deletedToast'), 'warning');
+  }, [dispatch, addToast, t]);
 
   const handleConfirmDelete = useCallback(() => {
     if (reminderToDelete) {
@@ -69,11 +71,11 @@ export default function ReminderList() {
     setError('');
 
     if (!title.trim()) {
-      setError('Укажите название счета');
+      setError(t('finance.reminder.error.titleRequired'));
       return;
     }
     if (amount <= 0) {
-      setError('Сумма должна быть больше нуля');
+      setError(t('finance.reminder.error.amountPositive'));
       return;
     }
 
@@ -99,9 +101,9 @@ export default function ReminderList() {
     setTitle('');
     setAmount(0);
     setDueDateISO(todayISO());
-    setCategory('Аренда');
+    setCategory('Rent');
     setRemindDaysBefore(3);
-    addToast('Платеж успешно запланирован', 'success');
+    addToast(t('finance.reminder.successToast'), 'success');
   };
 
   const sortedReminders = [...reminders].sort((a, b) => {
@@ -118,7 +120,7 @@ export default function ReminderList() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h4 style={{ fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
           <Bell size={14} />
-          <span>Предстоящие счета</span>
+          <span>{t('finance.reminder.upcomingBills')}</span>
         </h4>
         <button
           className="btn btn--secondary"
@@ -126,7 +128,7 @@ export default function ReminderList() {
           onClick={() => setIsOpen(true)}
         >
           <Plus size={12} />
-          <span>Запланировать</span>
+          <span>{t('finance.reminder.schedule')}</span>
         </button>
       </div>
 
@@ -160,7 +162,7 @@ export default function ReminderList() {
                     alignItems: 'center',
                     padding: 0
                   }}
-                  aria-label={rem.isPaid ? 'Оплачено' : `Отметить как оплачено: ${rem.title}`}
+                  aria-label={rem.isPaid ? t('finance.reminder.paid') : t('finance.reminder.markPaid', { title: rem.title })}
                 >
                   {rem.isPaid ? <CheckSquare size={16} /> : <Square size={16} />}
                 </button>
@@ -183,7 +185,7 @@ export default function ReminderList() {
                 <button
                   onClick={() => setReminderToDelete(rem.id)}
                   style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '2px' }}
-                  aria-label={`Удалить напоминание: ${rem.title}`}
+                  aria-label={t('finance.reminder.deleteReminder', { title: rem.title })}
                 >
                   <Trash2 size={12} />
                 </button>
@@ -194,30 +196,30 @@ export default function ReminderList() {
 
         {reminders.length === 0 && (
           <div style={{ textAlign: 'center', padding: '24px 10px', fontSize: '0.75rem', color: 'var(--text-secondary)', fontStyle: 'italic' }}>
-            Нет запланированных счетов.
+            {t('finance.reminder.noScheduledBills')}
           </div>
         )}
       </div>
 
         {isOpen && (
-          <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title="Запланировать платеж" maxWidth="sm">
+          <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title={t('finance.reminder.modal.title')} maxWidth="sm">
             <form onSubmit={handleSubmit} className="flex-col-16">
               {error && <div className="text-error-bold">{error}</div>}
 
-              <FormField label="Название платежа / Назначение" htmlFor="rem-title" required>
+              <FormField label={t('finance.reminder.field.title')} htmlFor="rem-title" required>
                 <input
                   id="rem-title"
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Например: Интернет, Коммунальные услуги"
+                  placeholder={t('finance.reminder.field.titlePlaceholder')}
                   required
                   style={{ width: '100%' }}
                 />
               </FormField>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                <FormField label="Сумма платежа (₽)" htmlFor="rem-amount" required>
+                <FormField label={t('finance.reminder.field.amount')} htmlFor="rem-amount" required>
                   <input
                     id="rem-amount"
                     type="number"
@@ -230,7 +232,7 @@ export default function ReminderList() {
                   />
                 </FormField>
 
-                <FormField label="Дата оплаты" htmlFor="rem-dueDate" required>
+                <FormField label={t('finance.reminder.field.dueDate')} htmlFor="rem-dueDate" required>
                   <input
                     id="rem-dueDate"
                     type="date"
@@ -243,17 +245,17 @@ export default function ReminderList() {
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                <FormField label="Категория" htmlFor="rem-category">
+                <FormField label={t('finance.field.category')} htmlFor="rem-category">
                   <select id="rem-category" value={category} onChange={(e) => setCategory(e.target.value)} style={{ width: '100%' }}>
-                    <option value="Аренда">Аренда / ЖКХ</option>
-                    <option value="Связь">Интернет / Телефон</option>
-                    <option value="Подписки">Подписки / Сервисы</option>
-                    <option value="Кредиты">Кредиты / Долги</option>
-                    <option value="Другое">Другое</option>
+                    <option value="Rent">{t('finance.reminder.category.rentUtilities')}</option>
+                    <option value="Telecom">{t('finance.reminder.category.telecomPhone')}</option>
+                    <option value="Subscriptions">{t('finance.reminder.category.subscriptionsServices')}</option>
+                    <option value="Loans">{t('finance.reminder.category.loansDebts')}</option>
+                    <option value="Other">{t('finance.reminder.category.other')}</option>
                   </select>
                 </FormField>
 
-                <FormField label="Напомнить за (дней)" htmlFor="rem-days">
+                <FormField label={t('finance.reminder.field.remindDays')} htmlFor="rem-days">
                   <input
                     id="rem-days"
                     type="number"
@@ -267,8 +269,8 @@ export default function ReminderList() {
               </div>
 
               <div className="modal-form-footer">
-                <button type="button" className="btn btn--secondary" onClick={() => setIsOpen(false)}>Отмена</button>
-                <button type="submit" className="btn btn--primary">Сохранить</button>
+                <button type="button" className="btn btn--secondary" onClick={() => setIsOpen(false)}>{t('action.cancel')}</button>
+                <button type="submit" className="btn btn--primary">{t('action.save')}</button>
               </div>
             </form>
           </Modal>
@@ -279,8 +281,8 @@ export default function ReminderList() {
             isOpen={reminderToDelete !== null}
             onConfirm={handleConfirmDelete}
             onCancel={() => setReminderToDelete(null)}
-            title="Удалить счет?"
-            message="Вы действительно хотите удалить это напоминание о платеже? Это действие необратимо."
+            title={t('finance.reminder.confirm.deleteTitle')}
+            message={t('finance.reminder.confirm.deleteMessage')}
             variant="danger"
           />
         )}

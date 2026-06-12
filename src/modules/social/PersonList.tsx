@@ -16,8 +16,8 @@ interface PersonListProps {
 export default function PersonList({ people, activeId, onSelect, onAddNew, graphWeights }: PersonListProps) {
   const { t } = useI18n();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedDepth, setSelectedDepth] = useState<Depth | 'Все'>('Все');
-  const [selectedStatus, setSelectedStatus] = useState<PersonStatus | 'Все'>('Все');
+  const [selectedDepth, setSelectedDepth] = useState<Depth | 'ALL'>('ALL');
+  const [selectedStatus, setSelectedStatus] = useState<PersonStatus | 'ALL'>('ALL');
   const [sortBy, setSortBy] = useState<'score' | 'energy' | 'recency' | 'name'>('score');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
@@ -44,8 +44,8 @@ export default function PersonList({ people, activeId, onSelect, onAddNew, graph
       const reflectionMatch = p.reflection.toLowerCase().includes(searchQuery.toLowerCase());
       const queryMatch = nameMatch || noteMatch || reflectionMatch;
 
-      const depthMatch = selectedDepth === 'Все' || p.depth === selectedDepth;
-      const statusMatch = selectedStatus === 'Все' || p.status === selectedStatus;
+      const depthMatch = selectedDepth === 'ALL' || p.depth === selectedDepth;
+      const statusMatch = selectedStatus === 'ALL' || p.status === selectedStatus;
 
       return queryMatch && depthMatch && statusMatch;
     });
@@ -102,10 +102,10 @@ export default function PersonList({ people, activeId, onSelect, onAddNew, graph
             <span className="social-filter-label">{t('social.label.depth')}</span>
             <select
               value={selectedDepth}
-              onChange={(e) => setSelectedDepth(e.target.value as Depth | 'Все')}
+              onChange={(e) => setSelectedDepth(e.target.value as Depth | 'ALL')}
               className="social-filter-select"
             >
-              <option value="Все">{t('social.filter.all_circles')}</option>
+              <option value="ALL">{t('social.filter.all_circles')}</option>
               <option value={Depth.CORE}>{t('social.depth.core')}</option>
               <option value={Depth.INNER}>{t('social.depth.inner')}</option>
               <option value={Depth.SOCIAL}>{t('social.depth.social')}</option>
@@ -116,10 +116,10 @@ export default function PersonList({ people, activeId, onSelect, onAddNew, graph
             <span className="social-filter-label">{t('social.label.status')}</span>
             <select
               value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value as PersonStatus | 'Все')}
+              onChange={(e) => setSelectedStatus(e.target.value as PersonStatus | 'ALL')}
               className="social-filter-select"
             >
-              <option value="Все">{t('social.filter.all_statuses')}</option>
+              <option value="ALL">{t('social.filter.all_statuses')}</option>
               <option value={PersonStatus.ACTIVE}>{t('social.status.active')}</option>
               <option value={PersonStatus.OCCASIONAL}>{t('social.status.occasional')}</option>
               <option value={PersonStatus.DISTANT}>{t('social.status.distant')}</option>
