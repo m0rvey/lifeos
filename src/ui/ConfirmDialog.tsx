@@ -10,7 +10,7 @@ interface ConfirmDialogProps {
   confirmLabel?: string;
   cancelLabel?: string;
   variant?: 'danger' | 'default';
-  requireTyping?: string; // если указано — нужно ввести текст для подтверждения
+  requireTyping?: string;
 }
 
 export default function ConfirmDialog({
@@ -25,25 +25,27 @@ export default function ConfirmDialog({
   requireTyping,
 }: ConfirmDialogProps) {
   const [typedValue, setTypedValue] = useState('');
-  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
 
-  if (isOpen !== prevIsOpen) {
-    setPrevIsOpen(isOpen);
-    if (!isOpen) {
-      setTypedValue('');
-    }
-  }
+  const handleConfirm = () => {
+    setTypedValue('');
+    onConfirm();
+  };
+
+  const handleCancel = () => {
+    setTypedValue('');
+    onCancel();
+  };
 
   const isConfirmDisabled = requireTyping ? typedValue !== requireTyping : false;
 
   const footer = (
     <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', width: '100%' }}>
-      <button className="btn btn--secondary" onClick={onCancel}>
+      <button className="btn btn--secondary" onClick={handleCancel}>
         {cancelLabel}
       </button>
       <button
         className={`btn ${variant === 'danger' ? 'btn--danger' : 'btn--primary'}`}
-        onClick={onConfirm}
+        onClick={handleConfirm}
         disabled={isConfirmDisabled}
       >
         {confirmLabel}
@@ -52,7 +54,7 @@ export default function ConfirmDialog({
   );
 
   return (
-    <Modal isOpen={isOpen} onClose={onCancel} title={title} maxWidth="sm" footer={footer}>
+    <Modal isOpen={isOpen} onClose={handleCancel} title={title} maxWidth="sm" footer={footer}>
       <div>
         <p style={{ color: 'var(--text-secondary)', marginBottom: requireTyping ? '16px' : '0', lineHeight: 1.5 }}>
           {message}

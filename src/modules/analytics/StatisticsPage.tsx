@@ -245,7 +245,7 @@ export default function StatisticsPage() {
               { label: 'Физический тонус', val: resourceScores.physical, color: 'var(--warning, #fbbf24)', desc: 'Выполнение нормы кардио- и фитнес-нагрузок' },
               { label: 'Ментальный фокус', val: resourceScores.mindful, color: 'var(--error, #f2b8b5)', desc: 'Регулярность привычек и дневника рефлексии' },
             ].map(item => (
-              <div className="flex-col-6">
+              <div key={item.label} className="flex-col-6">
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', fontWeight: 600 }}>
                   <span style={{ color: 'var(--text-primary)' }}>{item.label}</span>
                   <span style={{ color: item.color }}>{item.val}%</span>

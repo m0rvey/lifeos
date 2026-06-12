@@ -49,14 +49,3 @@ export function useI18n() {
   if (!ctx) throw new Error('useI18n must be used inside I18nProvider');
   return ctx;
 }
-
-export function t(key: string, vars?: Record<string, string | number>): string {
-  const lang = detectLanguage();
-  let text = locales[lang]?.[key] || locales.ru[key] || key;
-  if (vars) {
-    for (const [k, v] of Object.entries(vars)) {
-      text = text.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v));
-    }
-  }
-  return text;
-}

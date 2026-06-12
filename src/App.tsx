@@ -1,8 +1,8 @@
 import { lazy, Suspense } from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { DataProvider, useData } from './context/DataContext';
 import { AppProvider, useApp } from './context/AppContext';
-import { I18nProvider, useI18n } from './i18n';
+import { useI18n } from './i18n';
 import AppShell from './shell/AppShell';
 import { ErrorBoundary, PageTransition } from './ui';
 import { useKeyPress } from './hooks/useKeyPress';
@@ -18,6 +18,7 @@ const StatisticsPage = lazy(() => import('./modules/analytics/StatisticsPage'));
 
 function AppInner() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { data } = useData();
   const { addToast } = useApp();
   const { t } = useI18n();
@@ -67,12 +68,12 @@ function AppInner() {
         <PageTransition>
           <Routes>
             <Route path="/" element={<Navigate to="/hub" replace />} />
-            <Route path="/hub" element={<ErrorBoundary><HubPage /></ErrorBoundary>} />
-            <Route path="/social/*" element={<ErrorBoundary><SocialModule /></ErrorBoundary>} />
-            <Route path="/finance/*" element={<ErrorBoundary><FinanceModule /></ErrorBoundary>} />
-            <Route path="/cycling/*" element={<ErrorBoundary><CyclingModule /></ErrorBoundary>} />
-            <Route path="/reflect/*" element={<ErrorBoundary><ReflectModule /></ErrorBoundary>} />
-            <Route path="/analytics" element={<ErrorBoundary><StatisticsPage /></ErrorBoundary>} />
+            <Route path="/hub" element={<ErrorBoundary key={location.pathname}><HubPage /></ErrorBoundary>} />
+            <Route path="/social/*" element={<ErrorBoundary key={location.pathname}><SocialModule /></ErrorBoundary>} />
+            <Route path="/finance/*" element={<ErrorBoundary key={location.pathname}><FinanceModule /></ErrorBoundary>} />
+            <Route path="/cycling/*" element={<ErrorBoundary key={location.pathname}><CyclingModule /></ErrorBoundary>} />
+            <Route path="/reflect/*" element={<ErrorBoundary key={location.pathname}><ReflectModule /></ErrorBoundary>} />
+            <Route path="/analytics" element={<ErrorBoundary key={location.pathname}><StatisticsPage /></ErrorBoundary>} />
           </Routes>
         </PageTransition>
       </Suspense>
@@ -82,14 +83,12 @@ function AppInner() {
 
 export default function App() {
   return (
-    <I18nProvider>
-      <DataProvider>
-        <AppProvider>
-          <ErrorBoundary>
-            <AppInner />
-          </ErrorBoundary>
-        </AppProvider>
-      </DataProvider>
-    </I18nProvider>
+    <DataProvider>
+      <AppProvider>
+        <ErrorBoundary>
+          <AppInner />
+        </ErrorBoundary>
+      </AppProvider>
+    </DataProvider>
   );
 }
