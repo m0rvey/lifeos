@@ -359,16 +359,6 @@
   transform: scale(0.94);
 }
 
-.sidebar-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  z-index: 150;
-  animation: fadeIn 0.25s var(--ease-out) both;
-}
-
 /* ========== RESPONSIVE ========== */
 @media (max-width: 1024px) {
   .app-main { padding: var(--sp-5) var(--sp-5); }
@@ -396,14 +386,6 @@
   .app-module-tab span { display: none; }
   .app-main { padding: var(--sp-4); }
 }
-
-/* ========== NAV ITEM THEME ACCENTS ========== */
-.sidebar-nav-item.mindveyz-accent.active { background: rgba(208,188,255,0.1); color: #d0bcff; }
-.sidebar-nav-item.mindveyz-accent.active::before { background: #d0bcff; }
-.sidebar-nav-item.cyclist-accent.active  { background: rgba(255,107,53,0.1);  color: #ff6b35; }
-.sidebar-nav-item.cyclist-accent.active::before  { background: #ff6b35; }
-.sidebar-nav-item.reflect-accent.active  { background: rgba(100,100,220,0.08); color: var(--primary); }
-.sidebar-nav-item.reflect-accent.active::before  { background: var(--primary); }
 
 /* ========== BREADCRUMBS ========== */
 .breadcrumbs {

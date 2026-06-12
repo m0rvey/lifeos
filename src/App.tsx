@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { DataProvider, useData } from './context/DataContext';
 import { AppProvider, useApp } from './context/AppContext';
+import { I18nProvider, useI18n } from './i18n';
 import AppShell from './shell/AppShell';
 import { ErrorBoundary, PageTransition } from './ui';
 import { useKeyPress } from './hooks/useKeyPress';
@@ -19,6 +20,7 @@ function AppInner() {
   const navigate = useNavigate();
   const { data } = useData();
   const { addToast } = useApp();
+  const { t } = useI18n();
 
   // Keyboard Shortcuts: Alt+1 to Alt+5 for navigation, Ctrl+S for export backup
   useKeyPress('1', () => navigate('/hub'), { alt: true });
@@ -31,10 +33,10 @@ function AppInner() {
     e.preventDefault();
     try {
       exportBackup(data);
-      addToast('Резервная копия успешно экспортирована', 'success');
+      addToast(t('toast.export_success'), 'success');
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Неизвестная ошибка';
-      addToast(`Ошибка при экспорте резервной копии: ${message}`, 'error');
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      addToast(t('error.save_failed', { message }), 'error');
     }
   }, { ctrl: true });
 
@@ -59,7 +61,7 @@ function AppInner() {
             borderRadius: '50%',
             animation: 'spin 1s linear infinite'
           }} />
-          <span style={{ fontSize: '0.85rem' }}>Загрузка модуля платформы...</span>
+          <span style={{ fontSize: '0.85rem' }}>{t('loading')}</span>
         </div>
       }>
         <PageTransition>
@@ -80,12 +82,14 @@ function AppInner() {
 
 export default function App() {
   return (
-    <DataProvider>
-      <AppProvider>
-        <ErrorBoundary>
-          <AppInner />
-        </ErrorBoundary>
-      </AppProvider>
-    </DataProvider>
+    <I18nProvider>
+      <DataProvider>
+        <AppProvider>
+          <ErrorBoundary>
+            <AppInner />
+          </ErrorBoundary>
+        </AppProvider>
+      </DataProvider>
+    </I18nProvider>
   );
 }

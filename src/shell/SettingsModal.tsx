@@ -1,6 +1,7 @@
 import { useState, useMemo, useRef, type ChangeEvent } from 'react';
 import { useApp } from '../context/AppContext';
 import { useData } from '../context/DataContext';
+import { useI18n, type Language } from '../i18n';
 import { exportBackup, importBackup, wipeAllData, exportTransactionsCsv, exportRidesCsv, exportPeopleCsv } from '../storage/backup';
 import { ConfirmDialog, Modal } from '../ui';
 import { Database, Sliders, SlidersHorizontal, Trash2, Download, Upload, Info, ExternalLink, User } from 'lucide-react';
@@ -24,6 +25,7 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
     setFontSizeScale,
     addToast,
   } = useApp();
+  const { t, lang, setLang } = useI18n();
 
   const { data, dispatch } = useData();
 
@@ -113,11 +115,11 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
     setIsExporting(true);
     try {
       exportBackup(data);
-      addToast('Резервная копия успешно экспортирована', 'success');
+      addToast(t('toast.export_success'), 'success');
       setExportSuccess(true);
       setTimeout(() => setExportSuccess(false), 2000);
     } catch {
-      addToast('Не удалось экспортировать файл', 'error');
+      addToast(t('toast.export_error'), 'error');
     } finally {
       setIsExporting(false);
     }
@@ -143,13 +145,13 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
     try {
       const importedData = await importBackup(pendingImportFile);
       dispatch({ type: 'IMPORT', payload: importedData });
-      addToast('Данные успешно импортированы!', 'success');
+      addToast(t('toast.import_success'), 'success');
       setShowImportConfirm(false);
       setPendingImportFile(null);
       setTimeout(() => window.location.reload(), 1000);
     } catch (err) {
-      setImportError(err instanceof Error ? err.message : 'Неизвестная ошибка валидации файла');
-      addToast('Ошибка импорта резервной копии', 'error');
+      setImportError(err instanceof Error ? err.message : t('error.import_validation'));
+      addToast(t('toast.import_error'), 'error');
       setShowImportConfirm(false);
       setPendingImportFile(null);
     } finally {
@@ -163,7 +165,7 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
 
   const handleConfirmWipe = () => {
     wipeAllData();
-    addToast('Все данные были сброшены к начальным настройкам', 'success');
+    addToast(t('toast.wipe_success'), 'success');
     setShowWipeConfirm(false);
     setTimeout(() => window.location.reload(), 1000);
   };
@@ -171,7 +173,7 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
   const footer = (
     <div className="settings-footer" style={{ width: '100%' }}>
       <button className="btn btn--primary" onClick={onClose}>
-        Закрыть
+        {t('settings.close')}
       </button>
     </div>
   );
@@ -180,7 +182,7 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
     <Modal
       isOpen={true}
       onClose={onClose}
-      title="Настройки платформы"
+      title={t('settings.title')}
       maxWidth="lg"
       className="settings-modal-container"
       footer={footer}
@@ -193,12 +195,12 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
             <div className="settings-col">
               <div>
                 <h3 className="settings-section-title">
-                  <Sliders size={14} /> Основные параметры
+                  <Sliders size={14} /> {t('settings.core_params')}
                 </h3>
 
                 {/* User name */}
                 <div className="settings-form-group">
-                  <label className="settings-label">Имя пользователя</label>
+                  <label className="settings-label">{t('settings.user_name')}</label>
                   <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                     <User size={14} style={{ color: 'var(--text-secondary)', flexShrink: 0 }} />
                     <input
@@ -206,7 +208,7 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                       value={userName}
                       onChange={e => setUserName(e.target.value)}
                       className="settings-select"
-                      placeholder="Ваше имя"
+                      placeholder={t('settings.user_name_placeholder')}
                       maxLength={30}
                     />
                   </div>
@@ -214,43 +216,43 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
 
                 {/* Theme mode */}
                 <div className="settings-form-group">
-                  <label className="settings-label">Режим темы</label>
+                  <label className="settings-label">{t('settings.theme_mode')}</label>
                   <select
                     value={themeMode}
                     onChange={e => setThemeMode(e.target.value as ThemeMode)}
                     className="settings-select"
                   >
-                    <option value="manual">Ручной выбор</option>
-                    <option value="adaptive">Авто по модулям</option>
-                    <option value="system">По системным настройкам</option>
+                    <option value="manual">{t('settings.theme_mode.manual')}</option>
+                    <option value="adaptive">{t('settings.theme_mode.adaptive')}</option>
+                    <option value="system">{t('settings.theme_mode.system')}</option>
                   </select>
                 </div>
 
                 {themeMode === 'manual' && (
                   <div className="settings-form-group">
-                    <label className="settings-label">Тема оформления</label>
+                    <label className="settings-label">{t('settings.theme')}</label>
                     <select
                       value={theme}
                       onChange={e => setTheme(e.target.value as ThemeType)}
                       className="settings-select"
                     >
-                      <option value="slate">Slate (Нейтрально-темная)</option>
-                      <option value="mindveyz">MindVeyZ (Стеклянный фиолетовый)</option>
-                      <option value="cyclist">Cyclist (Оранжевый спорт)</option>
-                      <option value="reflect">Reflect (Минималистично-светлая)</option>
+                      <option value="slate">{t('settings.theme.slate')}</option>
+                      <option value="mindveyz">{t('settings.theme.mindveyz')}</option>
+                      <option value="cyclist">{t('settings.theme.cyclist')}</option>
+                      <option value="reflect">{t('settings.theme.reflect')}</option>
                     </select>
                   </div>
                 )}
 
                 {themeMode === 'system' && (
                   <p className="settings-hint">
-                    Тема будет автоматически переключаться между темной (Slate) и светлой (Reflect) в зависимости от настроек вашей ОС.
+                    {t('settings.theme_system_hint')}
                   </p>
                 )}
 
                 {/* Accent Color switcher */}
                 <div className="settings-form-group">
-                  <label className="settings-label">Цветовой акцент</label>
+                  <label className="settings-label">{t('settings.accent_color')}</label>
                   <div className="settings-accents-row">
                     {(['purple', 'orange', 'green', 'blue', 'rose'] as const).map(color => {
                       const colorHex = 
@@ -277,7 +279,7 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                 {/* Font Scaling */}
                 <div className="settings-form-group">
                   <label className="settings-slider-label">
-                    <span>Масштаб шрифта</span>
+                    <span>{t('settings.font_scale')}</span>
                     <strong>{Math.round(fontSizeScale * 100)}%</strong>
                   </label>
                   <input
@@ -293,14 +295,27 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
 
                 {/* Week Start Day */}
                 <div className="settings-form-group">
-                  <label className="settings-label">Первый день недели</label>
+                  <label className="settings-label">{t('settings.week_start')}</label>
                   <select
                     value={settings.weekStartDay}
                     onChange={e => handleWeekStartDayChange(Number(e.target.value) as 0 | 1)}
                     className="settings-select"
                   >
-                    <option value={1}>Понедельник</option>
-                    <option value={0}>Воскресенье</option>
+                    <option value={1}>{t('settings.week_start.monday')}</option>
+                    <option value={0}>{t('settings.week_start.sunday')}</option>
+                  </select>
+                </div>
+
+                {/* Language */}
+                <div className="settings-form-group">
+                  <label className="settings-label">{t('settings.language')}</label>
+                  <select
+                    value={lang}
+                    onChange={e => setLang(e.target.value as Language)}
+                    className="settings-select"
+                  >
+                    <option value="ru">{t('settings.language.ru')}</option>
+                    <option value="en">{t('settings.language.en')}</option>
                   </select>
                 </div>
               </div>
@@ -310,13 +325,13 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
             <div className="settings-col">
               <div>
                 <h3 className="settings-section-title">
-                  <SlidersHorizontal size={14} /> Настройка алгоритмов графа
+                  <SlidersHorizontal size={14} /> {t('settings.graph_tuning')}
                 </h3>
 
                 {/* Sensitivity */}
                 <div className="settings-form-group">
                   <label className="settings-slider-label">
-                    <span>Чувствительность графа</span>
+                    <span>{t('settings.graph_sensitivity')}</span>
                     <strong>{settings.graphSensitivity} / 10</strong>
                   </label>
                   <input
@@ -332,12 +347,12 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
 
                 {/* Weights coefficients */}
                 <div className="settings-weights-panel">
-                  <span className="settings-weights-header">Коэффициенты силы связи</span>
+                  <span className="settings-weights-header">{t('settings.graph_weights')}</span>
                   
                   {/* Energy weight */}
                   <div>
                     <label className="settings-weight-label">
-                      <span>Энергетический вклад</span>
+                      <span>{t('settings.weight.energy')}</span>
                       <strong>{settings.graphWeights.energy.toFixed(2)}</strong>
                     </label>
                     <input
@@ -354,7 +369,7 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                   {/* Resonance weight */}
                   <div>
                     <label className="settings-weight-label">
-                      <span>Интеллектуальный резонанс</span>
+                      <span>{t('settings.weight.resonance')}</span>
                       <strong>{settings.graphWeights.resonance.toFixed(2)}</strong>
                     </label>
                     <input
@@ -371,7 +386,7 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                   {/* Reciprocity weight */}
                   <div>
                     <label className="settings-weight-label">
-                      <span>Взаимность общения</span>
+                      <span>{t('settings.weight.reciprocity')}</span>
                       <strong>{settings.graphWeights.reciprocity.toFixed(2)}</strong>
                     </label>
                     <input
@@ -388,7 +403,7 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                   {/* Volatility weight */}
                   <div>
                     <label className="settings-weight-label">
-                      <span>Конфликтность/Изменчивость (-)</span>
+                      <span>{t('settings.weight.volatility')}</span>
                       <strong>{settings.graphWeights.volatility.toFixed(2)}</strong>
                     </label>
                     <input
@@ -405,7 +420,7 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                   {/* Recency weight */}
                   <div>
                     <label className="settings-weight-label">
-                      <span>Штраф за давность контакта (-)</span>
+                      <span>{t('settings.weight.recency')}</span>
                       <strong>{settings.graphWeights.recency.toFixed(2)}</strong>
                     </label>
                     <input
@@ -427,39 +442,39 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
           <div className="settings-db-stats-grid">
             <div>
               <h3 className="settings-section-title">
-                <Database size={14} /> Статистика базы данных
+                <Database size={14} /> {t('settings.db_stats')}
               </h3>
               <div className="settings-db-stats-panel">
                 <div className="settings-db-stats-row">
-                  <span>Социальных контактов:</span>
+                  <span>{t('settings.db.social_contacts')}</span>
                   <strong>{stats.people}</strong>
                 </div>
                 <div className="settings-db-stats-row">
-                  <span>Активных задач:</span>
+                  <span>{t('settings.db.active_tasks')}</span>
                   <strong>{stats.tasks}</strong>
                 </div>
                 <div className="settings-db-stats-row">
-                  <span>Финансовых транзакций:</span>
+                  <span>{t('settings.db.finance_transactions')}</span>
                   <strong>{stats.transactions}</strong>
                 </div>
                 <div className="settings-db-stats-row">
-                  <span>Велозаездов:</span>
+                  <span>{t('settings.db.cycling_rides')}</span>
                   <strong>{stats.rides}</strong>
                 </div>
                 <div className="settings-db-stats-row">
-                  <span>Записей ТО / заметок:</span>
+                  <span>{t('settings.db.maintenance_notes')}</span>
                   <strong>{stats.maintenance} / {stats.gallery}</strong>
                 </div>
                 <div className="settings-db-stats-row">
-                  <span>Дневник / Привычки:</span>
+                  <span>{t('settings.db.journal_habits')}</span>
                   <strong>{stats.journal} / {stats.habits}</strong>
                 </div>
                 <div className="settings-db-stats-row">
-                  <span>Мыслей в музее / Знаний:</span>
+                  <span>{t('settings.db.thoughts_knowledge')}</span>
                   <strong>{stats.thoughts} / {stats.knowledge}</strong>
                 </div>
                 <div className="settings-db-stats-row-total">
-                  <span>Размер данных (localStorage):</span>
+                  <span>{t('settings.db.storage_size')}</span>
                   <span>{stats.sizeKB} КБ</span>
                 </div>
               </div>
@@ -468,7 +483,7 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
             {/* Backups & Actions */}
             <div>
               <h3 className="settings-section-title">
-                Резервное копирование и сброс
+                {t('settings.backup_title')}
               </h3>
               
               <div className="settings-actions-panel">
@@ -478,7 +493,7 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                     onClick={handleExport}
                     disabled={isExporting}
                   >
-                    <Download size={14} /> {isExporting ? 'Экспорт...' : exportSuccess ? 'Готово!' : 'Экспорт JSON'}
+                    <Download size={14} /> {isExporting ? t('settings.exporting') : exportSuccess ? t('settings.export_done') : t('settings.export_json')}
                   </button>
                   
                   <button 
@@ -486,7 +501,7 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                     onClick={handleImportClick}
                     disabled={isImporting}
                   >
-                    <Upload size={14} /> {isImporting ? 'Импорт...' : 'Импорт JSON'}
+                    <Upload size={14} /> {isImporting ? t('settings.importing') : t('settings.import_json')}
                   </button>
                   <input
                     ref={fileInputRef}
@@ -504,35 +519,35 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                 )}
 
                 <div className="settings-csv-section">
-                  <span className="settings-csv-title">Экспорт в CSV</span>
+                  <span className="settings-csv-title">{t('settings.csv_export')}</span>
                   <div className="settings-actions-row">
                     <button
                       className="btn btn--secondary settings-actions-btn"
-                      onClick={() => { exportTransactionsCsv(data); addToast('Транзакции экспортированы', 'success'); }}
+                      onClick={() => { exportTransactionsCsv(data); addToast(t('toast.transactions_exported'), 'success'); }}
                     >
-                      <Download size={14} /> Транзакции
+                      <Download size={14} /> {t('settings.csv.transactions')}
                     </button>
                     <button
                       className="btn btn--secondary settings-actions-btn"
-                      onClick={() => { exportRidesCsv(data); addToast('Поездки экспортированы', 'success'); }}
+                      onClick={() => { exportRidesCsv(data); addToast(t('toast.rides_exported'), 'success'); }}
                     >
-                      <Download size={14} /> Поездки
+                      <Download size={14} /> {t('settings.csv.rides')}
                     </button>
                     <button
                       className="btn btn--secondary settings-actions-btn"
-                      onClick={() => { exportPeopleCsv(data); addToast('Контакты экспортированы', 'success'); }}
+                      onClick={() => { exportPeopleCsv(data); addToast(t('toast.contacts_exported'), 'success'); }}
                     >
-                      <Download size={14} /> Контакты
+                      <Download size={14} /> {t('settings.csv.contacts')}
                     </button>
                   </div>
                 </div>
 
                 <div className="settings-wipe-panel">
                   <span className="settings-wipe-text">
-                    Опасная зона: безвозвратно удаляет всю базу данных, включая велотренировки и контакты.
+                    {t('settings.danger_zone')}
                   </span>
                   <button className="btn btn--danger btn--sm" onClick={handleWipeData}>
-                    <Trash2 size={14} /> Сбросить всю базу данных
+                    <Trash2 size={14} /> {t('settings.wipe_all')}
                   </button>
                 </div>
               </div>
@@ -555,10 +570,10 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
         isOpen={showWipeConfirm}
         onConfirm={handleConfirmWipe}
         onCancel={() => setShowWipeConfirm(false)}
-        title="Удаление всей базы данных"
-        message="ВНИМАНИЕ: Это полностью очистит ваше локальное хранилище и удалит все велотренировки, контакты, задачи и записи капитала. Восстановление будет невозможно без файла резервной копии."
-        confirmLabel="Сбросить всё"
-        cancelLabel="Отмена"
+        title={t('confirm.wipe_title')}
+        message={t('confirm.wipe_message')}
+        confirmLabel={t('confirm.wipe_confirm')}
+        cancelLabel={t('action.cancel')}
         variant="danger"
         requireTyping="СБРОС"
       />
@@ -571,10 +586,10 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
           setShowImportConfirm(false);
           setPendingImportFile(null);
         }}
-        title="Импортировать резервную копию?"
-        message="Вы уверены, что хотите импортировать этот файл? Все текущие данные будут заменены данными из резервной копии."
-        confirmLabel="Импортировать"
-        cancelLabel="Отмена"
+        title={t('confirm.import_title')}
+        message={t('confirm.import_message')}
+        confirmLabel={t('confirm.import_confirm')}
+        cancelLabel={t('action.cancel')}
         variant="danger"
       />
     </Modal>

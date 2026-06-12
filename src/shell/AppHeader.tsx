@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Home, Share2, Wallet, Bike, BrainCircuit, BarChart3, Settings, Menu } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useData } from '../context/DataContext';
+import { useI18n } from '../i18n';
 import type { ModuleKey } from '../types';
 import { isDecaying } from '../cognitive/social';
 import '../styles/header-dropdown.css';
@@ -11,26 +12,20 @@ interface AppHeaderProps {
   onOpenSettings: () => void;
 }
 
-interface ModuleTab {
-  key: ModuleKey;
-  label: string;
-  icon: ComponentType<{ size?: number }>;
-  route: string;
-}
-
-const TABS: ModuleTab[] = [
-  { key: 'hub', label: 'Хаб', icon: Home, route: '/hub' },
-  { key: 'social', label: 'Социальный круг', icon: Share2, route: '/social' },
-  { key: 'finance', label: 'Капитал', icon: Wallet, route: '/finance' },
-  { key: 'cycling', label: 'Велоспорт', icon: Bike, route: '/cycling' },
-  { key: 'reflect', label: 'Рефлексия', icon: BrainCircuit, route: '/reflect' },
-  { key: 'analytics', label: 'Аналитика', icon: BarChart3, route: '/analytics' },
+const TABS: { key: ModuleKey; i18nKey: string; icon: ComponentType<{ size?: number }>; route: string }[] = [
+  { key: 'hub', i18nKey: 'nav.hub', icon: Home, route: '/hub' },
+  { key: 'social', i18nKey: 'nav.social', icon: Share2, route: '/social' },
+  { key: 'finance', i18nKey: 'nav.finance', icon: Wallet, route: '/finance' },
+  { key: 'cycling', i18nKey: 'nav.cycling', icon: Bike, route: '/cycling' },
+  { key: 'reflect', i18nKey: 'nav.reflect', icon: BrainCircuit, route: '/reflect' },
+  { key: 'analytics', i18nKey: 'nav.analytics', icon: BarChart3, route: '/analytics' },
 ];
 
 export default function AppHeader({ onOpenSettings }: AppHeaderProps) {
   const navigate = useNavigate();
   const { activeModule, userName, isSidebarOpen, setSidebarOpen } = useApp();
   const { data } = useData();
+  const { t } = useI18n();
 
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -61,8 +56,8 @@ export default function AppHeader({ onOpenSettings }: AppHeaderProps) {
         <button
           className="mobile-menu-btn"
           onClick={() => setSidebarOpen(!isSidebarOpen)}
-          aria-label={isSidebarOpen ? 'Закрыть меню' : 'Открыть меню'}
-          title={isSidebarOpen ? 'Закрыть меню' : 'Открыть меню'}
+          aria-label={isSidebarOpen ? t('header.menu_close') : t('header.menu_open')}
+          title={isSidebarOpen ? t('header.menu_close') : t('header.menu_open')}
         >
           <Menu size={20} />
         </button>
@@ -83,6 +78,7 @@ export default function AppHeader({ onOpenSettings }: AppHeaderProps) {
         {TABS.map((tab, idx) => {
           const isActive = activeModule === tab.key;
           const Icon = tab.icon;
+          const label = t(tab.i18nKey);
           
           let badgeCount = 0;
           if (tab.key === 'social') badgeCount = overdueContactsCount;
@@ -94,10 +90,10 @@ export default function AppHeader({ onOpenSettings }: AppHeaderProps) {
               onClick={() => handleTabClick(tab.route)}
               role="tab"
               aria-selected={isActive}
-              title={`Раздел ${tab.label} (Alt + ${idx + 1})`}
+              title={`${t('nav.settings')} ${label} (Alt + ${idx + 1})`}
             >
               <Icon size={14} />
-              <span>{tab.label}</span>
+              <span>{label}</span>
               {badgeCount > 0 && (
                 <span className="tab-badge" style={{
                   marginLeft: '6px',
@@ -122,16 +118,16 @@ export default function AppHeader({ onOpenSettings }: AppHeaderProps) {
         <button
           className="icon-btn"
           onClick={onOpenSettings}
-          title="Настройки платформы (Ctrl + S для быстрого бэкапа)"
-          aria-label="Настройки платформы"
+          title={t('header.settings_tooltip')}
+          aria-label={t('header.settings_tooltip')}
         >
           <Settings size={16} />
         </button>
         <button
           className="header-avatar"
           onClick={() => setShowProfileDropdown(!showProfileDropdown)}
-          title="Личный кабинет"
-          aria-label="Личный кабинет"
+          title={t('header.profile')}
+          aria-label={t('header.profile')}
         >
           {userName.slice(0, 2).toUpperCase()}
         </button>
@@ -142,23 +138,23 @@ export default function AppHeader({ onOpenSettings }: AppHeaderProps) {
               <div className="profile-dropdown-avatar">{userName.slice(0, 2).toUpperCase()}</div>
               <div className="profile-dropdown-info">
                 <div className="profile-dropdown-name">{userName}</div>
-                <div className="profile-dropdown-email">LifeOS</div>
+                <div className="profile-dropdown-email">{t('header.profile_name')}</div>
               </div>
             </div>
             <div className="profile-dropdown-divider" />
             <div className="profile-dropdown-stats">
               <div className="profile-dropdown-stat-row">
-                <span>Ментальная усталость:</span>
+                <span>{t('header.mental_fatigue')}</span>
                 <strong style={{ color: data.fatigue > 75 ? 'var(--error)' : data.fatigue > 45 ? 'var(--warning)' : 'var(--success)' }}>
                   {Math.round(data.fatigue)}%
                 </strong>
               </div>
               <div className="profile-dropdown-stat-row">
-                <span>Активные задачи:</span>
+                <span>{t('header.active_tasks')}</span>
                 <strong>{data.tasks.filter(t => !t.isCompleted).length}</strong>
               </div>
               <div className="profile-dropdown-stat-row">
-                <span>Всего контактов в круге:</span>
+                <span>{t('header.total_contacts')}</span>
                 <strong>{data.people.length}</strong>
               </div>
             </div>

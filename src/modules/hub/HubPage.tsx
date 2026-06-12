@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useData } from '../../context/DataContext';
+import { useI18n } from '../../i18n';
 import { 
   Brain, 
   Bike, 
@@ -18,6 +19,7 @@ import { formatDate, formatCurrency, formatDuration, formatDistance, getDaysSinc
 export default function HubPage() {
   const { data } = useData();
   const navigate = useNavigate();
+  const { t } = useI18n();
 
   // Current date in Russian format
   const formattedDate = useMemo(() => {
@@ -82,10 +84,10 @@ export default function HubPage() {
       {/* Banner */}
       <section className="hub-banner">
         <h2 className="hub-banner-title">
-          Добро пожаловать в LifeOS
+          {t('hub.welcome')}
         </h2>
         <p className="hub-banner-desc">
-          Когнитивный баланс, социальные связи, финансы, велотренировки и привычки — всё в одном месте.
+          {t('hub.description')}
         </p>
         <div className="hub-date-badge">
           <Calendar size={13} />
@@ -101,7 +103,7 @@ export default function HubPage() {
           <div className="hub-card-header">
             <div className="hub-card-title-row">
               <Brain size={16} />
-              <span>Когнитивный баланс</span>
+              <span>{t('hub.cognitive_balance')}</span>
             </div>
           </div>
 
@@ -114,16 +116,16 @@ export default function HubPage() {
             />
             <div>
               <p className="hub-text-sm-margin">
-                Усталость
+                {t('hub.fatigue')}
               </p>
               <p className="hub-text-sm">
-                Активных задач: <strong>{activeTasks.length}</strong>
+                {t('hub.active_tasks')}: <strong>{activeTasks.length}</strong>
               </p>
             </div>
           </div>
 
           <div className="hub-text-sm hub-empty-hint">
-            Задач: {activeTasks.length} активных
+            {t('hub.tasks_active', { count: activeTasks.length })}
           </div>
         </div>
 
@@ -132,13 +134,13 @@ export default function HubPage() {
           <div className="hub-card-header">
             <div className="hub-card-title-row">
               <Users size={16} />
-              <span>Социальный граф</span>
+              <span>{t('hub.social_graph')}</span>
             </div>
           </div>
 
           <div className="hub-flex-col-10">
             <div className="hub-row-space-between-sm">
-              <span>Контактов</span>
+              <span>{t('hub.contacts')}</span>
               <strong>{data.people.length}</strong>
             </div>
 
@@ -146,14 +148,14 @@ export default function HubPage() {
               <div className="hub-decaying-container">
                 <div className="hub-decaying-title">
                   <AlertTriangle size={11} />
-                  <span>Требуют внимания</span>
+                  <span>{t('hub.need_attention')}</span>
                 </div>
                 <ul className="hub-list-vertical">
                   {decayingPeople.map(p => (
                     <li key={p.id} className="hub-list-item">
                       <span className="hub-list-item-name">{p.name}</span>
                       <span className="hub-list-item-desc">
-                        {p.daysElapsed} дн.
+                      {p.daysElapsed} {t('days_abbrev')}
                       </span>
                     </li>
                   ))}
@@ -161,7 +163,7 @@ export default function HubPage() {
               </div>
             ) : (
               <p className="hub-text-sm hub-empty-hint">
-                Все связи актуальны
+                {t('hub.all_connections_ok')}
               </p>
             )}
           </div>
@@ -171,7 +173,7 @@ export default function HubPage() {
             onClick={() => navigate('/social')}
             aria-label="Открыть модуль социального графа"
           >
-            <span>Открыть</span>
+            <span>{t('hub.open')}</span>
             <ArrowRight size={14} />
           </button>
         </div>
@@ -181,13 +183,13 @@ export default function HubPage() {
           <div className="hub-card-header">
             <div className="hub-card-title-row">
               <Wallet size={16} />
-              <span>Капитал</span>
+              <span>{t('hub.finance')}</span>
             </div>
           </div>
 
           <div className="hub-flex-col-10">
             <div className="hub-row-space-between-sm">
-              <span>Баланс</span>
+              <span>{t('hub.balance')}</span>
               <strong className={balance >= 0 ? 'hub-balance-positive' : 'hub-balance-negative'}>
                 {formatCurrency(balance)}
               </strong>
@@ -195,7 +197,7 @@ export default function HubPage() {
 
             {unpaidReminders.length > 0 ? (
               <div className="hub-reminder-container">
-                <div className="hub-reminder-title">Ближайшие платежи</div>
+                <div className="hub-reminder-title">{t('hub.upcoming_payments')}</div>
                 <ul className="hub-list-vertical">
                   {unpaidReminders.map(r => (
                     <li key={r.id} className="hub-list-item">
@@ -209,7 +211,7 @@ export default function HubPage() {
               </div>
             ) : (
               <p className="hub-text-sm hub-empty-hint">
-                Нет неоплаченных счетов
+                {t('hub.no_unpaid_bills')}
               </p>
             )}
           </div>
@@ -219,7 +221,7 @@ export default function HubPage() {
             onClick={() => navigate('/finance')}
             aria-label="Открыть модуль финансов"
           >
-            <span>Открыть</span>
+            <span>{t('hub.open')}</span>
             <ArrowRight size={14} />
           </button>
         </div>
@@ -229,25 +231,25 @@ export default function HubPage() {
           <div className="hub-card-header">
             <div className="hub-card-title-row">
               <Bike size={16} />
-              <span>Велоспорт</span>
+              <span>{t('hub.cycling')}</span>
             </div>
           </div>
 
           <div className="hub-flex-col-10">
             <div className="hub-row-space-between-sm">
-              <span>Дистанция</span>
+              <span>{t('hub.distance')}</span>
               <strong>{formatDistance(totalRidesDistance)}</strong>
             </div>
             <div className="hub-row-space-between-sm">
-              <span>Поездок</span>
+              <span>{t('hub.rides_count')}</span>
               <strong>{data.rides.length}</strong>
             </div>
 
             {latestRides.length > 0 ? (
               <div className="hub-latest-ride">
-                <div className="hub-latest-ride-title">Последний заезд</div>
+                <div className="hub-latest-ride-title">{t('hub.last_ride')}</div>
                 <div className="hub-latest-ride-row">
-                  <strong>{latestRides[0].title || 'Без названия'}</strong>
+                  <strong>{latestRides[0].title || t('hub.no_rides')}</strong>
                   <span>{formatDate(latestRides[0].dateISO)}</span>
                 </div>
                 <div className="hub-latest-ride-meta">
@@ -256,7 +258,7 @@ export default function HubPage() {
               </div>
             ) : (
               <p className="hub-text-sm hub-empty-hint">
-                Поездок нет
+                {t('hub.no_rides')}
               </p>
             )}
           </div>
@@ -266,7 +268,7 @@ export default function HubPage() {
             onClick={() => navigate('/cycling')}
             aria-label="Открыть модуль велоспорта"
           >
-            <span>Открыть</span>
+            <span>{t('hub.open')}</span>
             <ArrowRight size={14} />
           </button>
         </div>
@@ -276,21 +278,21 @@ export default function HubPage() {
           <div className="hub-card-header">
             <div className="hub-card-title-row">
               <Flame size={16} />
-              <span>Рефлексия</span>
+              <span>{t('hub.reflection')}</span>
             </div>
           </div>
 
           <div className="hub-flex-col-10">
             <div className="hub-row-space-between-sm">
-              <span>Привычек</span>
+              <span>{t('hub.habits')}</span>
               <strong>{activeHabits.length}</strong>
             </div>
             <div className="hub-row-space-between-sm">
-              <span>Записей в дневнике</span>
+              <span>{t('hub.journal_entries')}</span>
               <strong>{data.journal.length}</strong>
             </div>
             <div className="hub-row-space-between-sm">
-              <span>Мыслей</span>
+              <span>{t('hub.thoughts')}</span>
               <strong>{data.thoughts.length}</strong>
             </div>
           </div>
@@ -300,7 +302,7 @@ export default function HubPage() {
             onClick={() => navigate('/reflect')}
             aria-label="Открыть модуль рефлексии"
           >
-            <span>Открыть</span>
+            <span>{t('hub.open')}</span>
             <ArrowRight size={14} />
           </button>
         </div>
@@ -310,7 +312,7 @@ export default function HubPage() {
       {/* Tip of the day */}
       <div className="hub-tip-container">
         <Flame size={14} />
-        <span>Горячие клавиши: Alt+1…Alt+5 — модули, Ctrl+S — экспорт бэкапа.</span>
+        <span>{t('hub.keyboard_tips')}</span>
       </div>
     </div>
   );

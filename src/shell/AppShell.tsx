@@ -6,37 +6,37 @@ import AppHeader from './AppHeader';
 import AppSidebar from './AppSidebar';
 import SettingsModal from './SettingsModal';
 import { useApp } from '../context/AppContext';
+import { useI18n } from '../i18n';
 
 interface AppShellProps {
   children: ReactNode;
 }
 
-const PATH_LABELS: Record<string, string> = {
-  hub: 'Хаб',
-  social: 'Социальный круг',
-  person: 'Карточка связи',
-  finance: 'Капитал',
-  reminders: 'Напоминания',
-  cycling: 'Велоспорт',
-  rides: 'Лог поездок',
-  routes: 'Планировщик трасс',
-  maintenance: 'Обслуживание',
-  reflect: 'Рефлексия',
-  journal: 'Дневник настроения',
-  knowledge: 'База знаний',
-  schedule: 'Gap-Планировщик',
-  habits: 'Трекер привычек',
-  thoughts: 'Музей мыслей',
-  workouts: 'Спортивный лог',
-  analytics: 'Аналитика',
+const PATH_I18N: Record<string, string> = {
+  hub: 'nav.hub',
+  social: 'nav.social',
+  person: 'breadcrumb.view',
+  finance: 'nav.finance',
+  reminders: 'sidebar.reminders',
+  cycling: 'nav.cycling',
+  rides: 'sidebar.rides',
+  routes: 'sidebar.routes',
+  maintenance: 'sidebar.maintenance',
+  reflect: 'nav.reflect',
+  journal: 'sidebar.journal',
+  knowledge: 'sidebar.knowledge',
+  schedule: 'sidebar.schedule',
+  habits: 'sidebar.habits',
+  thoughts: 'sidebar.thoughts',
+  workouts: 'sidebar.workouts',
+  analytics: 'nav.analytics',
 };
 
 export default function AppShell({ children }: AppShellProps) {
   const [showSettings, setShowSettings] = useState(false);
   const { toasts, removeToast } = useApp();
+  const { t } = useI18n();
   const location = useLocation();
-
-  const showBlobs = true;
 
   const pathnames = location.pathname.split('/').filter(x => x);
   const showBreadcrumbs = pathnames.length > 0 && pathnames[0] !== 'hub';
@@ -44,13 +44,9 @@ export default function AppShell({ children }: AppShellProps) {
   return (
     <div className="app-shell">
       {/* Background blobs for visual style */}
-      {showBlobs && (
-        <>
-          <div className="bg-blob bg-blob-1" />
-          <div className="bg-blob bg-blob-2" />
-          <div className="bg-blob bg-blob-3" />
-        </>
-      )}
+      <div className="bg-blob bg-blob-1" />
+      <div className="bg-blob bg-blob-2" />
+      <div className="bg-blob bg-blob-3" />
 
       {/* Header navbar */}
       <AppHeader onOpenSettings={() => setShowSettings(true)} />
@@ -61,20 +57,14 @@ export default function AppShell({ children }: AppShellProps) {
         <main className="app-main">
           {showBreadcrumbs && (
             <nav className="breadcrumbs" aria-label="breadcrumb">
-              <Link to="/hub" className="breadcrumb-item-link">Хаб</Link>
+              <Link to="/hub" className="breadcrumb-item-link">{t('breadcrumb.hub')}</Link>
               <span className="breadcrumb-separator">/</span>
               {pathnames.map((value, index) => {
                 const last = index === pathnames.length - 1;
                 const to = `/${pathnames.slice(0, index + 1).join('/')}`;
                 
-                let label = PATH_LABELS[value];
-                if (!label) {
-                  if (value.includes('_') || value.length > 15) {
-                    label = 'Просмотр';
-                  } else {
-                    label = value;
-                  }
-                }
+                const i18nKey = PATH_I18N[value];
+                const label = i18nKey ? t(i18nKey) : value;
                 
                 return last ? (
                   <span key={to} className="breadcrumb-item active">{label}</span>
@@ -109,7 +99,7 @@ export default function AppShell({ children }: AppShellProps) {
               >
                 <span className="toast-icon">{icons[toast.type]}</span>
                 <span className="toast-message">{toast.message}</span>
-                <button className="toast-close" onClick={() => removeToast(toast.id)} aria-label="Закрыть">
+                <button className="toast-close" onClick={() => removeToast(toast.id)} aria-label={t('action.close')}>
                   <X size={14} />
                 </button>
               </div>

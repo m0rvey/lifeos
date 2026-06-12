@@ -208,7 +208,7 @@ export default function CapitalPage() {
                   { key: 'dateISO', label: 'Дата', render: (v) => formatDate(v as string) },
                   { key: 'category', label: 'Категория' },
                   { key: 'amount', label: 'Сумма', render: (v, row) => (
-                    <span className={row.type === 'income' ? 'text-semibold text-success' : 'text-semibold text-error'}>
+                    <span className="text-semibold" style={{ color: row.type === 'income' ? 'var(--success)' : 'var(--error)' }}>
                       {row.type === 'income' ? '+' : '-'}{formatCurrency(v as number)}
                     </span>
                   )},
