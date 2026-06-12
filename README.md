@@ -1,110 +1,112 @@
-# m0rveyZ Platform v3.1.0
+# LifeOS
 
-Персональная платформа для управления ключевыми аспектами жизни: социальными связями, финансами, велосипедной активностью, рефлексией и привычками.
+Open-source life management platform: social connections, finance, cycling, reflection, and habits.
 
-> Автор: [m0rvey](https://github.com/m0rvey)
+## Features
 
-## Модули
+- **Hub** — dashboard with overview of all modules
+- **Social** — relationship graph with decay diagnostics
+- **Finance** — transaction management and bill reminders
+- **Cycling** — ride journal, routes, maintenance tracking
+- **Reflection** — journal, knowledge base, schedule, habits, workouts, thoughts
+- **Analytics** — cross-module statistics and recommendations
 
-- **Хаб** — главный дашборд с обзором всех модулей
-- **Социальный круг** — граф связей с диагностикой отношений
-- **Капитал** — управление транзакциями и напоминаниями
-- **Велоспорт** — журнал заездов, маршруты, обслуживание
-- **Рефлексия** — дневник, знания, расписание, привычки, тренировки, мысли
-- **Аналитика** — кросс-модульная статистика и рекомендации
-
-## Технологии
+## Tech Stack
 
 - React 19 + TypeScript 6
-- Vite 8 (быстрая сборка)
-- React Router 7 (маршрутизация)
-- Lucide React (иконки)
-- Zod (валидация схем)
-- Vitest (тесты)
-- CSS Custom Properties (дизайн-система)
+- Vite 8
+- React Router 7
+- Lucide React (icons)
+- Zod (schema validation)
+- Vitest (testing)
+- CSS Custom Properties (design system)
 
-## Быстрый старт
+## Getting Started
 
 ```bash
-# Установка зависимостей
+# Install dependencies
 npm install
 
-# Запуск dev-сервера
+# Start dev server
 npm run dev
 
-# Запуск тестов
+# Run tests
 npm run test
 
-# Сборка для продакшена
+# Build for production
 npm run build
 
-# Предпросмотр продакшен-сборки
+# Preview production build
 npm run preview
 ```
 
-## Скрипты
+## Scripts
 
-| Скрипт | Описание |
-|--------|----------|
-| `npm run dev` | Dev-сервер с HMR |
-| `npm run build` | Production сборка |
-| `npm run preview` | Предпросмотр сборки |
-| `npm run test` | Запуск тестов |
-| `npm run test:watch` | Тесты в watch-режиме |
-| `npm run lint` | ESLint проверка |
-| `npm run typecheck` | TypeScript проверка |
-| `npm run format` | Prettier форматирование |
+| Script | Description |
+|--------|-------------|
+| `npm run dev` | Dev server with HMR |
+| `npm run build` | Production build |
+| `npm run preview` | Preview production build |
+| `npm run test` | Run tests |
+| `npm run test:watch` | Run tests in watch mode |
+| `npm run lint` | ESLint check |
+| `npm run typecheck` | TypeScript check |
+| `npm run format` | Prettier formatting |
 
-## Горячие клавиши
+## Keyboard Shortcuts
 
-| Комбинация | Действие |
-|------------|----------|
-| `Alt + 1-5` | Навигация по модулям |
-| `Ctrl + S` | Экспорт резервной копии |
-| `?` | Список горячих клавиш |
+| Shortcut | Action |
+|----------|--------|
+| `Alt + 1-5` | Navigate modules |
+| `Ctrl + S` | Export backup |
+| `?` | Show keyboard shortcuts |
 
-## Структура проекта
+## Project Structure
 
 ```
 src/
-├── cognitive/      # Бизнес-логика (расчёты, хелперы) + barrel index
+├── cognitive/      # Business logic (helpers, calculations)
 ├── context/        # React Context (AppContext, DataContext)
-├── hooks/          # Кастомные хуки + barrel index
-├── modules/        # Модули приложения
-│   ├── hub/        # Главный дашборд
-│   ├── social/     # Социальный граф
-│   ├── finance/    # Финансы
-│   ├── cycling/    # Велоспорт
-│   ├── reflect/    # Рефлексия
-│   └── analytics/  # Аналитика
-├── shell/          # Оболочка приложения (Header, Sidebar, Settings)
-├── storage/        # Персистентность + barrel index
-├── styles/         # CSS (темы, компоненты, layouts)
-├── test/           # Vitest тесты
-├── types/          # TypeScript типы
-├── ui/             # Переиспользуемые компоненты
-└── validation/     # Zod-схемы
+├── hooks/          # Custom hooks
+├── modules/        # Application modules
+│   ├── hub/        # Dashboard
+│   ├── social/     # Social graph
+│   ├── finance/    # Finance
+│   ├── cycling/    # Cycling
+│   ├── reflect/    # Reflection
+│   └── analytics/  # Analytics
+├── shell/          # App shell (Header, Sidebar, Settings)
+├── storage/        # Persistence (localStorage, migrations)
+├── styles/         # CSS (themes, components, layouts)
+├── test/           # Vitest tests
+├── types/          # TypeScript types
+├── ui/             # Reusable components
+└── validation/     # Zod schemas
 ```
 
-## Данные
+## Data
 
-Все данные хранятся в `localStorage` браузера. Поддерживается:
-- Экспорт/импорт JSON-резервных копий
-- Экспорт в CSV (транзакции, поездки, контакты)
-- Автоматическое сохранение (debounce 2.5с)
-- Миграции между версиями
-- Режим темы: ручной / авто по модулям / по системным настройкам
+All data is stored in `localStorage`. Features:
+- JSON backup export/import
+- CSV export (transactions, rides, contacts)
+- Auto-save (2.5s debounce)
+- Version migrations
+- Theme modes: manual, adaptive, system
 
-## Темы
+## Themes
 
-4 встроенных темы + 3 режима:
-- **mindveyz** — тёмная фиолетовая (Glasswind)
-- **cyclist** — тёмная оранжевая
-- **reflect** — светлая минималистичная
-- **slate** — тёмная нейтральная
+4 built-in themes + 3 modes:
+- **mindveyz** — dark purple (Glasswind)
+- **cyclist** — dark orange
+- **reflect** — light minimal
+- **slate** — dark neutral
 
-Режимы: ручной выбор, авто по модулям, по системным настройкам (prefers-color-scheme).
+Modes: manual selection, adaptive by module, system (prefers-color-scheme).
 
-## Лицензия
+## License
 
 MIT
+
+## Author
+
+[m0rvey](https://github.com/m0rvey)

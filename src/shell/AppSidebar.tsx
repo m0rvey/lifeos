@@ -1,12 +1,14 @@
-import { useEffect, type ComponentType } from 'react';
+import { useState, type ComponentType } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { useData } from '../context/DataContext';
 import {
   Share2, Wallet, Calendar,
   BarChart2, List, MapPin, Wrench, LayoutDashboard,
-  PenLine, Brain, Flame, BookOpen, Dumbbell
+  PenLine, Brain, Flame, BookOpen, Dumbbell,
+  PanelLeftClose, PanelLeftOpen, Keyboard
 } from 'lucide-react';
+import ShortcutsHelp from '../ui/ShortcutsHelp';
 
 interface SidebarItem {
   route: string;
@@ -57,11 +59,8 @@ export default function AppSidebar() {
   const location = useLocation();
   const { activeModule, isSidebarOpen, setSidebarOpen } = useApp();
   const { data } = useData();
-
-  // Close sidebar on navigation
-  useEffect(() => {
-    setSidebarOpen(false);
-  }, [location.pathname, setSidebarOpen]);
+  const [showShortcuts, setShowShortcuts] = useState(false);
+  const isCollapsed = !isSidebarOpen;
 
   if (activeModule === 'hub' || activeModule === 'analytics' || activeModule === 'settings') {
     return null;
@@ -76,26 +75,28 @@ export default function AppSidebar() {
 
   return (
     <>
-      {isSidebarOpen && (
-        <div 
-          className="sidebar-backdrop" 
-          onClick={() => setSidebarOpen(false)} 
-        />
-      )}
-      <aside className={`app-sidebar ${isSidebarOpen ? 'open' : ''}`}>
+      <aside className={`app-sidebar ${isSidebarOpen ? 'open' : ''} ${isCollapsed ? 'collapsed' : ''}`}>
+        <div className="sidebar-toggle-wrapper">
+          <button
+            className="sidebar-toggle-btn"
+            onClick={() => setSidebarOpen(!isSidebarOpen)}
+            title={isCollapsed ? 'Развернуть панель' : 'Свернуть панель'}
+          >
+            {isCollapsed ? <PanelLeftOpen size={16} /> : <PanelLeftClose size={16} />}
+          </button>
+        </div>
+
         <div className="sidebar-section">
-          <div className="sidebar-group-label">
-            <span className="group-dot" />
-            {moduleConfig.title}
-          </div>
+          {!isCollapsed && (
+            <div className="sidebar-group-label">
+              <span className="group-dot" />
+              {moduleConfig.title}
+            </div>
+          )}
 
           <nav>
             {moduleConfig.items.map(item => {
               const count = item.countFn?.(data) ?? null;
-              // Check active state
-              // If the route is /reflect, it must match pathname exactly,
-              // otherwise /reflect/journal should not match /reflect.
-              // But if route is /social, it can match prefix.
               const isExact = item.route === '/reflect' || item.route === '/cycling' || item.route === '/finance';
               const isActive = isExact
                 ? location.pathname === item.route
@@ -111,10 +112,10 @@ export default function AppSidebar() {
                   title={item.label}
                 >
                   <Icon size={15} />
-                  <span>
-                    {item.label}
-                  </span>
-                  {count !== null && count > 0 && (
+                  {!isCollapsed && (
+                    <span>{item.label}</span>
+                  )}
+                  {!isCollapsed && count !== null && count > 0 && (
                     <span className="sidebar-nav-count">
                       {count > 99 ? '99+' : count}
                     </span>
@@ -124,7 +125,20 @@ export default function AppSidebar() {
             })}
           </nav>
         </div>
+
+        <div className="sidebar-footer">
+          <button
+            className="sidebar-nav-item"
+            onClick={() => setShowShortcuts(true)}
+            title="Горячие клавиши"
+          >
+            <Keyboard size={15} />
+            {!isCollapsed && <span>Горячие клавиши</span>}
+          </button>
+        </div>
       </aside>
+
+      {showShortcuts && <ShortcutsHelp isOpen={showShortcuts} onClose={() => setShowShortcuts(false)} />}
     </>
   );
 }

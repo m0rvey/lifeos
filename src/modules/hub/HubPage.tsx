@@ -82,7 +82,7 @@ export default function HubPage() {
       {/* Banner */}
       <section className="hub-banner">
         <h2 className="hub-banner-title">
-          Добро пожаловать в m0rveyZ
+          Добро пожаловать в LifeOS
         </h2>
         <p className="hub-banner-desc">
           Когнитивный баланс, социальные связи, финансы, велотренировки и привычки — всё в одном месте.
@@ -106,16 +106,15 @@ export default function HubPage() {
           </div>
 
           <div className="hub-fatigue-content">
-            <CircularProgressRing 
-              value={fatigueValue} 
-              size={72} 
-              strokeWidth={7} 
-              label={`${Math.round(fatigueValue)}%`}
+            <CircularProgressRing
+              value={fatigueValue}
+              size={72}
+              strokeWidth={7}
               color={fatigueValue > 75 ? 'var(--error)' : fatigueValue > 45 ? 'var(--warning)' : '#a78bfa'}
             />
             <div>
               <p className="hub-text-sm-margin">
-                Усталость: <strong>{Math.round(fatigueValue)}%</strong>
+                Усталость
               </p>
               <p className="hub-text-sm">
                 Активных задач: <strong>{activeTasks.length}</strong>

@@ -65,7 +65,7 @@ export function exportBackup(data: AppData): void {
     url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `m0rveyz_platform_backup_${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `lifeos_backup_${new Date().toISOString().slice(0, 10)}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -113,6 +113,8 @@ export function importBackup(file: File): Promise<AppData> {
 }
 export function wipeAllData(): void {
   const keys = [
+    'lifeos_platform_v1',
+    '_temp_lifeos_platform_v1',
     'm0rveyz_platform_v3',
     '_temp_m0rveyz_platform_v3',
     'm0rveyz_state',

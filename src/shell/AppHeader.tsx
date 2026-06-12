@@ -71,10 +71,10 @@ export default function AppHeader({ onOpenSettings }: AppHeaderProps) {
       {/* Platform Logo */}
       <div className="app-logo" onClick={() => navigate('/hub')} style={{ cursor: 'pointer' }}>
         <div className="app-logo-mark">
-          mZ
+          LO
           <span className="app-logo-pulse" />
         </div>
-        <span>m0rveyZ</span>
+        <span>LifeOS</span>
       </div>
       <div className="app-logo-sep" />
 
@@ -139,10 +139,10 @@ export default function AppHeader({ onOpenSettings }: AppHeaderProps) {
         {showProfileDropdown && (
           <div className="profile-dropdown" ref={dropdownRef}>
             <div className="profile-dropdown-header">
-              <div className="profile-dropdown-avatar">MV</div>
+              <div className="profile-dropdown-avatar">LO</div>
               <div className="profile-dropdown-info">
-                <div className="profile-dropdown-name">m0rveyZ</div>
-                <div className="profile-dropdown-email">m0rveyz@veyz.platform</div>
+                <div className="profile-dropdown-name">LifeOS</div>
+                <div className="profile-dropdown-email">open-source</div>
               </div>
             </div>
             <div className="profile-dropdown-divider" />

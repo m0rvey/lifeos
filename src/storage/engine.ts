@@ -3,7 +3,7 @@ import { getDefaultData } from './defaults';
 import { safeSaveItem } from './atomic';
 import { migrateData } from './migrations';
 
-export const STORAGE_KEY = 'm0rveyz_platform_v3';
+export const STORAGE_KEY = 'lifeos_platform_v1';
 
 export function loadData(): AppData {
   try {

@@ -1,9 +1,14 @@
 {
-  "name": "m0rveyz-platform",
+  "name": "lifeos",
   "private": true,
-  "version": "3.1.0",
-  "description": "Персональная платформа для управления ключевыми аспектами жизни: социальными связями, финансами, велосипедной активностью, рефлексией и привычками.",
+  "version": "1.0.0",
+  "description": "Open-source life management platform: social connections, finance, cycling, reflection, and habits.",
   "author": "m0rvey",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/m0rvey/lifeos"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",

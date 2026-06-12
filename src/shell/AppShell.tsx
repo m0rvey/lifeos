@@ -6,7 +6,6 @@ import AppHeader from './AppHeader';
 import AppSidebar from './AppSidebar';
 import SettingsModal from './SettingsModal';
 import { useApp } from '../context/AppContext';
-import { ShortcutsHelp } from '../ui';
 
 interface AppShellProps {
   children: ReactNode;
@@ -124,9 +123,6 @@ export default function AppShell({ children }: AppShellProps) {
       {showSettings && (
         <SettingsModal onClose={() => setShowSettings(false)} />
       )}
-
-      {/* Keyboard shortcuts help */}
-      <ShortcutsHelp />
     </div>
   );
 }
