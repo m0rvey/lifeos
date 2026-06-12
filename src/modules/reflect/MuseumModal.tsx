@@ -13,7 +13,7 @@ interface MuseumModalProps {
 export default function MuseumModal({ isOpen, onClose, thought, onSave }: MuseumModalProps) {
   const { t } = useI18n();
   const [content, setContent] = useState(thought?.content || '');
-  const [category, setCategory] = useState(thought?.category || 'Философия');
+  const [category, setCategory] = useState(thought?.category || t('reflect.museum.default_category'));
   const [tagsText, setTagsText] = useState(thought?.tags ? thought.tags.join(', ') : '');
   const [error, setError] = useState('');
 

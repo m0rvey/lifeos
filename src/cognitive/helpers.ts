@@ -130,14 +130,31 @@ export function formatCurrency(amount: number): string {
   }).format(amount);
 }
 
+function getCurrentLanguage(): 'ru' | 'en' {
+  if (typeof localStorage !== 'undefined') {
+    const saved = localStorage.getItem('lifeos-lang');
+    if (saved === 'en' || saved === 'ru') return saved;
+  }
+  if (typeof navigator !== 'undefined') {
+    const nav = navigator.language || 'ru';
+    return nav.startsWith('en') ? 'en' : 'ru';
+  }
+  return 'ru';
+}
+
 export function formatDuration(min: number): string {
   const h = Math.floor(min / 60);
   const m = Math.round(min % 60);
-  return h > 0 ? `${h}ч ${m}мин` : `${m}мин`;
+  const isEn = getCurrentLanguage() === 'en';
+  const hStr = isEn ? 'h' : 'ч';
+  const mStr = isEn ? 'm' : 'мин';
+  return h > 0 ? `${h}${hStr} ${m}${mStr}` : `${m}${mStr}`;
 }
 
 export function formatDistance(km: number): string {
-  return `${km.toFixed(1)} км`;
+  const isEn = getCurrentLanguage() === 'en';
+  const unit = isEn ? 'km' : 'км';
+  return `${km.toFixed(1)} ${unit}`;
 }
 
 export function calcAvgSpeed(distanceKm: number, durationMin: number): number {
@@ -154,9 +171,10 @@ export function getMoodEmoji(mood: number): { emoji: string; color: string } {
 }
 
 export function getMoodLabel(mood: number): string {
-  if (mood >= 80) return '😁 Великолепно';
-  if (mood >= 60) return '🙂 Хорошо';
-  if (mood >= 40) return '😐 Нормально';
-  if (mood >= 20) return '🙁 Плохо';
-  return '😢 Тяжело';
+  const isEn = getCurrentLanguage() === 'en';
+  if (mood >= 80) return isEn ? '😁 Great' : '😁 Великолепно';
+  if (mood >= 60) return isEn ? '🙂 Good' : '🙂 Хорошо';
+  if (mood >= 40) return isEn ? '😐 Normal' : '😐 Нормально';
+  if (mood >= 20) return isEn ? '🙁 Bad' : '🙁 Плохо';
+  return isEn ? '😢 Awful' : '😢 Тяжело';
 }

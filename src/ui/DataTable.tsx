@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react';
 import { Trash2 } from 'lucide-react';
+import { useI18n } from '../i18n';
  
 interface Column<T> {
   key: keyof T & string;
@@ -18,10 +19,13 @@ export default function DataTable<T extends { id: string }>({
   columns,
   data,
   onDelete,
-  emptyMessage = 'Нет данных для отображения',
+  emptyMessage,
 }: DataTableProps<T>) {
+  const { t } = useI18n();
+  const displayEmptyMessage = emptyMessage || t('common.no_data');
+
   if (data.length === 0) {
-    return <div className="data-table-empty">{emptyMessage}</div>;
+    return <div className="data-table-empty">{displayEmptyMessage}</div>;
   }
  
   return (
@@ -32,7 +36,7 @@ export default function DataTable<T extends { id: string }>({
             {columns.map((col) => (
               <th key={col.key}>{col.label}</th>
             ))}
-            {onDelete && <th style={{ width: '60px' }}>Действия</th>}
+            {onDelete && <th style={{ width: '60px' }}>{t('common.actions')}</th>}
           </tr>
         </thead>
         <tbody>
@@ -51,8 +55,8 @@ export default function DataTable<T extends { id: string }>({
                   <button
                     className="btn btn--icon btn--danger"
                     onClick={() => onDelete(row.id)}
-                    title="Удалить"
-                    aria-label="Удалить запись"
+                    title={t('common.delete')}
+                    aria-label={t('common.delete_record')}
                   >
                     <Trash2 size={14} />
                   </button>

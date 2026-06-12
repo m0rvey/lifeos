@@ -1,14 +1,6 @@
 import { useEffect } from 'react';
 import Modal from './Modal';
-
-const SHORTCUTS = [
-  { keys: ['Alt', '1-5'], description: 'Навигация по модулям' },
-  { keys: ['Ctrl', 'S'], description: 'Экспорт резервной копии' },
-  { keys: ['Esc'], description: 'Закрыть модалку/меню' },
-  { keys: ['Tab'], description: 'Навигация по элементам' },
-  { keys: ['Enter'], description: 'Активировать элемент' },
-  { keys: ['?'], description: 'Горячие клавиши' },
-];
+import { useI18n } from '../i18n';
 
 interface ShortcutsHelpProps {
   isOpen: boolean;
@@ -16,6 +8,17 @@ interface ShortcutsHelpProps {
 }
 
 export default function ShortcutsHelp({ isOpen, onClose }: ShortcutsHelpProps) {
+  const { t } = useI18n();
+
+  const shortcuts = [
+    { keys: ['Alt', '1-5'], description: t('shortcuts.module_nav') },
+    { keys: ['Ctrl', 'S'], description: t('shortcuts.export_backup') },
+    { keys: ['Esc'], description: t('shortcuts.close_menu') },
+    { keys: ['Tab'], description: t('shortcuts.element_nav') },
+    { keys: ['Enter'], description: t('shortcuts.activate_element') },
+    { keys: ['?'], description: t('shortcuts.show_shortcuts') },
+  ];
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === '?' && !e.ctrlKey && !e.altKey) {
@@ -32,9 +35,9 @@ export default function ShortcutsHelp({ isOpen, onClose }: ShortcutsHelpProps) {
   }, [onClose]);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Горячие клавиши" maxWidth="sm">
+    <Modal isOpen={isOpen} onClose={onClose} title={t('shortcuts.title')} maxWidth="sm">
       <div className="flex-col-12">
-        {SHORTCUTS.map((shortcut, i) => (
+        {shortcuts.map((shortcut, i) => (
           <div
             key={i}
             style={{
@@ -42,7 +45,7 @@ export default function ShortcutsHelp({ isOpen, onClose }: ShortcutsHelpProps) {
               justifyContent: 'space-between',
               alignItems: 'center',
               padding: '8px 0',
-              borderBottom: i < SHORTCUTS.length - 1 ? '1px solid var(--border-light)' : 'none',
+              borderBottom: i < shortcuts.length - 1 ? '1px solid var(--border-light)' : 'none',
             }}
           >
             <span style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-sm)' }}>

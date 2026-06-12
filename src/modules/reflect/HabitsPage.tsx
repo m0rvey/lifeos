@@ -6,14 +6,7 @@ import { Plus, Flame, CheckSquare, Trash2, Calendar, Sparkles } from 'lucide-rea
 import { StatCard, ConfirmDialog } from '../../ui';
 import { calcStreak, getStreakLevel } from '../../cognitive/habits';
 import { uid, nowISO } from '../../cognitive/helpers';
-
-const catLabels = {
-  social: 'Социальное',
-  health: 'Здоровье',
-  mind: 'Ментальное',
-  productivity: 'Продуктивность',
-  other: 'Другое'
-};
+import { useI18n } from '../../i18n';
 
 const catColors = {
   social: '#8b5cf6',      // Purple
@@ -41,7 +34,6 @@ interface HabitRowProps {
   habit: Habit;
   last7Days: string[];
   catColors: Record<string, string>;
-  catLabels: Record<string, string>;
   onToggleDate: (habit: Habit, date: string) => void;
   onDelete: (id: string) => void;
 }
@@ -50,10 +42,10 @@ const HabitRow = memo(function HabitRow({
   habit,
   last7Days,
   catColors,
-  catLabels,
   onToggleDate,
   onDelete,
 }: HabitRowProps) {
+  const { t } = useI18n();
   const streak = calcStreak(habit.completedDates);
   const streakLevel = getStreakLevel(streak.current);
 
@@ -65,7 +57,7 @@ const HabitRow = memo(function HabitRow({
           <span className="text-semibold">{habit.title}</span>
         </div>
         <span className="habits-category-label">
-          {catLabels[habit.category]}
+          {t(`reflect.habits.cat_${habit.category}`)}
         </span>
       </td>
       <td style={{ textAlign: 'center' }}>
@@ -95,8 +87,8 @@ const HabitRow = memo(function HabitRow({
         <button
           onClick={() => onDelete(habit.id)}
           className="habits-delete-btn"
-          title="Удалить"
-          aria-label={`Удалить привычку: ${habit.title}`}
+          title={t('action.delete')}
+          aria-label={t('reflect.habits.delete_aria', { title: habit.title })}
         >
           <Trash2 size={12} />
         </button>
@@ -108,6 +100,7 @@ const HabitRow = memo(function HabitRow({
 export default function HabitsPage() {
   const { data, dispatch } = useData();
   const { addToast } = useApp();
+  const { t, lang } = useI18n();
 
   const [newTitle, setNewTitle] = useState('');
   const [newCategory, setNewCategory] = useState<Habit['category']>('mind');
@@ -143,7 +136,7 @@ export default function HabitsPage() {
     });
 
     setNewTitle('');
-    addToast(`Привычка "${newHabit.title}" добавлена в трекер`, 'success');
+    addToast(t('reflect.habits.toast_created', { title: newHabit.title }), 'success');
   };
 
   const handleDeleteTrigger = useCallback((id: string) => {
@@ -159,10 +152,10 @@ export default function HabitsPage() {
         id: habitToDelete
       });
       setHabitToDelete(null);
-      addToast('Привычка удалена из архива', 'warning');
+      addToast(t('reflect.habits.toast_deleted'), 'warning');
     }
     setIsDeleteOpen(false);
-  }, [habitToDelete, dispatch, addToast]);
+  }, [habitToDelete, dispatch, addToast, t]);
 
   const handleToggleHabitDate = useCallback((habit: Habit, dateStr: string) => {
     const dates = [...habit.completedDates];
@@ -226,10 +219,10 @@ export default function HabitsPage() {
       <div className="flex-row-between">
         <div>
           <h2 className="text-lg-scale text-bold no-margin">
-            Трекер привычек и ритуалов
+            {t('reflect.habits.title')}
           </h2>
           <p className="text-sm-scale text-secondary margin-top4">
-            Закрепление полезных паттернов поведения, учет ежедневной дисциплины и анализ динамики страйков
+            {t('reflect.habits.subtitle')}
           </p>
         </div>
       </div>
@@ -237,16 +230,16 @@ export default function HabitsPage() {
       {/* Stats summaries */}
       <div className="grid-cols-stats">
         <StatCard
-          label="Всего привычек в логе"
+          label={t('reflect.habits.stat_total')}
           value={data.habits.length}
-          subtitle="Активно отслеживаемых паттернов"
+          subtitle={t('reflect.habits.stat_total_desc')}
           icon={<CheckSquare size={20} />}
           accent
         />
         <StatCard
-          label="Максимальный страйк"
-          value={`${totalMaxStreak} дней`}
-          subtitle="Рекорд последовательного выполнения"
+          label={t('reflect.habits.stat_streak')}
+          value={t('reflect.habits.days_count', { count: totalMaxStreak })}
+          subtitle={t('reflect.habits.stat_streak_desc')}
           icon={<Flame size={20} />}
           trend="up"
         />
@@ -256,7 +249,7 @@ export default function HabitsPage() {
       <div className="glass-panel padding-20-flex-col-12">
         <h3 className="habits-section-title">
           <Calendar size={14} />
-          <span>Тепловая карта выполнения (Последние 30 дней)</span>
+          <span>{t('reflect.habits.heatmap_title')}</span>
         </h3>
 
         <div className="habits-heatmap-container">
@@ -265,7 +258,7 @@ export default function HabitsPage() {
             const cellColor = getHeatmapColor(count);
             
             // Format label for tooltip
-            const dayLabel = new Date(date).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+            const dayLabel = new Date(date).toLocaleDateString(lang === 'en' ? 'en-US' : 'ru-RU', { day: 'numeric', month: 'short' });
             
             return (
               <div
@@ -275,7 +268,7 @@ export default function HabitsPage() {
                   background: cellColor,
                   color: count > 0 ? '#fff' : 'var(--text-secondary)'
                 }}
-                title={`${dayLabel}: выполнено ${count} привычек`}
+                title={t('reflect.habits.heatmap_tooltip', { dayLabel, count })}
               >
                 {new Date(date).getDate()}
               </div>
@@ -289,13 +282,13 @@ export default function HabitsPage() {
         <div className="flex-row-between-wrap">
           <h3 className="habits-section-title">
             <Sparkles size={14} />
-            <span>Дисциплинарная сетка привычек</span>
+            <span>{t('reflect.habits.grid_title')}</span>
           </h3>
 
           <form onSubmit={handleAddNew} className="habits-form">
             <input
               type="text"
-              placeholder="Новая полезная привычка..."
+              placeholder={t('reflect.habits.placeholder_new')}
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
               required
@@ -306,15 +299,15 @@ export default function HabitsPage() {
               onChange={(e) => setNewCategory(e.target.value as Habit['category'])}
               className="habits-form-select"
             >
-              <option value="mind">Ментальное</option>
-              <option value="health">Здоровье</option>
-              <option value="social">Социальное</option>
-              <option value="productivity">Продуктивность</option>
-              <option value="other">Другое</option>
+              <option value="mind">{t('reflect.habits.cat_mind')}</option>
+              <option value="health">{t('reflect.habits.cat_health')}</option>
+              <option value="social">{t('reflect.habits.cat_social')}</option>
+              <option value="productivity">{t('reflect.habits.cat_productivity')}</option>
+              <option value="other">{t('reflect.habits.cat_other')}</option>
             </select>
             <button type="submit" className="btn btn--primary habits-form-btn">
               <Plus size={14} />
-              <span>Создать</span>
+              <span>{t('reflect.habits.action_create')}</span>
             </button>
           </form>
         </div>
@@ -324,11 +317,11 @@ export default function HabitsPage() {
           <table className="habits-table">
             <thead>
               <tr className="habits-table-header-row">
-                <th>Название привычки</th>
-                <th style={{ width: '120px', textAlign: 'center' }}>Страйк</th>
+                <th>{t('reflect.habits.column_title')}</th>
+                <th style={{ width: '120px', textAlign: 'center' }}>{t('reflect.habits.column_streak')}</th>
                 {last7Days.map((date) => {
                   const dayNum = new Date(date).getDate();
-                  const weekday = new Date(date).toLocaleDateString('ru-RU', { weekday: 'short' });
+                  const weekday = new Date(date).toLocaleDateString(lang === 'en' ? 'en-US' : 'ru-RU', { weekday: 'short' });
                   return (
                     <th key={date} style={{ width: '60px', textAlign: 'center' }}>
                       <span className="habits-table-weekday">{weekday}</span>
@@ -346,7 +339,6 @@ export default function HabitsPage() {
                   habit={habit}
                   last7Days={last7Days}
                   catColors={catColors}
-                  catLabels={catLabels}
                   onToggleDate={handleToggleHabitDate}
                   onDelete={handleDeleteTrigger}
                 />
@@ -355,7 +347,7 @@ export default function HabitsPage() {
               {data.habits.length === 0 && (
                 <tr>
                   <td colSpan={10} className="habits-empty-cell">
-                    Привычек не зарегистрировано. Начните с создания своей первой привычки!
+                    {t('reflect.habits.empty_message')}
                   </td>
                 </tr>
               )}
@@ -369,10 +361,10 @@ export default function HabitsPage() {
             isOpen={isDeleteOpen}
             onConfirm={confirmDelete}
             onCancel={() => setIsDeleteOpen(false)}
-            title="Удалить привычку?"
-            message="Вы уверены, что хотите удалить эту привычку? Вся история ее соблюдения будет утеряна."
-            confirmLabel="Удалить"
-            cancelLabel="Отмена"
+            title={t('reflect.habits.confirm_delete_title')}
+            message={t('reflect.habits.confirm_delete_message')}
+            confirmLabel={t('action.delete')}
+            cancelLabel={t('action.cancel')}
             variant="danger"
           />
         )}

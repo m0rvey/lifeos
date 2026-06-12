@@ -5,6 +5,7 @@ import { type ScheduleBlock } from '../../types';
 import { Plus, Trash2, Edit2, Clock, Calendar, CheckSquare, Square } from 'lucide-react';
 import { StatCard, EmptyState, ConfirmDialog } from '../../ui';
 import { uid, nowISO, todayISO, formatDuration, formatDate } from '../../cognitive/helpers';
+import { useI18n } from '../../i18n';
 import ScheduleModal from './ScheduleModal';
 
 const typeColors: Record<ScheduleBlock['type'], string> = {
@@ -14,15 +15,6 @@ const typeColors: Record<ScheduleBlock['type'], string> = {
   social: '#8b5cf6',    // Purple
   learning: '#f59e0b',  // Yellow
   rest: '#64748b'       // Grey
-};
-
-const typeLabels: Record<ScheduleBlock['type'], string> = {
-  work: 'Работа / Обучение',
-  personal: 'Личное / Быт',
-  health: 'Здоровье / Спорт',
-  social: 'Социальное / Общение',
-  learning: 'Чтение / Развитие',
-  rest: 'Отдых / Сон'
 };
 
 function parseTime(time: string): number {
@@ -40,6 +32,7 @@ function computeEndTime(startTime: string, duration: number): string {
 export default function SchedulePage() {
   const { data, dispatch } = useData();
   const { addToast } = useApp();
+  const { t } = useI18n();
 
   const [activeDate, setActiveDate] = useState(todayISO());
   const [isOpen, setIsOpen] = useState(false);
@@ -84,7 +77,7 @@ export default function SchedulePage() {
         id: editingBlock.id,
         payload: blockData
       });
-      addToast('Событие успешно изменено', 'success');
+      addToast(t('reflect.schedule.toast_updated'), 'success');
     } else {
       const newBlock: ScheduleBlock = {
         id: `sched_${uid()}`,
@@ -102,10 +95,10 @@ export default function SchedulePage() {
         entity: 'schedule',
         payload: newBlock
       });
-      addToast('Событие добавлено в расписание', 'success');
+      addToast(t('reflect.schedule.toast_created'), 'success');
     }
     setIsOpen(false);
-  }, [editingBlock, activeDate, dispatch, addToast]);
+  }, [editingBlock, activeDate, dispatch, addToast, t]);
 
   const handleDeleteTrigger = (id: string) => {
     setBlockToDelete(id);
@@ -120,10 +113,10 @@ export default function SchedulePage() {
         id: blockToDelete
       });
       setBlockToDelete(null);
-      addToast('Событие удалено из расписания', 'warning');
+      addToast(t('reflect.schedule.toast_deleted'), 'warning');
     }
     setIsDeleteOpen(false);
-  }, [blockToDelete, dispatch, addToast]);
+  }, [blockToDelete, dispatch, addToast, t]);
 
   const handleToggleComplete = useCallback((block: ScheduleBlock) => {
     dispatch({
@@ -132,8 +125,8 @@ export default function SchedulePage() {
       id: block.id,
       payload: { isCompleted: !block.isCompleted }
     });
-    addToast(block.isCompleted ? 'Событие возвращено в планы' : 'Событие выполнено', 'success');
-  }, [dispatch, addToast]);
+    addToast(block.isCompleted ? t('reflect.schedule.toast_uncompleted') : t('reflect.schedule.toast_completed'), 'success');
+  }, [dispatch, addToast, t]);
 
   const handleGapClick = (startTime: string, duration: number) => {
     setEditingBlock(null);
@@ -142,15 +135,27 @@ export default function SchedulePage() {
     setIsOpen(true);
   };
 
+  const translateType = (type: ScheduleBlock['type']): string => {
+    switch (type) {
+      case 'work': return t('reflect.schedule.type_work');
+      case 'personal': return t('reflect.schedule.type_personal');
+      case 'health': return t('reflect.schedule.type_health');
+      case 'social': return t('reflect.schedule.type_social');
+      case 'learning': return t('reflect.schedule.type_learning');
+      case 'rest': return t('reflect.schedule.type_rest');
+      default: return type;
+    }
+  };
+
   return (
     <div className="fade-in-entry flex-col-24">
       <div className="flex-row-between-wrap">
         <div>
           <h2 className="text-lg-scale text-bold no-margin">
-            Gap-Планировщик расписания
+            {t('reflect.schedule.title')}
           </h2>
           <p className="text-sm-scale text-secondary margin-top4">
-            Ведение дневного таймлайна, автопоиск свободных окон (Gap) и организация распорядка
+            {t('reflect.schedule.subtitle')}
           </p>
         </div>
 
@@ -163,7 +168,7 @@ export default function SchedulePage() {
           />
           <button className="btn btn--primary flex-row-center-gap6" onClick={handleAddNew}>
             <Plus size={16} />
-            <span>Добавить блок</span>
+            <span>{t('reflect.schedule.action_add')}</span>
           </button>
         </div>
       </div>
@@ -171,16 +176,16 @@ export default function SchedulePage() {
       {/* Stats row */}
       <div className="grid-cols-stats">
         <StatCard
-          label="Запланировано времени"
+          label={t('reflect.schedule.stat_time')}
           value={formatDuration(totalScheduledMinutes)}
-          subtitle="Суммарная нагрузка за день"
+          subtitle={t('reflect.schedule.stat_time_desc')}
           icon={<Clock size={20} />}
           accent
         />
         <StatCard
-          label="Всего блоков дня"
+          label={t('reflect.schedule.stat_blocks')}
           value={dayBlocks.length}
-          subtitle={`Дата: ${formatDate(new Date(activeDate).toISOString())}`}
+          subtitle={t('reflect.schedule.date_prefix', { date: formatDate(new Date(activeDate).toISOString()) })}
           icon={<Calendar size={20} />}
           trend="neutral"
         />
@@ -208,9 +213,9 @@ export default function SchedulePage() {
                     <div 
                       onClick={() => handleGapClick(gapStartString, gap)}
                       className="schedule-gap-btn"
-                      title="Кликните, чтобы заполнить это окно"
+                      title={t('reflect.schedule.gap_title')}
                     >
-                      Свободное окно ({formatDuration(gap)}) с {gapStartString} — кликните для планирования
+                      {t('reflect.schedule.gap_text', { duration: formatDuration(gap), start: gapStartString })}
                     </div>
                   )}
 
@@ -248,7 +253,7 @@ export default function SchedulePage() {
                           border: `1px solid ${typeColors[block.type]}30`,
                         }}
                       >
-                        {typeLabels[block.type]}
+                        {translateType(block.type)}
                       </span>
 
                       <span className={`schedule-block-title ${block.isCompleted ? 'completed' : ''}`}>
@@ -284,12 +289,12 @@ export default function SchedulePage() {
         ) : (
           <EmptyState
             icon={<Clock size={48} />}
-            title="Нет запланированных блоков"
-            description={`На день ${formatDate(new Date(activeDate).toISOString())} расписание пустое.`}
+            title={t('reflect.schedule.empty_title')}
+            description={t('reflect.schedule.empty_desc', { date: formatDate(new Date(activeDate).toISOString()) })}
             action={
               <button className="btn btn--primary" onClick={handleAddNew}>
                 <Plus size={14} />
-                <span>Запланировать блок</span>
+                <span>{t('reflect.schedule.action_schedule')}</span>
               </button>
             }
           />
@@ -313,10 +318,10 @@ export default function SchedulePage() {
             isOpen={isDeleteOpen}
             onConfirm={confirmDelete}
             onCancel={() => setIsDeleteOpen(false)}
-            title="Удалить блок из расписания?"
-            message="Вы уверены, что хотите удалить это событие? Действие не может быть отменено."
-            confirmLabel="Удалить"
-            cancelLabel="Отмена"
+            title={t('reflect.schedule.confirm_delete_title')}
+            message={t('reflect.schedule.confirm_delete_message')}
+            confirmLabel={t('common.delete')}
+            cancelLabel={t('common.cancel')}
             variant="danger"
           />
         )}

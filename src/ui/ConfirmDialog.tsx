@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Modal from './Modal';
+import { useI18n } from '../i18n';
 
 interface ConfirmDialogProps {
   isOpen: boolean;
@@ -19,12 +20,16 @@ export default function ConfirmDialog({
   onCancel,
   title,
   message,
-  confirmLabel = 'Подтвердить',
-  cancelLabel = 'Отмена',
+  confirmLabel,
+  cancelLabel,
   variant = 'default',
   requireTyping,
 }: ConfirmDialogProps) {
+  const { t } = useI18n();
   const [typedValue, setTypedValue] = useState('');
+
+  const displayConfirmLabel = confirmLabel || t('action.confirm');
+  const displayCancelLabel = cancelLabel || t('action.cancel');
 
   const handleConfirm = () => {
     setTypedValue('');
@@ -41,14 +46,14 @@ export default function ConfirmDialog({
   const footer = (
     <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', width: '100%' }}>
       <button className="btn btn--secondary" onClick={handleCancel}>
-        {cancelLabel}
+        {displayCancelLabel}
       </button>
       <button
         className={`btn ${variant === 'danger' ? 'btn--danger' : 'btn--primary'}`}
         onClick={handleConfirm}
         disabled={isConfirmDisabled}
       >
-        {confirmLabel}
+        {displayConfirmLabel}
       </button>
     </div>
   );
@@ -63,7 +68,7 @@ export default function ConfirmDialog({
         {requireTyping && (
           <div style={{ marginTop: '16px' }}>
             <label style={{ marginBottom: '8px', display: 'block', fontSize: '14px', color: 'var(--text-secondary)' }}>
-              Введите <strong style={{ color: 'var(--text-primary)' }}>{requireTyping}</strong> для подтверждения:
+              {t('confirmDialog.confirm_typing_prompt', { text: requireTyping })}
             </label>
             <input
               type="text"

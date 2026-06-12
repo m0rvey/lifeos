@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { type WorkoutRecord } from '../../types';
 import { Modal, FormField } from '../../ui';
 import { todayISO } from '../../cognitive/helpers';
+import { useI18n } from '../../i18n';
 
 interface WorkoutModalProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface WorkoutModalProps {
 }
 
 export default function WorkoutModal({ isOpen, onClose, workout, onSave }: WorkoutModalProps) {
+  const { t } = useI18n();
   const [type, setType] = useState<WorkoutRecord['type']>(workout?.type || 'gym');
   const [dateISO, setDateISO] = useState(workout?.dateISO ? workout.dateISO.slice(0, 10) : todayISO());
   const [durationMin, setDurationMin] = useState<number>(workout?.durationMin || 45);
@@ -24,13 +26,13 @@ export default function WorkoutModal({ isOpen, onClose, workout, onSave }: Worko
     setError('');
 
     if (durationMin <= 0) {
-      setError('Продолжительность тренировки должна быть больше 0 минут');
+      setError(t('reflect.workout.error_duration'));
       return;
     }
 
     const calsNum = calories.trim() === '' ? null : Number(calories);
     if (calsNum !== null && (isNaN(calsNum) || calsNum < 0)) {
-      setError('Количество калорий должно быть положительным числом');
+      setError(t('reflect.workout.error_calories'));
       return;
     }
 
@@ -46,11 +48,11 @@ export default function WorkoutModal({ isOpen, onClose, workout, onSave }: Worko
 
   const getIntensityLabel = (val: number) => {
     switch (val) {
-      case 1: return '1 — Очень легко';
-      case 2: return '2 — Легко';
-      case 3: return '3 — Умеренно';
-      case 4: return '4 — Тяжело';
-      case 5: return '5 — Максимально';
+      case 1: return t('reflect.workout.intensity_1');
+      case 2: return t('reflect.workout.intensity_2');
+      case 3: return t('reflect.workout.intensity_3');
+      case 4: return t('reflect.workout.intensity_4');
+      case 5: return t('reflect.workout.intensity_5');
       default: return String(val);
     }
   };
@@ -59,7 +61,7 @@ export default function WorkoutModal({ isOpen, onClose, workout, onSave }: Worko
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={workout ? 'Редактировать тренировку' : 'Добавить тренировку'}
+      title={workout ? t('reflect.workout.modal_edit_title') : t('reflect.workout.modal_create_title')}
       maxWidth="sm"
     >
       <form onSubmit={handleSubmit} className="flex-col-16">
@@ -70,23 +72,23 @@ export default function WorkoutModal({ isOpen, onClose, workout, onSave }: Worko
         )}
 
         <div className="form-row">
-          <FormField label="Вид активности" required>
+          <FormField label={t('reflect.workout.field_type')} required>
             <select
               value={type}
               onChange={(e) => setType(e.target.value as WorkoutRecord['type'])}
               required
               style={{ width: '100%' }}
             >
-              <option value="gym">Силовая тренировка</option>
-              <option value="running">Бег</option>
-              <option value="swimming">Плавание</option>
-              <option value="yoga">Йога</option>
-              <option value="walking">Ходьба</option>
-              <option value="other">Другое</option>
+              <option value="gym">{t('reflect.workout.type_gym')}</option>
+              <option value="running">{t('reflect.workout.type_running')}</option>
+              <option value="swimming">{t('reflect.workout.type_swimming')}</option>
+              <option value="yoga">{t('reflect.workout.type_yoga')}</option>
+              <option value="walking">{t('reflect.workout.type_walking')}</option>
+              <option value="other">{t('reflect.workout.type_other')}</option>
             </select>
           </FormField>
 
-          <FormField label="Дата тренировки" required>
+          <FormField label={t('reflect.workout.field_date')} required>
             <input
               type="date"
               value={dateISO}
@@ -98,7 +100,7 @@ export default function WorkoutModal({ isOpen, onClose, workout, onSave }: Worko
         </div>
 
         <div className="form-row">
-          <FormField label="Длительность (мин)" required>
+          <FormField label={t('reflect.workout.field_duration')} required>
             <input
               type="number"
               min="1"
@@ -110,11 +112,11 @@ export default function WorkoutModal({ isOpen, onClose, workout, onSave }: Worko
             />
           </FormField>
 
-          <FormField label="Калории (ккал)">
+          <FormField label={t('reflect.workout.field_calories')}>
             <input
               type="number"
               min="0"
-              placeholder="Необязательно"
+              placeholder={t('reflect.workout.placeholder_optional')}
               value={calories}
               onChange={(e) => setCalories(e.target.value)}
               style={{ width: '100%' }}
@@ -122,7 +124,7 @@ export default function WorkoutModal({ isOpen, onClose, workout, onSave }: Worko
           </FormField>
         </div>
 
-        <FormField label="Интенсивность" required>
+        <FormField label={t('reflect.workout.field_intensity')} required>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             <input
               type="range"
@@ -134,28 +136,28 @@ export default function WorkoutModal({ isOpen, onClose, workout, onSave }: Worko
               style={{ width: '100%' }}
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-              <span>Легко</span>
+              <span>{t('reflect.workout.intensity_easy')}</span>
               <strong style={{ color: 'var(--text-primary)' }}>{getIntensityLabel(intensity)}</strong>
-              <span>Максимум</span>
+              <span>{t('reflect.workout.intensity_max')}</span>
             </div>
           </div>
         </FormField>
 
-        <FormField label="Описание / Упражнения">
+        <FormField label={t('reflect.workout.field_description')}>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Жим лежа, приседания... или маршрут бега"
+            placeholder={t('reflect.workout.placeholder_description')}
             style={{ width: '100%', height: '80px', resize: 'vertical' }}
           />
         </FormField>
 
         <div className="modal-form-footer">
           <button type="button" className="btn btn--secondary" onClick={onClose}>
-            Отмена
+            {t('action.cancel')}
           </button>
           <button type="submit" className="btn btn--primary">
-            {workout ? 'Сохранить изменения' : 'Добавить тренировку'}
+            {workout ? t('reflect.workout.action_save') : t('reflect.workout.action_create')}
           </button>
         </div>
       </form>

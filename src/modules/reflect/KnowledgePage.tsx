@@ -6,26 +6,50 @@ import { Plus, Book, Tag, ExternalLink, Search, Edit2, Trash2, ChevronDown, Chev
 import { EmptyState, ConfirmDialog } from '../../ui';
 import { uid, nowISO } from '../../cognitive/helpers';
 import KnowledgeModal from './KnowledgeModal';
+import { useI18n } from '../../i18n';
 
 export default function KnowledgePage() {
   const { data, dispatch } = useData();
   const { addToast } = useApp();
+  const { t } = useI18n();
 
   const [isOpen, setIsOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<KnowledgeItem | null>(null);
   
   // Search & Filters
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('Все');
+  const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const [expandedItemId, setExpandedItemId] = useState<string | null>(null);
 
   // Delete dialog
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
 
+  const getCategoryLabel = useCallback((cat: string) => {
+    switch (cat) {
+      case 'Книги':
+      case 'Books':
+        return t('reflect.knowledge.category_books');
+      case 'Статьи':
+      case 'Articles':
+        return t('reflect.knowledge.category_articles');
+      case 'Видео':
+      case 'Videos':
+        return t('reflect.knowledge.category_videos');
+      case 'Подкасты':
+      case 'Podcasts':
+        return t('reflect.knowledge.category_podcasts');
+      case 'Методология':
+      case 'Methodology':
+        return t('reflect.knowledge.category_methodology');
+      default:
+        return cat;
+    }
+  }, [t]);
+
   const categories = useMemo(() => {
     const cats = new Set(data.knowledge.map((item) => item.category));
-    return ['Все', ...Array.from(cats)];
+    return ['ALL', ...Array.from(cats)];
   }, [data.knowledge]);
 
   const filteredItems = useMemo(() => {
@@ -35,7 +59,7 @@ export default function KnowledgePage() {
         item.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
 
-      const matchCategory = selectedCategory === 'Все' || item.category === selectedCategory;
+      const matchCategory = selectedCategory === 'ALL' || item.category === selectedCategory;
 
       return matchQuery && matchCategory;
     });
@@ -60,12 +84,12 @@ export default function KnowledgePage() {
         id: editingItem.id,
         payload: itemData
       });
-      addToast('Статья БЗ обновлена', 'success');
+      addToast(t('reflect.knowledge.toast_updated'), 'success');
     } else {
       const newItem: KnowledgeItem = {
         id: `know_${uid()}`,
         title: itemData.title || '',
-        category: itemData.category || 'Книги',
+        category: itemData.category || t('reflect.knowledge.category_books_val'),
         source: itemData.source || '',
         url: itemData.url || '',
         content: itemData.content || '',
@@ -78,10 +102,10 @@ export default function KnowledgePage() {
         entity: 'knowledge',
         payload: newItem
       });
-      addToast('Новые знания добавлены в базу', 'success');
+      addToast(t('reflect.knowledge.toast_created'), 'success');
     }
     setIsOpen(false);
-  }, [editingItem, dispatch, addToast]);
+  }, [editingItem, dispatch, addToast, t]);
 
   const handleDeleteTrigger = (e: MouseEvent, id: string) => {
     e.stopPropagation();
@@ -97,10 +121,10 @@ export default function KnowledgePage() {
         id: itemToDelete
       });
       setItemToDelete(null);
-      addToast('Запись БЗ удалена', 'warning');
+      addToast(t('reflect.knowledge.toast_deleted'), 'warning');
     }
     setIsDeleteOpen(false);
-  }, [itemToDelete, dispatch, addToast]);
+  }, [itemToDelete, dispatch, addToast, t]);
 
   const toggleExpand = (id: string) => {
     setExpandedItemId(expandedItemId === id ? null : id);
@@ -111,15 +135,15 @@ export default function KnowledgePage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
-            База знаний (Second Brain)
+            {t('reflect.knowledge.title')}
           </h2>
           <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>
-            Накопление структурированной информации, конспекты книг, статьи и полезные ссылки
+            {t('reflect.knowledge.subtitle')}
           </p>
         </div>
         <button className="btn btn--primary" onClick={handleAddNew} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <Plus size={16} />
-          <span>Добавить знания</span>
+          <span>{t('reflect.knowledge.action_add')}</span>
         </button>
       </div>
 
@@ -129,7 +153,7 @@ export default function KnowledgePage() {
           <Search size={16} style={{ color: 'var(--text-secondary)', marginRight: '8px' }} />
           <input
             type="text"
-            placeholder="Искать в конспектах, тегах и заголовках..."
+            placeholder={t('reflect.knowledge.search_placeholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             style={{
@@ -144,14 +168,16 @@ export default function KnowledgePage() {
         </div>
 
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Раздел:</span>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{t('reflect.knowledge.filter_section_label')}</span>
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
             style={{ height: '40px', padding: '0 12px', fontSize: '0.85rem' }}
           >
             {categories.map((cat) => (
-              <option key={cat} value={cat}>{cat}</option>
+              <option key={cat} value={cat}>
+                {cat === 'ALL' ? t('filter.all') : getCategoryLabel(cat)}
+              </option>
             ))}
           </select>
         </div>
@@ -183,7 +209,7 @@ export default function KnowledgePage() {
                     <div>
                       <h3 style={{ fontSize: '0.95rem', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>{item.title}</h3>
                       <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', display: 'block', marginTop: '2px' }}>
-                        Категория: <strong>{item.category}</strong> {item.source && ` · Источник: ${item.source}`}
+                        {t('reflect.knowledge.card_category_label')} <strong>{getCategoryLabel(item.category)}</strong> {item.source && ` · ${t('reflect.knowledge.card_source_label')} ${item.source}`}
                       </span>
                     </div>
                   </div>
@@ -247,12 +273,12 @@ export default function KnowledgePage() {
         ) : (
           <EmptyState
             icon={<Book size={48} />}
-            title="База знаний пуста"
-            description="Ничего не найдено. Добавьте конспекты, статьи или цитаты, чтобы начать формирование вашей базы знаний."
+            title={t('reflect.knowledge.empty_title')}
+            description={t('reflect.knowledge.empty_description')}
             action={
               <button className="btn btn--primary" onClick={handleAddNew}>
                 <Plus size={14} />
-                <span>Добавить конспект</span>
+                <span>{t('reflect.knowledge.action_add_summary')}</span>
               </button>
             }
           />
@@ -273,10 +299,10 @@ export default function KnowledgePage() {
             isOpen={isDeleteOpen}
             onConfirm={confirmDelete}
             onCancel={() => setIsDeleteOpen(false)}
-            title="Удалить запись БЗ?"
-            message="Вы уверены, что хотите удалить эту статью из базы знаний? Это действие необратимо."
-            confirmLabel="Удалить"
-            cancelLabel="Отмена"
+            title={t('reflect.knowledge.confirm_delete_title')}
+            message={t('reflect.knowledge.confirm_delete_message')}
+            confirmLabel={t('action.delete')}
+            cancelLabel={t('action.cancel')}
             variant="danger"
           />
         )}

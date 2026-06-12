@@ -6,11 +6,13 @@ import { Plus, Dumbbell, Flame, Clock, Edit2, Trash2, Activity } from 'lucide-re
 import { StatCard, EmptyState, ConfirmDialog, DataTable } from '../../ui';
 import { formatDate, formatDuration, uid, nowISO, todayISO } from '../../cognitive/helpers';
 import { useCrudEntity } from '../../hooks/useCrudEntity';
+import { useI18n } from '../../i18n';
 import WorkoutModal from './WorkoutModal';
 
 export default function WorkoutsPage() {
   const { data, dispatch } = useData();
   const { addToast } = useApp();
+  const { t } = useI18n();
   const { editing: editingWorkout, deleting: workoutToDelete, openAdd, openEdit, openDelete, closeAll } = useCrudEntity<WorkoutRecord>();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -51,7 +53,7 @@ export default function WorkoutsPage() {
         id: editingWorkout.id,
         payload: workoutData
       });
-      addToast('Тренировка обновлена успешно', 'success');
+      addToast(t('reflect.workout.toast_updated'), 'success');
     } else {
       const newWorkout: WorkoutRecord = {
         id: `work_${uid()}`,
@@ -69,11 +71,11 @@ export default function WorkoutsPage() {
         entity: 'workouts',
         payload: newWorkout
       });
-      addToast('Новая тренировка успешно зарегистрирована', 'success');
+      addToast(t('reflect.workout.toast_created'), 'success');
     }
     setIsOpen(false);
     closeAll();
-  }, [editingWorkout, dispatch, addToast, closeAll]);
+  }, [editingWorkout, dispatch, addToast, closeAll, t]);
 
   const handleDeleteTrigger = (id: string) => {
     openDelete({ id } as WorkoutRecord);
@@ -86,19 +88,19 @@ export default function WorkoutsPage() {
         entity: 'workouts',
         id: workoutToDelete.id
       });
-      addToast('Тренировка удалена из лога', 'warning');
+      addToast(t('reflect.workout.toast_deleted'), 'warning');
     }
     closeAll();
-  }, [workoutToDelete, dispatch, addToast, closeAll]);
+  }, [workoutToDelete, dispatch, addToast, closeAll, t]);
 
   const translateWorkoutType = (type: WorkoutRecord['type']): string => {
     switch (type) {
-      case 'gym': return 'Силовая';
-      case 'running': return 'Бег';
-      case 'swimming': return 'Плавание';
-      case 'yoga': return 'Йога';
-      case 'walking': return 'Ходьба';
-      case 'other': return 'Другое';
+      case 'gym': return t('reflect.workout.type_gym_short');
+      case 'running': return t('reflect.workout.type_running_short');
+      case 'swimming': return t('reflect.workout.type_swimming_short');
+      case 'yoga': return t('reflect.workout.type_yoga_short');
+      case 'walking': return t('reflect.workout.type_walking_short');
+      case 'other': return t('reflect.workout.type_other_short');
       default: return type;
     }
   };
@@ -116,43 +118,43 @@ export default function WorkoutsPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
-            Спортивный журнал активности
+            {t('reflect.workout.title')}
           </h2>
           <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>
-            Логирование физических нагрузок, учет калорий и управление тренировочным процессом
+            {t('reflect.workout.subtitle')}
           </p>
         </div>
         <button className="btn btn--primary" onClick={handleAddNew} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <Plus size={16} />
-          <span>Добавить занятие</span>
+          <span>{t('reflect.workout.action_add')}</span>
         </button>
       </div>
 
       {/* Stats row */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
         <StatCard
-          label="Всего занятий"
+          label={t('reflect.workout.stat_total')}
           value={stats.total}
-          subtitle="Выполненных тренировок"
+          subtitle={t('reflect.workout.stat_total_desc')}
           icon={<Dumbbell size={20} />}
           accent
         />
         <StatCard
-          label="Общее время"
+          label={t('reflect.workout.stat_time')}
           value={formatDuration(stats.duration)}
-          subtitle="Активного движения"
+          subtitle={t('reflect.workout.stat_time_desc')}
           icon={<Clock size={20} />}
         />
         <StatCard
-          label="Сжёно энергии"
-          value={`${stats.calories} ккал`}
-          subtitle="Суммарный расход"
+          label={t('reflect.workout.stat_calories')}
+          value={t('reflect.workout.calories_unit', { val: stats.calories })}
+          subtitle={t('reflect.workout.stat_calories_desc')}
           icon={<Flame size={20} />}
         />
         <StatCard
-          label="Средняя нагрузка"
+          label={t('reflect.workout.stat_intensity')}
           value={`${stats.avgIntensity} / 5`}
-          subtitle="Уровень интенсивности"
+          subtitle={t('reflect.workout.stat_intensity_desc')}
           icon={<Activity size={20} />}
         />
       </div>
@@ -162,16 +164,16 @@ export default function WorkoutsPage() {
         {sortedWorkouts.length > 0 ? (
           <DataTable
             data={sortedWorkouts}
-            emptyMessage="Записи о тренировках отсутствуют"
+            emptyMessage={t('reflect.workout.empty_message')}
             columns={[
               {
                 key: 'dateISO',
-                label: 'Дата',
+                label: t('reflect.workout.column_date'),
                 render: (v) => <span style={{ whiteSpace: 'nowrap' }}>{formatDate(v as string)}</span>
               },
               {
                 key: 'type',
-                label: 'Тип тренировки',
+                label: t('reflect.workout.column_type'),
                 render: (v) => (
                   <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
                     {translateWorkoutType(v as WorkoutRecord['type'])}
@@ -180,12 +182,12 @@ export default function WorkoutsPage() {
               },
               {
                 key: 'durationMin',
-                label: 'Время',
-                render: (v) => <span>{v as number} мин</span>
+                label: t('reflect.workout.column_time'),
+                render: (v) => <span>{t('reflect.workout.minutes_unit', { val: v as number })}</span>
               },
               {
                 key: 'intensity',
-                label: 'Интенсивность',
+                label: t('reflect.workout.column_intensity'),
                 render: (v) => (
                   <span
                     style={{
@@ -199,18 +201,18 @@ export default function WorkoutsPage() {
                       color: getIntensityBadgeColor(v as number)
                     }}
                   >
-                    {v as number} из 5
+                    {t('reflect.workout.intensity_of_five', { val: v as number })}
                   </span>
                 )
               },
               {
                 key: 'calories',
-                label: 'Калории',
-                render: (v) => <span>{v !== null ? `${v} ккал` : '—'}</span>
+                label: t('reflect.workout.column_calories'),
+                render: (v) => <span>{v !== null ? t('reflect.workout.calories_unit', { val: v as number }) : '—'}</span>
               },
               {
                 key: 'description',
-                label: 'Описание / Заметки',
+                label: t('reflect.workout.column_description'),
                 render: (v) => (
                   <span
                     style={{
@@ -247,12 +249,12 @@ export default function WorkoutsPage() {
         ) : (
           <EmptyState
             icon={<Dumbbell size={48} />}
-            title="Нет спортивных записей"
-            description="Добавьте свою первую тренировку, чтобы вести учет активности, отслеживать прогресс и энергобаланс."
+            title={t('reflect.workout.empty_title')}
+            description={t('reflect.workout.empty_desc')}
             action={
               <button className="btn btn--primary" onClick={handleAddNew}>
                 <Plus size={14} />
-                <span>Добавить занятие</span>
+                <span>{t('reflect.workout.action_add')}</span>
               </button>
             }
           />
@@ -273,10 +275,10 @@ export default function WorkoutsPage() {
             isOpen={!!workoutToDelete}
             onConfirm={confirmDelete}
             onCancel={closeAll}
-            title="Удалить тренировку?"
-            message="Вы уверены, что хотите удалить эту запись из спортивного журнала? Это действие необратимо."
-            confirmLabel="Удалить"
-            cancelLabel="Отмена"
+            title={t('reflect.workout.confirm_delete_title')}
+            message={t('reflect.workout.confirm_delete_message')}
+            confirmLabel={t('common.delete')}
+            cancelLabel={t('common.cancel')}
             variant="danger"
           />
         )}

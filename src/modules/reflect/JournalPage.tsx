@@ -64,7 +64,7 @@ export default function JournalPage() {
         entity: 'journal',
         payload: newEntry
       });
-      addToast('Новая страница рефлексии добавлена в дневник', 'success');
+      addToast(t('reflect.journal.toast_created'), 'success');
     }
     setIsOpen(false);
   }, [editingEntry, dispatch, addToast, t]);
@@ -82,41 +82,41 @@ export default function JournalPage() {
         id: entryToDelete
       });
       setEntryToDelete(null);
-      addToast('Запись дневника удалена', 'warning');
+      addToast(t('reflect.journal.toast_deleted'), 'warning');
     }
     setIsDeleteOpen(false);
-  }, [entryToDelete, dispatch, addToast]);
+  }, [entryToDelete, dispatch, addToast, t]);
 
   return (
     <div className="flex-col-24 fade-in-entry">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
-            Дневник настроения и рефлексии
+            {t('reflect.journal.title')}
           </h2>
           <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>
-            Фиксация ментальных состояний, отслеживание колебаний настроения и анализ мыслей
+            {t('reflect.journal.subtitle')}
           </p>
         </div>
         <button className="btn btn--primary" onClick={handleAddNew} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <Plus size={16} />
-          <span>Новая запись</span>
+          <span>{t('reflect.journal.action_new')}</span>
         </button>
       </div>
 
       {/* Summary stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
         <StatCard
-          label="Всего записей"
+          label={t('reflect.journal.stat_entries')}
           value={data.journal.length}
-          subtitle="Зафиксированных дней рефлексии"
+          subtitle={t('reflect.journal.stat_entries_desc')}
           icon={<BookOpen size={20} />}
           accent
         />
         <StatCard
-          label="Средний индекс настроения"
+          label={t('reflect.journal.stat_mood')}
           value={`${avgMood}%`}
-          subtitle="Общий показатель благополучия"
+          subtitle={t('reflect.journal.stat_mood_desc')}
           icon={<Smile size={20} />}
           trend={avgMood >= 60 ? 'up' : 'neutral'}
         />
@@ -151,7 +151,7 @@ export default function JournalPage() {
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <span style={{ fontSize: '0.8rem', background: 'rgba(255,255,255,0.02)', padding: '4px 10px', borderRadius: '24px', border: '1px solid var(--border)', fontWeight: 600 }}>
-                      Настроение: {entry.mood}%
+                      {t('reflect.journal.mood_prefix')} {entry.mood}%
                     </span>
                     <button className="btn btn--secondary" style={{ padding: '6px' }} onClick={() => handleEdit(entry)}>
                       <Edit2 size={12} />
@@ -171,12 +171,12 @@ export default function JournalPage() {
         ) : (
           <EmptyState
             icon={<BookOpen size={48} />}
-            title="Дневник пуст"
-            description="Запишите ваши мысли за сегодня. Рефлексия помогает лучше справляться со стрессом и усталостью."
+            title={t('reflect.journal.empty_title')}
+            description={t('reflect.journal.empty_desc')}
             action={
               <button className="btn btn--primary" onClick={handleAddNew}>
                 <Plus size={14} />
-                <span>Начать дневник</span>
+                <span>{t('reflect.journal.action_start')}</span>
               </button>
             }
           />
@@ -197,10 +197,10 @@ export default function JournalPage() {
             isOpen={isDeleteOpen}
             onConfirm={confirmDelete}
             onCancel={() => setIsDeleteOpen(false)}
-            title="Удалить страницу из дневника?"
-            message="Вы уверены, что хотите удалить эту запись? Данные рефлексии настроения за этот день будут утеряны."
-            confirmLabel="Удалить"
-            cancelLabel="Отмена"
+            title={t('reflect.journal.confirm_delete_title')}
+            message={t('reflect.journal.confirm_delete_message')}
+            confirmLabel={t('common.delete')}
+            cancelLabel={t('common.cancel')}
             variant="danger"
           />
         )}

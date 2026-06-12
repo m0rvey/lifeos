@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import {
   uid,
   todayISO,
@@ -13,6 +13,22 @@ import {
   getMoodEmoji,
   getMoodLabel,
 } from '../cognitive/helpers';
+
+beforeAll(() => {
+  if (typeof localStorage !== 'undefined') {
+    localStorage.setItem('lifeos-lang', 'ru');
+  } else {
+    // Mock local storage if not available in non-dom environment
+    (globalThis as any).localStorage = {
+      getItem: (key: string) => key === 'lifeos-lang' ? 'ru' : null,
+      setItem: () => {},
+      removeItem: () => {},
+      clear: () => {},
+      length: 0,
+      key: () => null,
+    };
+  }
+});
 
 describe('uid', () => {
   it('generates unique ids', () => {

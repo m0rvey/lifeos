@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { type KnowledgeItem } from '../../types';
 import { Modal, FormField } from '../../ui';
+import { useI18n } from '../../i18n';
 
 interface KnowledgeModalProps {
   isOpen: boolean;
@@ -10,8 +11,9 @@ interface KnowledgeModalProps {
 }
 
 export default function KnowledgeModal({ isOpen, onClose, item, onSave }: KnowledgeModalProps) {
+  const { t } = useI18n();
   const [title, setTitle] = useState(item?.title || '');
-  const [category, setCategory] = useState(item?.category || 'Книги');
+  const [category, setCategory] = useState(item?.category || t('reflect.knowledge.category_books_val'));
   const [source, setSource] = useState(item?.source || '');
   const [url, setUrl] = useState(item?.url || '');
   const [content, setContent] = useState(item?.content || '');
@@ -23,11 +25,11 @@ export default function KnowledgeModal({ isOpen, onClose, item, onSave }: Knowle
     setError('');
 
     if (!title.trim()) {
-      setError('Укажите название статьи / идеи');
+      setError(t('reflect.knowledge.error_title_empty'));
       return;
     }
     if (!content.trim()) {
-      setError('Содержимое записи не может быть пустым');
+      setError(t('reflect.knowledge.error_content_empty'));
       return;
     }
 
@@ -45,7 +47,7 @@ export default function KnowledgeModal({ isOpen, onClose, item, onSave }: Knowle
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={item ? 'Редактировать статью БЗ' : 'Добавить новые знания'}
+      title={item ? t('reflect.knowledge.modal_edit_title') : t('reflect.knowledge.modal_create_title')}
       maxWidth="md"
     >
       <form onSubmit={handleSubmit} className="flex-col-16">
@@ -56,44 +58,44 @@ export default function KnowledgeModal({ isOpen, onClose, item, onSave }: Knowle
         )}
 
         <div className="form-row-2-1">
-          <FormField label="Название статьи / Идея" required>
+          <FormField label={t('reflect.knowledge.field_title')} required>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Например: Методика ведения заметок Zettelkasten"
+              placeholder={t('reflect.knowledge.placeholder_title')}
               required
               style={{ width: '100%' }}
             />
           </FormField>
 
-          <FormField label="Категория">
+          <FormField label={t('reflect.knowledge.field_category')}>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               style={{ width: '100%' }}
             >
-              <option value="Книги">Книги / Конспекты</option>
-              <option value="Статьи">Статьи / Блоги</option>
-              <option value="Видео">Видео / Лекции</option>
-              <option value="Подкасты">Подкасты</option>
-              <option value="Методология">Методологии / Личное</option>
+              <option value={t('reflect.knowledge.category_books_val')}>{t('reflect.knowledge.category_books')}</option>
+              <option value={t('reflect.knowledge.category_articles_val')}>{t('reflect.knowledge.category_articles')}</option>
+              <option value={t('reflect.knowledge.category_videos_val')}>{t('reflect.knowledge.category_videos')}</option>
+              <option value={t('reflect.knowledge.category_podcasts_val')}>{t('reflect.knowledge.category_podcasts')}</option>
+              <option value={t('reflect.knowledge.category_methodology_val')}>{t('reflect.knowledge.category_methodology')}</option>
             </select>
           </FormField>
         </div>
 
         <div className="form-row">
-          <FormField label="Источник информации">
+          <FormField label={t('reflect.knowledge.field_source')}>
             <input
               type="text"
               value={source}
               onChange={(e) => setSource(e.target.value)}
-              placeholder="Например: Блог Ивана Никитина, книга С. Кузнецова"
+              placeholder={t('reflect.knowledge.placeholder_source')}
               style={{ width: '100%' }}
             />
           </FormField>
 
-          <FormField label="Ссылка (URL)">
+          <FormField label={t('reflect.knowledge.field_url')}>
             <input
               type="url"
               value={url}
@@ -104,35 +106,35 @@ export default function KnowledgeModal({ isOpen, onClose, item, onSave }: Knowle
           </FormField>
         </div>
 
-        <FormField label="Конспект / Ключевые идеи" required>
+        <FormField label={t('reflect.knowledge.field_content')} required>
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="Опишите главные тезисы, конспект или цитаты..."
+            placeholder={t('reflect.knowledge.placeholder_content')}
             required
             style={{ width: '100%', height: '140px', resize: 'vertical' }}
           />
         </FormField>
 
-        <FormField label="Теги">
+        <FormField label={t('reflect.knowledge.field_tags')}>
           <input
             type="text"
             value={tagsText}
             onChange={(e) => setTagsText(e.target.value)}
-            placeholder="продуктивность, фокус, философия"
+            placeholder={t('reflect.knowledge.placeholder_tags')}
             style={{ width: '100%' }}
           />
           <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginTop: '4px', display: 'block' }}>
-            Перечислите теги через запятую.
+            {t('reflect.knowledge.tags_hint')}
           </span>
         </FormField>
 
         <div className="modal-form-footer">
           <button type="button" className="btn btn--secondary" onClick={onClose}>
-            Отмена
+            {t('action.cancel')}
           </button>
           <button type="submit" className="btn btn--primary">
-            {item ? 'Сохранить изменения' : 'Добавить знания'}
+            {item ? t('reflect.knowledge.action_save') : t('reflect.knowledge.action_create')}
           </button>
         </div>
       </form>

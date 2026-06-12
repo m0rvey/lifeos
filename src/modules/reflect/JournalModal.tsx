@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { type JournalEntry } from '../../types';
 import { Modal, FormField } from '../../ui';
 import { todayISO, getMoodEmoji } from '../../cognitive/helpers';
+import { useI18n } from '../../i18n';
 
 interface JournalModalProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface JournalModalProps {
 }
 
 export default function JournalModal({ isOpen, onClose, entry, onSave }: JournalModalProps) {
+  const { t } = useI18n();
   const [title, setTitle] = useState(entry?.title || '');
   const [content, setContent] = useState(entry?.content || '');
   const [mood, setMood] = useState(entry?.mood ?? 50);
@@ -22,11 +24,11 @@ export default function JournalModal({ isOpen, onClose, entry, onSave }: Journal
     setError('');
 
     if (!title.trim()) {
-      setError('Укажите тему дневниковой записи');
+      setError(t('reflect.journal.error_title'));
       return;
     }
     if (!content.trim()) {
-      setError('Содержание записи не может быть пустым');
+      setError(t('reflect.journal.error_content'));
       return;
     }
 
@@ -42,7 +44,7 @@ export default function JournalModal({ isOpen, onClose, entry, onSave }: Journal
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={entry ? 'Редактировать запись в дневнике' : 'Новая запись рефлексии'}
+      title={entry ? t('reflect.journal.modal_edit_title') : t('reflect.journal.modal_create_title')}
       maxWidth="sm"
     >
       <form onSubmit={handleSubmit} className="flex-col-16">
@@ -53,18 +55,18 @@ export default function JournalModal({ isOpen, onClose, entry, onSave }: Journal
         )}
 
         <div className="form-row">
-          <FormField label="Тема / Заголовок" required>
+          <FormField label={t('reflect.journal.field_title')} required>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Утренний настрой..."
+              placeholder={t('reflect.journal.placeholder_title')}
               required
               style={{ width: '100%' }}
             />
           </FormField>
 
-          <FormField label="Дата записи">
+          <FormField label={t('reflect.journal.field_date')}>
             <input
               type="date"
               value={dateISO}
@@ -75,7 +77,7 @@ export default function JournalModal({ isOpen, onClose, entry, onSave }: Journal
           </FormField>
         </div>
 
-        <FormField label="Ваше настроение">
+        <FormField label={t('reflect.journal.field_mood')}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <span style={{ fontSize: '1.2rem' }}>
               {getMoodEmoji(mood).emoji}
@@ -93,11 +95,11 @@ export default function JournalModal({ isOpen, onClose, entry, onSave }: Journal
           </div>
         </FormField>
 
-        <FormField label="Текст записи (Опишите мысли, эмоции, события)" required>
+        <FormField label={t('reflect.journal.field_content')} required>
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="Сегодня я почувствовал..."
+            placeholder={t('reflect.journal.placeholder_content')}
             required
             style={{ width: '100%', height: '120px', resize: 'vertical' }}
           />
@@ -105,10 +107,10 @@ export default function JournalModal({ isOpen, onClose, entry, onSave }: Journal
 
         <div className="modal-form-footer">
           <button type="button" className="btn btn--secondary" onClick={onClose}>
-            Отмена
+            {t('action.cancel')}
           </button>
           <button type="submit" className="btn btn--primary">
-            {entry ? 'Сохранить изменения' : 'Записать в дневник'}
+            {entry ? t('reflect.journal.action_save') : t('reflect.journal.action_create')}
           </button>
         </div>
       </form>

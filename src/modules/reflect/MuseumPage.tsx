@@ -18,7 +18,7 @@ export default function MuseumPage() {
 
   // Search & Filters
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('Все');
+  const [selectedCategory, setSelectedCategory] = useState('ALL');
 
   // Deletion dialog
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -26,7 +26,7 @@ export default function MuseumPage() {
 
   const categories = useMemo(() => {
     const cats = new Set(data.thoughts.map((t) => t.category));
-    return ['Все', ...Array.from(cats)];
+    return ['ALL', ...Array.from(cats)];
   }, [data.thoughts]);
 
   const filteredThoughts = useMemo(() => {
@@ -35,7 +35,7 @@ export default function MuseumPage() {
         thought.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
         thought.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
 
-      const matchCategory = selectedCategory === 'Все' || thought.category === selectedCategory;
+      const matchCategory = selectedCategory === 'ALL' || thought.category === selectedCategory;
 
       return matchQuery && matchCategory;
     });
@@ -70,7 +70,7 @@ export default function MuseumPage() {
       const newThought: Thought = {
         id: `thou_${uid()}`,
         content: thoughtData.content || '',
-        category: thoughtData.category || 'Философия',
+        category: thoughtData.category || t('reflect.museum.default_category'),
         tags: thoughtData.tags || [],
         createdAt: nowISO(),
         updatedAt: nowISO()
@@ -159,7 +159,7 @@ export default function MuseumPage() {
             style={{ height: '40px', padding: '0 12px', fontSize: '0.85rem' }}
           >
             {categories.map((cat) => (
-              <option key={cat} value={cat}>{cat === 'Все' ? t('filter.all') : cat}</option>
+              <option key={cat} value={cat}>{cat === 'ALL' ? t('filter.all') : cat}</option>
             ))}
           </select>
         </div>

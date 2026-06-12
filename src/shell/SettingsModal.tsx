@@ -475,7 +475,7 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                 </div>
                 <div className="settings-db-stats-row-total">
                   <span>{t('settings.db.storage_size')}</span>
-                  <span>{stats.sizeKB} КБ</span>
+                  <span>{stats.sizeKB} {t('settings.db.kb')}</span>
                 </div>
               </div>
             </div>
@@ -575,7 +575,7 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
         confirmLabel={t('confirm.wipe_confirm')}
         cancelLabel={t('action.cancel')}
         variant="danger"
-        requireTyping="СБРОС"
+        requireTyping={t('confirm.wipe_require_typing')}
       />
 
       {/* Confirmation for Import operations */}

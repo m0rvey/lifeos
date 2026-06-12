@@ -1,5 +1,6 @@
 import { type ReactNode, type MouseEvent, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { useI18n } from '../i18n';
 
 interface ModalProps {
   isOpen: boolean;
@@ -20,6 +21,7 @@ export default function Modal({
   footer,
   className,
 }: ModalProps) {
+  const { t } = useI18n();
   const overlayRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -107,7 +109,7 @@ export default function Modal({
       >
         <div className="modal-header">
           <h2 className="modal-title">{title}</h2>
-          <button className="modal-close-btn" onClick={onClose} aria-label="Закрыть">
+          <button className="modal-close-btn" onClick={onClose} aria-label={t('action.close')}>
             &times;
           </button>
         </div>
