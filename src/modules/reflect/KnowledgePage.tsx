@@ -4,7 +4,7 @@ import { useApp } from '../../context/AppContext';
 import { type KnowledgeItem } from '../../types';
 import { Plus, Book, Tag, ExternalLink, Search, Edit2, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
 import { EmptyState, ConfirmDialog } from '../../ui';
-import { uid, nowISO } from '../../cognitive/helpers';
+import { uid, nowISO, sanitizeUrl } from '../../cognitive/helpers';
 import KnowledgeModal from './KnowledgeModal';
 import { useI18n } from '../../i18n';
 
@@ -217,9 +217,9 @@ export default function KnowledgePage() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     {item.url && (
                       <a 
-                        href={item.url} 
+                        href={sanitizeUrl(item.url)} 
                         target="_blank" 
-                        rel="noreferrer" 
+                        rel="noopener noreferrer" 
                         onClick={(e) => e.stopPropagation()} 
                         style={{ color: 'var(--accent)', display: 'flex', alignItems: 'center' }}
                       >

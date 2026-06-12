@@ -18,15 +18,18 @@ beforeAll(() => {
   if (typeof localStorage !== 'undefined') {
     localStorage.setItem('lifeos-lang', 'ru');
   } else {
-    // Mock local storage if not available in non-dom environment
-    (globalThis as any).localStorage = {
-      getItem: (key: string) => key === 'lifeos-lang' ? 'ru' : null,
-      setItem: () => {},
-      removeItem: () => {},
-      clear: () => {},
-      length: 0,
-      key: () => null,
-    };
+    Object.defineProperty(globalThis, 'localStorage', {
+      value: {
+        getItem: (key: string) => (key === 'lifeos-lang' ? 'ru' : null),
+        setItem: () => {},
+        removeItem: () => {},
+        clear: () => {},
+        length: 0,
+        key: () => null,
+      },
+      writable: true,
+      configurable: true,
+    });
   }
 });
 

@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useReducer, useEffect, useRef, useState, type ReactNode, type Dispatch } from 'react';
+import { createContext, useContext, useReducer, useEffect, useRef, type ReactNode, type Dispatch } from 'react';
 import type { AppData } from '../types';
 import { loadData, saveData } from '../storage/engine';
 import { getDefaultData } from '../storage/defaults';
@@ -88,26 +88,24 @@ function dataReducer(state: AppData, action: DataAction): AppData {
       return state;
   }
 
-  return newState;
+  return {
+    ...newState,
+    fatigue: calculateFatigue(newState),
+  };
 }
 
 const DataStateContext = createContext<AppData | null>(null);
 const DataDispatchContext = createContext<Dispatch<DataAction> | null>(null);
 
 export function DataProvider({ children }: { children: ReactNode }) {
-  const [data, dispatch] = useReducer(dataReducer, null, () => loadData());
-  const [fatigue, setFatigue] = useState(data.fatigue);
+  const [data, dispatch] = useReducer(dataReducer, null, () => {
+    const loaded = loadData();
+    return {
+      ...loaded,
+      fatigue: calculateFatigue(loaded),
+    };
+  });
   const prevDataRef = useRef(data);
-  const fatigueTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-
-  // Debounced fatigue recalculation (500ms)
-  useEffect(() => {
-    clearTimeout(fatigueTimerRef.current);
-    fatigueTimerRef.current = setTimeout(() => {
-      setFatigue(calculateFatigue(data));
-    }, 500);
-    return () => clearTimeout(fatigueTimerRef.current);
-  }, [data]);
 
   // Auto-save on every change, debounced 2.5s. Also handle page unload.
   useEffect(() => {
@@ -133,10 +131,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
     };
   }, [data]);
 
-  const dataWithFatigue = { ...data, fatigue };
-
   return (
-    <DataStateContext.Provider value={dataWithFatigue}>
+    <DataStateContext.Provider value={data}>
       <DataDispatchContext.Provider value={dispatch}>
         {children}
       </DataDispatchContext.Provider>

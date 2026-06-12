@@ -152,7 +152,7 @@ export default function MaintenancePage() {
               { key: 'type', label: t('cycling.maintenance.colType'), render: (v) => typeLabels[v as keyof typeof typeLabels] || v as string },
               { key: 'cost', label: t('cycling.maintenance.colCost'), render: (v) => formatCurrency(v as number) },
               { key: 'dateISO', label: t('cycling.maintenance.colDate'), render: (v) => formatDate(v as string) },
-              { key: 'isDone', label: t('cycling.maintenance.colStatus'), render: (v, row) => {
+              { key: 'isDone', label: t('cycling.maintenance.colStatus'), render: (_, row) => {
                 const record = row as MaintenanceRecord;
                 return (
                   <button 

@@ -178,3 +178,17 @@ export function getMoodLabel(mood: number): string {
   if (mood >= 20) return isEn ? '🙁 Bad' : '🙁 Плохо';
   return isEn ? '😢 Awful' : '😢 Тяжело';
 }
+
+export function sanitizeUrl(urlStr: string): string {
+  if (!urlStr) return '';
+  const trimmed = urlStr.trim();
+  // Block javascript:, data:, and vbscript: to prevent XSS attacks
+  if (/^(javascript|data|vbscript):/i.test(trimmed)) {
+    return 'about:blank';
+  }
+  // Allow relative paths, standard web protocols, or query routes
+  if (/^https?:\/\//i.test(trimmed) || /^\//.test(trimmed) || !trimmed.includes(':')) {
+    return trimmed;
+  }
+  return 'about:blank';
+}
