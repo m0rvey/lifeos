@@ -301,11 +301,14 @@ export function sanitizeData(data: unknown): AppData {
   const themeModeStr = typeof rawSettings.themeMode === 'string' ? rawSettings.themeMode : '';
   const themeModeVal = ['manual', 'adaptive', 'system'].includes(themeModeStr) ? (themeModeStr as AppData['settings']['themeMode']) : def.settings.themeMode;
 
+  const userNameStr = typeof rawSettings.userName === 'string' ? rawSettings.userName : '';
+
   return {
     version: 3,
     settings: {
       theme: themeVal,
       themeMode: themeModeVal,
+      userName: userNameStr || def.settings.userName,
       accentColor: accentVal,
       fontSizeScale: typeof rawSettings.fontSizeScale === 'number' ? Math.max(0.8, Math.min(1.2, rawSettings.fontSizeScale)) : def.settings.fontSizeScale,
       isAdaptive: typeof rawSettings.isAdaptive === 'boolean' ? rawSettings.isAdaptive : def.settings.isAdaptive,

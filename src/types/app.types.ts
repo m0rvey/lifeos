@@ -13,6 +13,7 @@ export type ThemeMode = 'manual' | 'adaptive' | 'system';
 export interface AppSettings {
   theme: ThemeType;
   themeMode: ThemeMode;
+  userName: string;
   accentColor: 'purple' | 'orange' | 'green' | 'blue' | 'rose';
   fontSizeScale: number;
   isAdaptive: boolean;

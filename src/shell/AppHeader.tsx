@@ -29,7 +29,7 @@ const TABS: ModuleTab[] = [
 
 export default function AppHeader({ onOpenSettings }: AppHeaderProps) {
   const navigate = useNavigate();
-  const { activeModule, isSidebarOpen, setSidebarOpen } = useApp();
+  const { activeModule, userName, isSidebarOpen, setSidebarOpen } = useApp();
   const { data } = useData();
 
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
@@ -133,16 +133,16 @@ export default function AppHeader({ onOpenSettings }: AppHeaderProps) {
           title="Личный кабинет"
           aria-label="Личный кабинет"
         >
-          MV
+          {userName.slice(0, 2).toUpperCase()}
         </button>
 
         {showProfileDropdown && (
           <div className="profile-dropdown" ref={dropdownRef}>
             <div className="profile-dropdown-header">
-              <div className="profile-dropdown-avatar">LO</div>
+              <div className="profile-dropdown-avatar">{userName.slice(0, 2).toUpperCase()}</div>
               <div className="profile-dropdown-info">
-                <div className="profile-dropdown-name">LifeOS</div>
-                <div className="profile-dropdown-email">open-source</div>
+                <div className="profile-dropdown-name">{userName}</div>
+                <div className="profile-dropdown-email">LifeOS</div>
               </div>
             </div>
             <div className="profile-dropdown-divider" />

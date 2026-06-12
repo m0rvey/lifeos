@@ -186,6 +186,7 @@ export const GraphWeightsSchema = z.object({
 export const AppSettingsSchema = z.object({
   theme: z.enum(['mindveyz', 'cyclist', 'reflect', 'slate']),
   themeMode: z.enum(['manual', 'adaptive', 'system']),
+  userName: z.string(),
   accentColor: z.enum(['purple', 'orange', 'green', 'blue', 'rose']),
   fontSizeScale: z.number().min(0.8).max(1.2),
   isAdaptive: z.boolean(),

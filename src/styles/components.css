@@ -987,5 +987,36 @@ tr:nth-child(even) td { background: color-mix(in srgb, var(--surface) 50%, trans
   }
 }
 
+/* Settings About */
+.settings-about {
+  margin-top: var(--sp-6);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
 
+.settings-about-content {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: var(--sp-2);
+}
+
+.settings-about-author {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+}
+
+.settings-about-author a {
+  color: var(--accent);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: opacity var(--duration-fast);
+}
+
+.settings-about-author a:hover {
+  opacity: 0.8;
+}
 

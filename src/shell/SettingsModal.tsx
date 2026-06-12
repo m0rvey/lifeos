@@ -3,7 +3,7 @@ import { useApp } from '../context/AppContext';
 import { useData } from '../context/DataContext';
 import { exportBackup, importBackup, wipeAllData, exportTransactionsCsv, exportRidesCsv, exportPeopleCsv } from '../storage/backup';
 import { ConfirmDialog, Modal } from '../ui';
-import { Database, Sliders, SlidersHorizontal, Trash2, Download, Upload, Info } from 'lucide-react';
+import { Database, Sliders, SlidersHorizontal, Trash2, Download, Upload, Info, ExternalLink, User } from 'lucide-react';
 import type { ThemeType, ThemeMode } from '../types';
 
 interface SettingsModalProps {
@@ -16,6 +16,8 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
     setTheme,
     themeMode,
     setThemeMode,
+    userName,
+    setUserName,
     accentColor,
     setAccentColor,
     fontSizeScale,
@@ -193,7 +195,23 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                 <h3 className="settings-section-title">
                   <Sliders size={14} /> Основные параметры
                 </h3>
-                
+
+                {/* User name */}
+                <div className="settings-form-group">
+                  <label className="settings-label">Имя пользователя</label>
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <User size={14} style={{ color: 'var(--text-secondary)', flexShrink: 0 }} />
+                    <input
+                      type="text"
+                      value={userName}
+                      onChange={e => setUserName(e.target.value)}
+                      className="settings-select"
+                      placeholder="Ваше имя"
+                      maxLength={30}
+                    />
+                  </div>
+                </div>
+
                 {/* Theme mode */}
                 <div className="settings-form-group">
                   <label className="settings-label">Режим темы</label>
@@ -518,6 +536,16 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                   </button>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* About section */}
+          <div className="settings-about">
+            <div className="settings-about-content">
+              <strong>LifeOS</strong> — open-source platform for managing social connections, finance, cycling, reflection, and habits.
+            </div>
+            <div className="settings-about-author">
+              Created by <a href="https://github.com/m0rvey" target="_blank" rel="noopener noreferrer">m0rvey <ExternalLink size={11} /></a>
             </div>
           </div>
         </div>

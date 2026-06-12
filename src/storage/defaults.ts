@@ -6,6 +6,7 @@ export function getDefaultData(): AppData {
     settings: {
       theme: 'mindveyz',
       themeMode: 'adaptive',
+      userName: 'User',
       accentColor: 'purple',
       fontSizeScale: 1.0,
       isAdaptive: true,

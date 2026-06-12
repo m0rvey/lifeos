@@ -10,6 +10,8 @@ interface AppContextValue {
   setTheme: (theme: ThemeType) => void;
   themeMode: ThemeMode;
   setThemeMode: (mode: ThemeMode) => void;
+  userName: string;
+  setUserName: (name: string) => void;
   isAdaptive: boolean;
   setIsAdaptive: (adaptive: boolean) => void;
   accentColor: 'purple' | 'orange' | 'green' | 'blue' | 'rose';
@@ -103,6 +105,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
         settings: {
           ...settingsRef.current,
           accentColor: accent,
+        },
+      },
+    });
+  }, [dispatch]);
+
+  const setUserName = useCallback((name: string) => {
+    dispatch({
+      type: 'SET_DATA',
+      payload: {
+        settings: {
+          ...settingsRef.current,
+          userName: name,
         },
       },
     });
@@ -231,6 +245,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setTheme,
         themeMode: settings.themeMode,
         setThemeMode,
+        userName: settings.userName,
+        setUserName,
         isAdaptive: settings.isAdaptive,
         setIsAdaptive,
         accentColor: settings.accentColor,
