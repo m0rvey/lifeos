@@ -402,9 +402,6 @@
   .stat-grid, .stat-grid-compact {
     grid-template-columns: 1fr 1fr;
   }
-  .hub-grid {
-    grid-template-columns: 1fr;
-  }
   .flex-layout-split {
     flex-direction: column;
   }
