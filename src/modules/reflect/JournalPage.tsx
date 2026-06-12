@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useData } from '../../context/DataContext';
 import { useApp } from '../../context/AppContext';
+import { useI18n } from '../../i18n';
 import { type JournalEntry } from '../../types';
 import { Plus, BookOpen, Smile, Edit2, Trash2 } from 'lucide-react';
 import { StatCard, EmptyState, ConfirmDialog } from '../../ui';
@@ -10,6 +11,7 @@ import JournalModal from './JournalModal';
 export default function JournalPage() {
   const { data, dispatch } = useData();
   const { addToast } = useApp();
+  const { t } = useI18n();
 
   const [isOpen, setIsOpen] = useState(false);
   const [editingEntry, setEditingEntry] = useState<JournalEntry | null>(null);
@@ -46,7 +48,7 @@ export default function JournalPage() {
         id: editingEntry.id,
         payload: { ...entryData, updatedAt: nowISO() }
       });
-      addToast('Запись в дневнике сохранена', 'success');
+      addToast(t('journal.saved'), 'success');
     } else {
       const newEntry: JournalEntry = {
         id: `journ_${uid()}`,
@@ -65,7 +67,7 @@ export default function JournalPage() {
       addToast('Новая страница рефлексии добавлена в дневник', 'success');
     }
     setIsOpen(false);
-  }, [editingEntry, dispatch, addToast]);
+  }, [editingEntry, dispatch, addToast, t]);
 
   const handleDeleteTrigger = (id: string) => {
     setEntryToDelete(id);

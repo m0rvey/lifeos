@@ -6,9 +6,11 @@ import { Plus, Bike, Route, Gauge, TrendingUp, Mountain, Clock, Award, Edit2, Tr
 import { EmptyState, ConfirmDialog } from '../../ui';
 import { formatDate, formatDistance, formatDuration, uid, nowISO } from '../../cognitive/helpers';
 import { useRideStats } from '../../hooks/useRideStats';
+import { useI18n } from '../../i18n';
 import RideModal from './RideModal';
 
 export default function RidesPage() {
+  const { t } = useI18n();
   const { data, dispatch } = useData();
   const { addToast } = useApp();
 
@@ -44,12 +46,12 @@ export default function RidesPage() {
         id: editingRide.id,
         payload: { ...rideData, updatedAt: nowISO() }
       });
-      addToast('Заезд успешно отредактирован', 'success');
+      addToast(t('cycling.rides.toastEdited'), 'success');
     } else {
       const newRide: RideRecord = {
         id: `ride_${uid()}`,
         dateISO: rideData.dateISO || new Date().toISOString(),
-        title: rideData.title || 'Велотренировка',
+        title: rideData.title || t('cycling.rides.defaultTitle'),
         distanceKm: rideData.distanceKm || 0,
         durationMin: rideData.durationMin || 0,
         avgSpeedKmh: rideData.avgSpeedKmh || 0,
@@ -67,10 +69,10 @@ export default function RidesPage() {
         entity: 'rides',
         payload: newRide
       });
-      addToast('Новый заезд зафиксирован в журнале', 'success');
+      addToast(t('cycling.rides.toastCreated'), 'success');
     }
     setIsOpen(false);
-  }, [editingRide, dispatch, addToast]);
+  }, [editingRide, dispatch, addToast, t]);
 
   const handleDelete = useCallback((id: string) => {
     dispatch({
@@ -78,8 +80,8 @@ export default function RidesPage() {
       entity: 'rides',
       id
     });
-    addToast('Запись о заезде удалена', 'warning');
-  }, [dispatch, addToast]);
+    addToast(t('cycling.rides.toastDeleted'), 'warning');
+  }, [dispatch, addToast, t]);
 
   const handleConfirmDelete = useCallback(() => {
     if (rideToDelete) {
@@ -95,47 +97,47 @@ export default function RidesPage() {
         <div className="glass-panel cycling-stat-panel">
           <Route size={24} style={{ color: 'var(--accent)' }} />
           <div>
-            <span className="cycling-stat-label">Дистанция</span>
-            <strong className="cycling-stat-val">{totalDistance.toFixed(1)} км</strong>
+            <span className="cycling-stat-label">{t('cycling.rides.distance')}</span>
+            <strong className="cycling-stat-val">{totalDistance.toFixed(1)} {t('cycling.common.km')}</strong>
           </div>
         </div>
 
         <div className="glass-panel cycling-stat-panel">
           <Gauge size={24} style={{ color: 'var(--accent)' }} />
           <div>
-            <span className="cycling-stat-label">Средняя</span>
-            <strong className="cycling-stat-val">{averageSpeed.toFixed(1)} км/ч</strong>
+            <span className="cycling-stat-label">{t('cycling.rides.avg')}</span>
+            <strong className="cycling-stat-val">{averageSpeed.toFixed(1)} {t('cycling.common.kmh')}</strong>
           </div>
         </div>
 
         <div className="glass-panel cycling-stat-panel">
           <TrendingUp size={24} style={{ color: 'var(--accent)' }} />
           <div>
-            <span className="cycling-stat-label">Рекорд скорости</span>
-            <strong className="cycling-stat-val">{recordSpeed.toFixed(1)} км/ч</strong>
+            <span className="cycling-stat-label">{t('cycling.rides.speedRecord')}</span>
+            <strong className="cycling-stat-val">{recordSpeed.toFixed(1)} {t('cycling.common.kmh')}</strong>
           </div>
         </div>
 
         <div className="glass-panel cycling-stat-panel">
           <Mountain size={24} style={{ color: 'var(--accent)' }} />
           <div>
-            <span className="cycling-stat-label">Набор высоты</span>
-            <strong className="cycling-stat-val">{totalElevation.toFixed(1)} м</strong>
+            <span className="cycling-stat-label">{t('cycling.dashboard.elevationGain')}</span>
+            <strong className="cycling-stat-val">{totalElevation.toFixed(1)} {t('cycling.common.m')}</strong>
           </div>
         </div>
 
         <div className="glass-panel cycling-stat-panel">
           <Award size={24} style={{ color: 'var(--accent)' }} />
           <div>
-            <span className="cycling-stat-label">Макс. длина</span>
-            <strong className="cycling-stat-val">{maxDistance.toFixed(1)} км</strong>
+            <span className="cycling-stat-label">{t('cycling.rides.maxDistance')}</span>
+            <strong className="cycling-stat-val">{maxDistance.toFixed(1)} {t('cycling.common.km')}</strong>
           </div>
         </div>
 
         <div className="glass-panel cycling-stat-panel">
           <Clock size={24} style={{ color: 'var(--accent)' }} />
           <div>
-            <span className="cycling-stat-label">Общее время</span>
+            <span className="cycling-stat-label">{t('cycling.rides.totalTime')}</span>
             <strong className="cycling-stat-val">{formatDuration(totalDuration)}</strong>
           </div>
         </div>
@@ -146,17 +148,17 @@ export default function RidesPage() {
         <div className="cycling-roster-header">
           <h3 className="cycling-title-group">
             <Bike size={16} />
-            <span>Журнал тренировок</span>
+            <span>{t('cycling.rides.trainingJournal')}</span>
           </h3>
 
           <div className="cycling-actions">
             <div className="filter-tabs" style={{ marginBottom: 0 }}>
-              <button className={`tab-btn ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')}>Все ({data.rides.length})</button>
-              <button className={`tab-btn ${filter === 'recent' ? 'active' : ''}`} onClick={() => setFilter('recent')}>Последние 5</button>
+              <button className={`tab-btn ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')}>{t('cycling.rides.filterAll')} ({data.rides.length})</button>
+              <button className={`tab-btn ${filter === 'recent' ? 'active' : ''}`} onClick={() => setFilter('recent')}>{t('cycling.rides.filterRecent')}</button>
             </div>
             <button className="btn btn--primary cycling-actions-btn" onClick={handleAddNew}>
               <Plus size={14} />
-              <span>Записать тренировку</span>
+              <span>{t('cycling.rides.recordTraining')}</span>
             </button>
           </div>
         </div>
@@ -179,14 +181,14 @@ export default function RidesPage() {
                     <button 
                       className="btn btn--secondary cycling-btn-sm-edit" 
                       onClick={() => handleEdit(ride)}
-                      title="Редактировать"
+                      title={t('action.edit')}
                     >
                       <Edit2 size={12} />
                     </button>
                     <button 
                       className="btn btn--secondary cycling-btn-sm-delete" 
                       onClick={() => setRideToDelete(ride.id)}
-                      title="Удалить"
+                      title={t('action.delete')}
                     >
                       <Trash2 size={12} />
                     </button>
@@ -202,19 +204,19 @@ export default function RidesPage() {
 
                 <div className="cycling-ride-card-details">
                   <div>
-                    <span>Средняя</span>
-                    <strong>{ride.avgSpeedKmh.toFixed(1)} км/ч</strong>
+                    <span>{t('cycling.rides.avg')}</span>
+                    <strong>{ride.avgSpeedKmh.toFixed(1)} {t('cycling.common.kmh')}</strong>
                   </div>
                   <div>
-                    <span>Максимум</span>
-                    <strong>{ride.maxSpeedKmh.toFixed(1)} км/ч</strong>
+                    <span>{t('cycling.rides.maximum')}</span>
+                    <strong>{ride.maxSpeedKmh.toFixed(1)} {t('cycling.common.kmh')}</strong>
                   </div>
                   <div>
-                    <span>Набор высоты</span>
-                    <strong>{ride.elevationGainM.toFixed(1)} м</strong>
+                    <span>{t('cycling.dashboard.elevationGain')}</span>
+                    <strong>{ride.elevationGainM.toFixed(1)} {t('cycling.common.m')}</strong>
                   </div>
                   <div>
-                    <span>Время</span>
+                    <span>{t('cycling.rides.time')}</span>
                     <strong>{formatDuration(ride.durationMin)}</strong>
                   </div>
                 </div>
@@ -224,19 +226,19 @@ export default function RidesPage() {
         ) : (
           <EmptyState
             icon={<Bike size={48} />}
-            title="Журнал заездов пуст"
-            description="Запишите вашу первую велотренировку или привяжите ее к готовому маршруту."
+            title={t('cycling.rides.emptyTitle')}
+            description={t('cycling.rides.emptyDescription')}
             action={
               <button className="btn btn--primary" onClick={handleAddNew}>
                 <Plus size={14} />
-                <span>Записать тренировку</span>
+                <span>{t('cycling.rides.recordTraining')}</span>
               </button>
             }
           />
         )}
       </div>
 
-        {isOpen && (
+      {isOpen && (
           <RideModal
             isOpen={isOpen}
             ride={editingRide}
@@ -251,8 +253,8 @@ export default function RidesPage() {
             isOpen={rideToDelete !== null}
             onConfirm={handleConfirmDelete}
             onCancel={() => setRideToDelete(null)}
-            title="Удалить заезд?"
-            message="Вы действительно хотите удалить эту запись о велотренировке? Это действие необратимо."
+            title={t('cycling.rides.deleteConfirmTitle')}
+            message={t('cycling.rides.deleteConfirmMessage')}
             variant="danger"
           />
         )}

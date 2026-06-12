@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { type Person, Depth, Archetype, PersonStatus } from '../../types';
 import { Modal, FormField } from '../../ui';
 import { todayISO } from '../../cognitive/helpers';
+import { useI18n } from '../../i18n';
 
 interface PersonModalProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface PersonModalProps {
 }
 
 export default function PersonModal({ isOpen, onClose, person, onSave }: PersonModalProps) {
+  const { t } = useI18n();
   const [name, setName] = useState(person?.name || '');
   const [depth, setDepth] = useState<Depth>(person?.depth || Depth.INNER);
   const [archetype, setArchetype] = useState<Archetype>(person?.archetype || Archetype.INTELLECTUAL);
@@ -29,7 +31,7 @@ export default function PersonModal({ isOpen, onClose, person, onSave }: PersonM
     setError('');
 
     if (!name.trim()) {
-      setError('Имя контакта обязательно');
+      setError(t('social.modal.name_required_error'));
       return;
     }
 
@@ -52,7 +54,7 @@ export default function PersonModal({ isOpen, onClose, person, onSave }: PersonM
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={person ? 'Настройка социальной связи' : 'Регистрация нового знакомства'}
+      title={person ? t('social.modal.edit_title') : t('social.modal.create_title')}
       maxWidth="md"
     >
       <form onSubmit={handleSubmit} className="flex-col-16">
@@ -62,61 +64,61 @@ export default function PersonModal({ isOpen, onClose, person, onSave }: PersonM
           </div>
         )}
 
-        <FormField label="Имя и Фамилия" required>
+        <FormField label={t('social.modal.name_label')} required>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Константин Вернадский"
+            placeholder={t('social.modal.name_placeholder')}
             required
             style={{ width: '100%' }}
           />
         </FormField>
 
         <div className="form-row">
-          <FormField label="Круг близости">
+          <FormField label={t('social.label.depth')}>
             <select
               value={depth}
               onChange={(e) => setDepth(e.target.value as Depth)}
               style={{ width: '100%' }}
             >
-              <option value={Depth.CORE}>Ядро (Семья, Близкие)</option>
-              <option value={Depth.INNER}>Ближний круг (Друзья)</option>
-              <option value={Depth.SOCIAL}>Социальный слой (Коллеги)</option>
-              <option value={Depth.PERIPHERY}>Периферия (Знакомые)</option>
+              <option value={Depth.CORE}>{t('social.modal.depth_core_detail')}</option>
+              <option value={Depth.INNER}>{t('social.modal.depth_inner_detail')}</option>
+              <option value={Depth.SOCIAL}>{t('social.modal.depth_social_detail')}</option>
+              <option value={Depth.PERIPHERY}>{t('social.modal.depth_periphery_detail')}</option>
             </select>
           </FormField>
 
-          <FormField label="Архетип связи">
+          <FormField label={t('social.label.archetype')}>
             <select
               value={archetype}
               onChange={(e) => setArchetype(e.target.value as Archetype)}
               style={{ width: '100%' }}
             >
-              <option value={Archetype.INTELLECTUAL}>Интеллектуальный</option>
-              <option value={Archetype.EMOTIONAL}>Эмоциональный</option>
-              <option value={Archetype.BUSINESS}>Деловой</option>
+              <option value={Archetype.INTELLECTUAL}>{t('social.archetype.intellectual')}</option>
+              <option value={Archetype.EMOTIONAL}>{t('social.archetype.emotional')}</option>
+              <option value={Archetype.BUSINESS}>{t('social.archetype.business')}</option>
             </select>
           </FormField>
         </div>
 
         <div className="form-row">
-          <FormField label="Статус общения">
+          <FormField label={t('social.label.status')}>
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value as PersonStatus)}
               style={{ width: '100%' }}
             >
-              <option value={PersonStatus.ACTIVE}>Активен</option>
-              <option value={PersonStatus.OCCASIONAL}>Покой / Эпизодически</option>
-              <option value={PersonStatus.DISTANT}>На расстоянии</option>
-              <option value={PersonStatus.CONFLICT}>В конфликте</option>
-              <option value={PersonStatus.LOST}>Потерян / Не общаемся</option>
-              <option value={PersonStatus.MENTOR}>Наставник</option>
+              <option value={PersonStatus.ACTIVE}>{t('social.status.active')}</option>
+              <option value={PersonStatus.OCCASIONAL}>{t('social.status.occasional')} / {t('social.status.episodic')}</option>
+              <option value={PersonStatus.DISTANT}>{t('social.status.distant')}</option>
+              <option value={PersonStatus.CONFLICT}>{t('social.status.conflict')}</option>
+              <option value={PersonStatus.LOST}>{t('social.status.lost')}</option>
+              <option value={PersonStatus.MENTOR}>{t('social.status.mentor')}</option>
             </select>
           </FormField>
 
-          <FormField label="Дата последнего контакта">
+          <FormField label={t('social.modal.last_contact_label')}>
             <input
               type="date"
               value={lastContactISO}
@@ -128,13 +130,13 @@ export default function PersonModal({ isOpen, onClose, person, onSave }: PersonM
 
         <div style={{ borderTop: '1px solid var(--border)', paddingTop: '16px', marginTop: '8px' }}>
           <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '12px' }}>
-            Количественные метрики (0-100)
+            {t('social.modal.metrics_title')}
           </span>
           
           <div className="form-row">
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '6px' }}>
-                <span>Энергия (влияние)</span>
+                <span>{t('social.metric.energy')}</span>
                 <strong>{energy}%</strong>
               </div>
               <input
@@ -150,7 +152,7 @@ export default function PersonModal({ isOpen, onClose, person, onSave }: PersonM
 
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '6px' }}>
-                <span>Резонанс (ценности)</span>
+                <span>{t('social.metric.resonance')}</span>
                 <strong>{resonance}%</strong>
               </div>
               <input
@@ -166,7 +168,7 @@ export default function PersonModal({ isOpen, onClose, person, onSave }: PersonM
 
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '6px' }}>
-                <span>Взаимность (интерес)</span>
+                <span>{t('social.metric.reciprocity')}</span>
                 <strong>{reciprocity}%</strong>
               </div>
               <input
@@ -182,7 +184,7 @@ export default function PersonModal({ isOpen, onClose, person, onSave }: PersonM
 
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '6px' }}>
-                <span>Волатильность (хаос)</span>
+                <span>{t('social.metric.volatility')}</span>
                 <strong>{volatility}%</strong>
               </div>
               <input
@@ -198,30 +200,30 @@ export default function PersonModal({ isOpen, onClose, person, onSave }: PersonM
           </div>
         </div>
 
-        <FormField label="Рефлексия (ваши выводы)">
+        <FormField label={t('social.modal.reflection_label')}>
           <textarea
             value={reflection}
             onChange={(e) => setReflection(e.target.value)}
             style={{ width: '100%', height: '60px', resize: 'vertical' }}
-            placeholder="Какие инсайты или эмоции принесло общение?"
+            placeholder={t('social.modal.reflection_placeholder')}
           />
         </FormField>
 
-        <FormField label="Заметки / Договорённости">
+        <FormField label={t('social.modal.notes_label')}>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             style={{ width: '100%', height: '60px', resize: 'vertical' }}
-            placeholder="О чем договорились встретиться или списаться в будущем?"
+            placeholder={t('social.modal.notes_placeholder')}
           />
         </FormField>
 
         <div className="modal-form-footer">
           <button type="button" className="btn btn--secondary" onClick={onClose}>
-            Отмена
+            {t('action.cancel')}
           </button>
           <button type="submit" className="btn btn--primary">
-            {person ? 'Сохранить изменения' : 'Создать связь'}
+            {person ? t('social.modal.save_changes') : t('social.modal.create_connection')}
           </button>
         </div>
       </form>

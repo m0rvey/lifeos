@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { type Thought } from '../../types';
 import { Modal, FormField } from '../../ui';
+import { useI18n } from '../../i18n';
 
 interface MuseumModalProps {
   isOpen: boolean;
@@ -10,6 +11,7 @@ interface MuseumModalProps {
 }
 
 export default function MuseumModal({ isOpen, onClose, thought, onSave }: MuseumModalProps) {
+  const { t } = useI18n();
   const [content, setContent] = useState(thought?.content || '');
   const [category, setCategory] = useState(thought?.category || 'Философия');
   const [tagsText, setTagsText] = useState(thought?.tags ? thought.tags.join(', ') : '');
@@ -20,7 +22,7 @@ export default function MuseumModal({ isOpen, onClose, thought, onSave }: Museum
     setError('');
 
     if (!content.trim()) {
-      setError('Содержание мысли не может быть пустым');
+      setError(t('reflect.museum.error_empty'));
       return;
     }
 
@@ -35,7 +37,7 @@ export default function MuseumModal({ isOpen, onClose, thought, onSave }: Museum
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={thought ? 'Редактировать мысль' : 'Зафиксировать инсайт / Цитату'}
+      title={thought ? t('reflect.museum.modal_edit_title') : t('reflect.museum.modal_create_title')}
       maxWidth="sm"
     >
       <form onSubmit={handleSubmit} className="flex-col-16">
@@ -45,45 +47,45 @@ export default function MuseumModal({ isOpen, onClose, thought, onSave }: Museum
           </div>
         )}
 
-        <FormField label="Текст мысли / Инсайт / Цитата" required>
+        <FormField label={t('reflect.museum.field_thought')} required>
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="Запишите то, что вас вдохновило или пришло на ум..."
+            placeholder={t('reflect.museum.placeholder_thought')}
             required
             style={{ width: '100%', height: '120px', resize: 'vertical' }}
           />
         </FormField>
 
-        <FormField label="Категория">
+        <FormField label={t('reflect.museum.field_category')}>
           <input
             type="text"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            placeholder="Например: Философия, Цитаты, Инсайты"
+            placeholder={t('reflect.museum.placeholder_category')}
             style={{ width: '100%' }}
           />
         </FormField>
 
-        <FormField label="Теги">
+        <FormField label={t('reflect.museum.field_tags')}>
           <input
             type="text"
             value={tagsText}
             onChange={(e) => setTagsText(e.target.value)}
-            placeholder="жизнь, мудрость, мотивация"
+            placeholder={t('reflect.museum.placeholder_tags')}
             style={{ width: '100%' }}
           />
           <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginTop: '4px', display: 'block' }}>
-            Перечислите теги через запятую.
+            {t('reflect.museum.tags_hint')}
           </span>
         </FormField>
 
         <div className="modal-form-footer">
           <button type="button" className="btn btn--secondary" onClick={onClose}>
-            Отмена
+            {t('action.cancel')}
           </button>
           <button type="submit" className="btn btn--primary">
-            {thought ? 'Сохранить изменения' : 'Запечатлеть'}
+            {thought ? t('reflect.museum.save') : t('reflect.museum.action_capture')}
           </button>
         </div>
       </form>

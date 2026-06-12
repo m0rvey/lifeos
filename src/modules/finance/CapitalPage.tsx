@@ -5,6 +5,7 @@ import { type Transaction } from '../../types';
 import { Plus, Wallet, TrendingUp, TrendingDown, Edit2, Trash2, Search } from 'lucide-react';
 import { StatCard, DataTable, EmptyState, ConfirmDialog } from '../../ui';
 import { formatDate, formatCurrency, uid, nowISO, todayISO } from '../../cognitive/helpers';
+import { useI18n } from '../../i18n';
 import BalanceChart from './BalanceChart';
 import ReminderList from './ReminderList';
 import TransactionModal from './TransactionModal';
@@ -12,6 +13,7 @@ import TransactionModal from './TransactionModal';
 export default function CapitalPage() {
   const { data, dispatch } = useData();
   const { addToast } = useApp();
+  const { t } = useI18n();
 
   const [showForm, setShowForm] = useState(false);
   const [editingTx, setEditingTx] = useState<Transaction | null>(null);
@@ -25,7 +27,6 @@ export default function CapitalPage() {
     return ['Все', ...Array.from(cats)];
   }, [data.transactions]);
 
-  // Financial calculations
   const totalIncome = useMemo(() => {
     return data.transactions
       .filter((t) => t.type === 'income')
@@ -78,7 +79,7 @@ export default function CapitalPage() {
         id: editingTx.id,
         payload: { ...txData, updatedAt: nowISO() }
       });
-      addToast('Транзакция успешно обновлена', 'success');
+      addToast(t('toast.transaction.updated'), 'success');
     } else {
       const newTx: Transaction = {
         id: `tx_${uid()}`,
@@ -95,10 +96,10 @@ export default function CapitalPage() {
         entity: 'transactions',
         payload: newTx
       });
-      addToast('Транзакция добавлена на баланс', 'success');
+      addToast(t('toast.transaction.added'), 'success');
     }
     setShowForm(false);
-  }, [editingTx, dispatch, addToast]);
+  }, [editingTx, dispatch, addToast, t]);
 
   const handleDelete = useCallback((id: string) => {
     dispatch({
@@ -106,8 +107,8 @@ export default function CapitalPage() {
       entity: 'transactions',
       id
     });
-    addToast('Транзакция удалена с баланса', 'warning');
-  }, [dispatch, addToast]);
+    addToast(t('toast.transaction.deleted'), 'warning');
+  }, [dispatch, addToast, t]);
 
   const handleConfirmDelete = useCallback(() => {
     if (txToDelete) {
@@ -122,34 +123,34 @@ export default function CapitalPage() {
       <div className="flex-row-between">
         <div>
           <h1 className="text-xl-scale text-bold no-margin">
-            Капитал & Бюджет
+            {t('finance.page.title')}
           </h1>
           <span className="text-sm-scale text-secondary">
-            Мониторинг денежных потоков и планирование платежей
+            {t('finance.page.subtitle')}
           </span>
         </div>
         <button className="btn btn--primary flex-row-center-gap6" onClick={handleAddNewClick}>
           <Plus size={16} />
-          <span>Добавить операцию</span>
+          <span>{t('finance.add.operation')}</span>
         </button>
       </div>
 
       {/* Stat Cards Overview */}
       <div className="grid-cols-stats">
         <StatCard 
-          label="Общий баланс" 
+          label={t('finance.stat.totalBalance')} 
           value={formatCurrency(balance)} 
           icon={<Wallet size={20} />} 
           accent 
         />
         <StatCard 
-          label="Всего доходов" 
+          label={t('finance.stat.totalIncome')} 
           value={formatCurrency(totalIncome)} 
           icon={<TrendingUp size={20} />} 
           trend="up" 
         />
         <StatCard 
-          label="Всего расходов" 
+          label={t('finance.stat.totalExpenses')} 
           value={formatCurrency(totalExpenses)} 
           icon={<TrendingDown size={20} />} 
           trend="down" 
@@ -166,7 +167,7 @@ export default function CapitalPage() {
           {/* Transactions DataTable */}
           <div className="glass-panel padding-16-flex-col-12">
             <span className="section-title">
-              Журнал операций
+              {t('finance.journal')}
             </span>
 
             <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginBottom: '12px', alignItems: 'center' }}>
@@ -174,7 +175,7 @@ export default function CapitalPage() {
                 <Search size={16} style={{ color: 'var(--text-secondary)', marginRight: '8px' }} />
                 <input
                   type="text"
-                  placeholder="Искать по описанию или категории..."
+                  placeholder={t('finance.search.placeholder')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   style={{
@@ -189,13 +190,14 @@ export default function CapitalPage() {
               </div>
 
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Категория:</span>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{t('finance.category.label')}</span>
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
                   style={{ height: '40px', padding: '0 12px', fontSize: '0.85rem', background: 'var(--bg-secondary)', border: '1px solid var(--border)', color: 'var(--text-primary)', borderRadius: 'var(--radius-sm)', outline: 'none' }}
                 >
-                  {categories.map((cat) => (
+                  <option value="Все">{t('filter.all')}</option>
+                  {categories.filter((cat) => cat !== 'Все').map((cat) => (
                     <option key={cat} value={cat}>{cat}</option>
                   ))}
                 </select>
@@ -205,27 +207,27 @@ export default function CapitalPage() {
             {sortedTransactions.length > 0 ? (
               <DataTable
                 columns={[
-                  { key: 'dateISO', label: 'Дата', render: (v) => formatDate(v as string) },
-                  { key: 'category', label: 'Категория' },
-                  { key: 'amount', label: 'Сумма', render: (v, row) => (
+                  { key: 'dateISO', label: t('finance.column.date'), render: (v) => formatDate(v as string) },
+                  { key: 'category', label: t('finance.column.category') },
+                  { key: 'amount', label: t('finance.column.amount'), render: (v, row) => (
                     <span className="text-semibold" style={{ color: row.type === 'income' ? 'var(--success)' : 'var(--error)' }}>
                       {row.type === 'income' ? '+' : '-'}{formatCurrency(v as number)}
                     </span>
                   )},
-                  { key: 'description', label: 'Описание' },
-                  { key: 'id', label: 'Действия', render: (_, row) => (
+                  { key: 'description', label: t('finance.column.description') },
+                  { key: 'id', label: t('finance.column.actions'), render: (_, row) => (
                     <div className="action-btn-row">
                       <button 
                         className="btn btn--secondary btn-padding-4-6" 
                         onClick={() => handleEditClick(row as Transaction)}
-                        aria-label="Редактировать операцию"
+                        aria-label={t('finance.action.editOperation')}
                       >
                         <Edit2 size={12} />
                       </button>
                       <button 
                         className="btn btn--secondary btn-padding-4-6-red" 
                         onClick={() => setTxToDelete((row as Transaction).id)}
-                        aria-label="Удалить операцию"
+                        aria-label={t('finance.action.deleteOperation')}
                       >
                         <Trash2 size={12} />
                       </button>
@@ -233,17 +235,17 @@ export default function CapitalPage() {
                   )},
                 ]}
                 data={sortedTransactions}
-                emptyMessage="Транзакций пока нет."
+                emptyMessage={t('finance.empty.transactions')}
               />
             ) : (
               <EmptyState 
                 icon={<Wallet size={48} />}
-                title="История операций пуста"
-                description="Начните добавлять доходы и расходы, чтобы увидеть аналитику капитала."
+                title={t('finance.empty.history')}
+                description={t('finance.empty.historyDescription')}
                 action={
                   <button className="btn btn--primary flex-row-center-gap6" onClick={handleAddNewClick}>
                     <Plus size={16} />
-                    <span>Добавить транзакцию</span>
+                    <span>{t('finance.add.transaction')}</span>
                   </button>
                 }
               />
@@ -271,8 +273,8 @@ export default function CapitalPage() {
             isOpen={txToDelete !== null}
             onConfirm={handleConfirmDelete}
             onCancel={() => setTxToDelete(null)}
-            title="Удалить операцию?"
-            message="Вы действительно хотите удалить эту финансовую транзакцию? Это действие необратимо."
+            title={t('finance.confirm.deleteTitle')}
+            message={t('finance.confirm.deleteMessage')}
             variant="danger"
           />
         )}

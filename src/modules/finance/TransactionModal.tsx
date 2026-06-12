@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { type Transaction } from '../../types';
 import { Modal, FormField } from '../../ui';
 import { todayISO } from '../../cognitive/helpers';
+import { useI18n } from '../../i18n';
 
 interface TransactionModalProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface TransactionModalProps {
 }
 
 export default function TransactionModal({ isOpen, onClose, transaction, onSave }: TransactionModalProps) {
+  const { t } = useI18n();
   const [type, setType] = useState<'income' | 'expense'>(transaction?.type || 'expense');
   const [amount, setAmount] = useState(transaction?.amount ?? 0);
   const [category, setCategory] = useState(transaction?.category || '');
@@ -23,12 +25,12 @@ export default function TransactionModal({ isOpen, onClose, transaction, onSave 
     setError('');
 
     if (amount <= 0 || isNaN(amount)) {
-      setError('Сумма транзакции должна быть больше нуля');
+      setError(t('error.amount.positive'));
       return;
     }
 
     if (!category.trim()) {
-      setError('Укажите категорию транзакции');
+      setError(t('error.category.required'));
       return;
     }
 
@@ -45,7 +47,7 @@ export default function TransactionModal({ isOpen, onClose, transaction, onSave 
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={transaction ? 'Редактировать транзакцию' : 'Зафиксировать финансовое событие'}
+      title={transaction ? t('finance.modal.title.edit') : t('finance.modal.title.new')}
       maxWidth="sm"
     >
       <form onSubmit={handleSubmit} className="flex-col-16">
@@ -55,19 +57,19 @@ export default function TransactionModal({ isOpen, onClose, transaction, onSave 
           </div>
         )}
 
-        <FormField label="Тип транзакции">
+        <FormField label={t('finance.field.type')}>
           <select
             value={type}
             onChange={(e) => setType(e.target.value as 'income' | 'expense')}
             style={{ width: '100%' }}
           >
-            <option value="expense">Расход (Списание средств)</option>
-            <option value="income">Доход (Пополнение баланса)</option>
+            <option value="expense">{t('finance.type.expense')}</option>
+            <option value="income">{t('finance.type.income')}</option>
           </select>
         </FormField>
 
         <div className="form-row">
-          <FormField label="Сумма (₽)" required>
+          <FormField label={t('finance.field.amount')} required>
             <input
               type="number"
               min="0"
@@ -79,7 +81,7 @@ export default function TransactionModal({ isOpen, onClose, transaction, onSave 
             />
           </FormField>
 
-          <FormField label="Дата транзакции">
+          <FormField label={t('finance.field.date')}>
             <input
               type="date"
               value={dateISO}
@@ -90,32 +92,32 @@ export default function TransactionModal({ isOpen, onClose, transaction, onSave 
           </FormField>
         </div>
 
-        <FormField label="Категория" required>
+        <FormField label={t('finance.field.category')} required>
           <input
             type="text"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            placeholder="Например: Продукты, Зарплата, Аренда"
+            placeholder={t('finance.category.placeholder')}
             required
             style={{ width: '100%' }}
           />
         </FormField>
 
-        <FormField label="Комментарий / Описание">
+        <FormField label={t('finance.field.description')}>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Дополнительные примечания к транзакции..."
+            placeholder={t('finance.description.placeholder')}
             style={{ width: '100%', height: '60px', resize: 'vertical' }}
           />
         </FormField>
 
         <div className="modal-form-footer">
           <button type="button" className="btn btn--secondary" onClick={onClose}>
-            Отмена
+            {t('action.cancel')}
           </button>
           <button type="submit" className="btn btn--primary">
-            {transaction ? 'Сохранить изменения' : 'Зафиксировать'}
+            {transaction ? t('finance.save.changes') : t('finance.confirm.record')}
           </button>
         </div>
       </form>

@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { type MaintenanceRecord } from '../../types';
 import { Modal, FormField } from '../../ui';
 import { todayISO } from '../../cognitive/helpers';
+import { useI18n } from '../../i18n';
 
 interface MaintenanceModalProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface MaintenanceModalProps {
 }
 
 export default function MaintenanceModal({ isOpen, onClose, record, onSave }: MaintenanceModalProps) {
+  const { t } = useI18n();
   const [bikePart, setBikePart] = useState(record?.bikePart || '');
   const [type, setType] = useState<MaintenanceRecord['type']>(record?.type || 'service');
   const [description, setDescription] = useState(record?.description || '');
@@ -24,11 +26,11 @@ export default function MaintenanceModal({ isOpen, onClose, record, onSave }: Ma
     setError('');
 
     if (!bikePart.trim()) {
-      setError('Укажите обслуженную деталь / узел велосипеда');
+      setError(t('cycling.maintenance.errorPart'));
       return;
     }
     if (cost < 0 || isNaN(cost)) {
-      setError('Стоимость должна быть числом не меньше нуля');
+      setError(t('cycling.maintenance.errorCost'));
       return;
     }
 
@@ -46,7 +48,7 @@ export default function MaintenanceModal({ isOpen, onClose, record, onSave }: Ma
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={record ? 'Редактировать запись ТО' : 'Зафиксировать техническое обслуживание'}
+      title={record ? t('cycling.maintenance.modalEditTitle') : t('cycling.maintenance.modalCreateTitle')}
       maxWidth="sm"
     >
       <form onSubmit={handleSubmit} className="flex-col-16">
@@ -56,34 +58,34 @@ export default function MaintenanceModal({ isOpen, onClose, record, onSave }: Ma
           </div>
         )}
 
-        <FormField label="Узел велосипеда / Запчасть" required>
+        <FormField label={t('cycling.maintenance.fieldPart')} required>
           <input
             type="text"
             value={bikePart}
             onChange={(e) => setBikePart(e.target.value)}
-            placeholder="Например: Цепь, Амортизатор, Покрышки"
+            placeholder={t('cycling.maintenance.partPlaceholder')}
             required
             style={{ width: '100%' }}
           />
         </FormField>
 
         <div className="form-row">
-          <FormField label="Тип обслуживания">
+          <FormField label={t('cycling.maintenance.fieldType')}>
             <select
               value={type}
               onChange={(e) => setType(e.target.value as MaintenanceRecord['type'])}
               style={{ width: '100%' }}
             >
-              <option value="inspection">Осмотр / Диагностика</option>
-              <option value="cleaning">Очистка / Смазка</option>
-              <option value="service">Настройка / Сервис</option>
-              <option value="repair">Ремонт поломки</option>
-              <option value="replace">Замена детали</option>
-              <option value="upgrade">Апгрейд (Тюнинг)</option>
+              <option value="inspection">{t('cycling.maintenance.type.inspection')}</option>
+              <option value="cleaning">{t('cycling.maintenance.type.cleaning')}</option>
+              <option value="service">{t('cycling.maintenance.type.service')}</option>
+              <option value="repair">{t('cycling.maintenance.type.repair')}</option>
+              <option value="replace">{t('cycling.maintenance.type.replace')}</option>
+              <option value="upgrade">{t('cycling.maintenance.type.upgrade')}</option>
             </select>
           </FormField>
 
-          <FormField label="Стоимость обслуживания (₽)">
+          <FormField label={t('cycling.maintenance.fieldCost')}>
             <input
               type="number"
               min="0"
@@ -96,7 +98,7 @@ export default function MaintenanceModal({ isOpen, onClose, record, onSave }: Ma
         </div>
 
         <div className="form-row">
-          <FormField label="Дата проведения">
+          <FormField label={t('cycling.maintenance.fieldDate')}>
             <input
               type="date"
               value={dateISO}
@@ -106,7 +108,7 @@ export default function MaintenanceModal({ isOpen, onClose, record, onSave }: Ma
             />
           </FormField>
 
-          <FormField label="Статус выполнения">
+          <FormField label={t('cycling.maintenance.fieldStatus')}>
             <div style={{ display: 'flex', alignItems: 'center', height: '38px', gap: '8px' }}>
               <input
                 type="checkbox"
@@ -114,26 +116,26 @@ export default function MaintenanceModal({ isOpen, onClose, record, onSave }: Ma
                 checked={isDone}
                 onChange={(e) => setIsDone(e.target.checked)}
               />
-              <label htmlFor="maint-done" style={{ fontSize: '0.8rem', cursor: 'pointer' }}>Завершено</label>
+              <label htmlFor="maint-done" style={{ fontSize: '0.8rem', cursor: 'pointer' }}>{t('cycling.maintenance.completed')}</label>
             </div>
           </FormField>
         </div>
 
-        <FormField label="Описание работ / Детали">
+        <FormField label={t('cycling.maintenance.fieldDescription')}>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Опишите проведенные работы, бренд новой детали или состояние..."
+            placeholder={t('cycling.maintenance.descriptionPlaceholder')}
             style={{ width: '100%', height: '60px', resize: 'vertical' }}
           />
         </FormField>
 
         <div className="modal-form-footer">
           <button type="button" className="btn btn--secondary" onClick={onClose}>
-            Отмена
+            {t('action.cancel')}
           </button>
           <button type="submit" className="btn btn--primary">
-            {record ? 'Сохранить изменения' : 'Создать запись'}
+            {record ? t('cycling.rides.saveChanges') : t('cycling.maintenance.createRecord')}
           </button>
         </div>
       </form>

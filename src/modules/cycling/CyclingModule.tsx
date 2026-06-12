@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
+import { useI18n } from '../../i18n';
 
 const Dashboard = lazy(() => import('./Dashboard'));
 const RidesPage = lazy(() => import('./RidesPage'));
@@ -7,6 +8,7 @@ const RoutePlanner = lazy(() => import('./RoutePlanner'));
 const MaintenancePage = lazy(() => import('./MaintenancePage'));
 
 export default function CyclingModule() {
+  const { t } = useI18n();
   const navigate = useNavigate();
 
   const handleNavigateTab = (tab: string) => {
@@ -18,7 +20,7 @@ export default function CyclingModule() {
   };
 
   return (
-    <Suspense fallback={<div className="loading-fallback">Загрузка...</div>}>
+    <Suspense fallback={<div className="loading-fallback">{t('common.loading')}</div>}>
       <Routes>
         <Route 
           index 

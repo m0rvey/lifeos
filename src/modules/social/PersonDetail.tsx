@@ -2,6 +2,7 @@ import { useState, useMemo, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useData } from '../../context/DataContext';
 import { useApp } from '../../context/AppContext';
+import { useI18n } from '../../i18n';
 import { 
   ArrowLeft, 
   Calendar, 
@@ -18,14 +19,37 @@ import { computeConnectionScore, isDecaying, getContactThreshold } from '../../c
 import { formatDate, todayISO, getDaysSince } from '../../cognitive/helpers';
 import { ConfirmDialog } from '../../ui';
 import PersonModal from './PersonModal';
-import { Person } from '../../types';
-import { depthLabels, archetypeLabels, statusLabels, statusPills } from './constants';
+import { Person, Depth, Archetype, PersonStatus } from '../../types';
+import { statusPills } from './constants';
 
 export default function PersonDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { data, dispatch } = useData();
   const { addToast } = useApp();
+  const { t } = useI18n();
+
+  const depthLabelMap: Record<Depth, string> = {
+    [Depth.CORE]: t('social.depth.core'),
+    [Depth.INNER]: t('social.depth.inner'),
+    [Depth.SOCIAL]: t('social.depth.social'),
+    [Depth.PERIPHERY]: t('social.depth.periphery'),
+  };
+
+  const archetypeLabelMap: Record<Archetype, string> = {
+    [Archetype.INTELLECTUAL]: t('social.archetype.intellectual'),
+    [Archetype.EMOTIONAL]: t('social.archetype.emotional'),
+    [Archetype.BUSINESS]: t('social.archetype.business'),
+  };
+
+  const statusLabelMap: Record<PersonStatus, string> = {
+    [PersonStatus.ACTIVE]: t('social.status.active'),
+    [PersonStatus.OCCASIONAL]: t('social.status.occasional'),
+    [PersonStatus.DISTANT]: t('social.status.distant'),
+    [PersonStatus.CONFLICT]: t('social.status.conflict'),
+    [PersonStatus.LOST]: t('social.status.lost'),
+    [PersonStatus.MENTOR]: t('social.status.mentor'),
+  };
 
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -62,8 +86,8 @@ export default function PersonDetail() {
       id: person.id,
       payload: { lastContactISO: todayISO() },
     });
-    addToast('Контакт отмечен сегодняшним днем', 'success');
-  }, [person, dispatch, addToast]);
+    addToast(t('social.toast.contact_today'), 'success');
+  }, [person, dispatch, addToast, t]);
 
   const handleSavePerson = useCallback((updatedFields: Partial<Person>) => {
     if (!person) return;
@@ -74,8 +98,8 @@ export default function PersonDetail() {
       payload: updatedFields,
     });
     setIsEditOpen(false);
-    addToast('Связь успешно сохранена', 'success');
-  }, [person, dispatch, addToast]);
+    addToast(t('social.toast.contact_saved'), 'success');
+  }, [person, dispatch, addToast, t, setIsEditOpen]);
 
   const handleDelete = useCallback(() => {
     if (!person) return;
@@ -85,16 +109,16 @@ export default function PersonDetail() {
       id: person.id,
     });
     setIsDeleteOpen(false);
-    addToast('Контакт удален из сети', 'warning');
+    addToast(t('social.toast.contact_deleted'), 'warning');
     navigate('/social');
-  }, [person, dispatch, navigate, addToast]);
+  }, [person, dispatch, navigate, addToast, t, setIsDeleteOpen]);
 
   if (!person) {
     return (
       <div className="detail-empty-box">
-        <h3 className="detail-empty-title">Связь не найдена</h3>
+        <h3 className="detail-empty-title">{t('social.detail.not_found')}</h3>
         <Link to="/social" className="btn btn--secondary">
-          <ArrowLeft size={16} /> Назад к списку
+          <ArrowLeft size={16} /> {t('social.detail.back_to_list')}
         </Link>
       </div>
     );
@@ -109,7 +133,7 @@ export default function PersonDetail() {
       <div className="detail-back-row">
         <Link to="/social" className="detail-back-link">
           <ArrowLeft size={16} />
-          <span>Вернуться к карте социального поля</span>
+          <span>{t('social.detail.back_to_map')}</span>
         </Link>
       </div>
 
@@ -122,10 +146,10 @@ export default function PersonDetail() {
           <h1 className="detail-name">{person.name}</h1>
           <div className="detail-tags">
             <span className="detail-tag-depth">
-              {depthLabels[person.depth]}
+              {depthLabelMap[person.depth]}
             </span>
             <span className="detail-tag-archetype">
-              {archetypeLabels[person.archetype]}
+              {archetypeLabelMap[person.archetype]}
             </span>
             <span 
               className="detail-tag-status"
@@ -134,15 +158,15 @@ export default function PersonDetail() {
                 color: statusPill.color,
               }}
             >
-              {statusLabels[person.status]}
+              {statusLabelMap[person.status]}
             </span>
           </div>
         </div>
         <div className="detail-actions">
-          <button className="btn btn--secondary detail-btn-edit" onClick={() => setIsEditOpen(true)} aria-label="Редактировать связь">
+          <button className="btn btn--secondary detail-btn-edit" onClick={() => setIsEditOpen(true)} aria-label={t('social.detail.edit_aria')}>
             <Edit size={16} />
           </button>
-          <button className="btn btn--secondary detail-btn-delete" onClick={() => setIsDeleteOpen(true)} aria-label="Удалить связь">
+          <button className="btn btn--secondary detail-btn-delete" onClick={() => setIsDeleteOpen(true)} aria-label={t('social.detail.delete_aria')}>
             <Trash2 size={16} />
           </button>
         </div>
@@ -155,14 +179,14 @@ export default function PersonDetail() {
         <div className="glass-panel detail-metrics-panel">
           <h3 className="detail-metrics-title">
             <Award size={18} style={{ color: 'var(--accent)' }} />
-            <span>Параметры близости</span>
+            <span>{t('social.detail.metrics_title')}</span>
           </h3>
 
           <div className="detail-metrics-list">
             {/* Energy */}
             <div>
               <div className="detail-metric-row">
-                <span className="detail-metric-label">Энергия (влияние)</span>
+                <span className="detail-metric-label">{t('social.metric.energy')}</span>
                 <strong className="detail-metric-val">{person.energy}%</strong>
               </div>
               <div className="detail-metric-bar-bg">
@@ -173,7 +197,7 @@ export default function PersonDetail() {
             {/* Resonance */}
             <div>
               <div className="detail-metric-row">
-                <span className="detail-metric-label">Резонанс (ценности)</span>
+                <span className="detail-metric-label">{t('social.metric.resonance')}</span>
                 <strong className="detail-metric-val">{person.resonance}%</strong>
               </div>
               <div className="detail-metric-bar-bg">
@@ -184,7 +208,7 @@ export default function PersonDetail() {
             {/* Reciprocity */}
             <div>
               <div className="detail-metric-row">
-                <span className="detail-metric-label">Взаимность (интерес)</span>
+                <span className="detail-metric-label">{t('social.metric.reciprocity')}</span>
                 <strong className="detail-metric-val">{person.reciprocity}%</strong>
               </div>
               <div className="detail-metric-bar-bg">
@@ -195,7 +219,7 @@ export default function PersonDetail() {
             {/* Volatility */}
             <div>
               <div className="detail-metric-row">
-                <span className="detail-metric-label">Волатильность (хаос)</span>
+                <span className="detail-metric-label">{t('social.metric.volatility')}</span>
                 <strong className="detail-metric-val">{person.volatility}%</strong>
               </div>
               <div className="detail-metric-bar-bg">
@@ -210,18 +234,18 @@ export default function PersonDetail() {
           <div>
             <h3 className="detail-metrics-title">
               <Zap size={18} style={{ color: 'var(--accent)' }} />
-              <span>Диагностика отношений</span>
+              <span>{t('social.detail.diagnostics_title')}</span>
             </h3>
 
             <div className="detail-diagnostics-box">
               <div>
-                <span className="detail-diagnostics-score-label">Индекс ресурса</span>
+                <span className="detail-diagnostics-score-label">{t('social.stat.resource_index')}</span>
                 <strong className="detail-diagnostics-score-val">{Math.round(score)}%</strong>
               </div>
               <div className="detail-diagnostics-desc-group">
-                <span className="detail-diagnostics-desc-label">Качество связи</span>
+                <span className="detail-diagnostics-desc-label">{t('social.detail.quality_label')}</span>
                 <strong className="detail-diagnostics-desc-val">
-                  {score >= 85 ? 'Резонансная' : score >= 65 ? 'Сильная' : score >= 45 ? 'Стабильная' : score >= 25 ? 'Слабая' : 'Критическая'}
+                  {score >= 85 ? t('social.quality.resonant') : score >= 65 ? t('social.quality.strong') : score >= 45 ? t('social.quality.stable') : score >= 25 ? t('social.quality.weak') : t('social.quality.critical')}
                 </strong>
               </div>
             </div>
@@ -231,14 +255,14 @@ export default function PersonDetail() {
             <div className="detail-recency-left">
               <Calendar size={16} style={{ color: 'var(--text-secondary)' }} />
               <div>
-                <span className="detail-recency-label-group">Последнее касание</span>
+                <span className="detail-recency-label-group">{t('social.detail.last_touch')}</span>
                 <strong className="detail-recency-val">{formatDate(person.lastContactISO)}</strong>
               </div>
             </div>
             <div className="detail-elapsed-group">
-              <span className="detail-elapsed-label">Прошло</span>
+              <span className="detail-elapsed-label">{t('social.detail.elapsed')}</span>
               <strong className={`detail-elapsed-val ${isDecayed ? 'detail-elapsed-val--decayed' : 'detail-elapsed-val--normal'}`}>
-                {daysSince} дн.
+                {daysSince} {t('days_abbrev')}
               </strong>
             </div>
           </div>
@@ -247,14 +271,14 @@ export default function PersonDetail() {
             <div className="detail-decay-alert">
               <AlertTriangle size={14} style={{ color: 'var(--error)', flexShrink: 0 }} />
               <span className="detail-decay-alert-text">
-                Связь остывает! Превышен лимит контакта для круга "{depthLabels[person.depth]}" ({limit} дн.).
+                {t('social.detail.decay_alert', { depth: depthLabelMap[person.depth], limit })}
               </span>
             </div>
           )}
 
           <button className="btn btn--primary detail-btn-touch" onClick={handleMarkContactToday}>
             <Check size={16} />
-            <span>Касание сегодня</span>
+            <span>{t('social.detail.touch_today')}</span>
           </button>
         </div>
       </div>
@@ -266,12 +290,12 @@ export default function PersonDetail() {
         <div className="glass-panel detail-content-panel">
           <h3 className="detail-content-title">
             <Smile size={18} style={{ color: 'var(--accent)' }} />
-            <span>Рефлексия (Выводы из общения)</span>
+            <span>{t('social.detail.reflection_title')}</span>
           </h3>
           <div className="detail-content-text-box">
             {person.reflection || (
               <span className="detail-content-text-empty">
-                Рефлексии пока нет. Запишите инсайты или эмоции, оставшиеся после общения.
+                {t('social.detail.reflection_empty')}
               </span>
             )}
           </div>
@@ -281,12 +305,12 @@ export default function PersonDetail() {
         <div className="glass-panel detail-content-panel">
           <h3 className="detail-content-title">
             <Flame size={18} style={{ color: 'var(--accent)' }} />
-            <span>Заметки / Договорённости</span>
+            <span>{t('social.detail.notes_title')}</span>
           </h3>
           <div className="detail-content-text-box detail-content-text-box--notes">
             {person.notes || (
               <span className="detail-content-text-empty">
-                Заметки отсутствуют. Запишите важные детали или планы на следующую встречу.
+                {t('social.detail.notes_empty')}
               </span>
             )}
           </div>
@@ -309,10 +333,10 @@ export default function PersonDetail() {
             isOpen={isDeleteOpen}
             onConfirm={handleDelete}
             onCancel={() => setIsDeleteOpen(false)}
-            title="Удалить связь?"
-            message={`Вы уверены, что хотите удалить связь с "${person.name}"? Это действие безвозвратно удалит все сопутствующие данные рефлексии и заметок.`}
-            confirmLabel="Удалить"
-            cancelLabel="Отмена"
+            title={t('social.detail.delete_title')}
+            message={t('social.detail.delete_message', { name: person.name })}
+            confirmLabel={t('action.delete')}
+            cancelLabel={t('action.cancel')}
             variant="danger"
           />
         )}

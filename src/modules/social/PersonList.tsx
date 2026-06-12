@@ -2,7 +2,8 @@ import { useState, useMemo } from 'react';
 import { Search, Plus } from 'lucide-react';
 import { type Person, Depth, PersonStatus, type GraphWeights } from '../../types';
 import { computeConnectionScore, isDecaying } from '../../cognitive/social';
-import { depthLabels, statusLabels, statusPills } from './constants';
+import { statusPills } from './constants';
+import { useI18n } from '../../i18n';
 
 interface PersonListProps {
   people: Person[];
@@ -13,11 +14,28 @@ interface PersonListProps {
 }
 
 export default function PersonList({ people, activeId, onSelect, onAddNew, graphWeights }: PersonListProps) {
+  const { t } = useI18n();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDepth, setSelectedDepth] = useState<Depth | 'Все'>('Все');
   const [selectedStatus, setSelectedStatus] = useState<PersonStatus | 'Все'>('Все');
   const [sortBy, setSortBy] = useState<'score' | 'energy' | 'recency' | 'name'>('score');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+
+  const depthLabelMap: Record<Depth, string> = {
+    [Depth.CORE]: t('social.depth.core'),
+    [Depth.INNER]: t('social.depth.inner'),
+    [Depth.SOCIAL]: t('social.depth.social'),
+    [Depth.PERIPHERY]: t('social.depth.periphery'),
+  };
+
+  const statusLabelMap: Record<PersonStatus, string> = {
+    [PersonStatus.ACTIVE]: t('social.status.active'),
+    [PersonStatus.OCCASIONAL]: t('social.status.occasional'),
+    [PersonStatus.DISTANT]: t('social.status.distant'),
+    [PersonStatus.CONFLICT]: t('social.status.conflict'),
+    [PersonStatus.LOST]: t('social.status.lost'),
+    [PersonStatus.MENTOR]: t('social.status.mentor'),
+  };
 
   const filteredSortedPeople = useMemo(() => {
     let result = people.filter((p) => {
@@ -62,7 +80,7 @@ export default function PersonList({ people, activeId, onSelect, onAddNew, graph
           <Search size={16} className="social-search-icon" />
           <input
             type="text"
-            placeholder="Поиск связей..."
+            placeholder={t('social.search_placeholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="social-search-input"
@@ -71,7 +89,7 @@ export default function PersonList({ people, activeId, onSelect, onAddNew, graph
         <button
           className="btn btn--primary social-add-btn"
           onClick={onAddNew}
-          aria-label="Добавить новый контакт"
+          aria-label={t('social.add_contact_aria')}
         >
           <Plus size={18} />
         </button>
@@ -81,55 +99,55 @@ export default function PersonList({ people, activeId, onSelect, onAddNew, graph
       <div className="glass-panel social-filters-panel">
         <div className="social-filters-grid">
           <div>
-            <span className="social-filter-label">Круг близости</span>
+            <span className="social-filter-label">{t('social.label.depth')}</span>
             <select
               value={selectedDepth}
               onChange={(e) => setSelectedDepth(e.target.value as Depth | 'Все')}
               className="social-filter-select"
             >
-              <option value="Все">Все круги</option>
-              <option value={Depth.CORE}>Ядро</option>
-              <option value={Depth.INNER}>Ближний круг</option>
-              <option value={Depth.SOCIAL}>Социальный слой</option>
-              <option value={Depth.PERIPHERY}>Периферия</option>
+              <option value="Все">{t('social.filter.all_circles')}</option>
+              <option value={Depth.CORE}>{t('social.depth.core')}</option>
+              <option value={Depth.INNER}>{t('social.depth.inner')}</option>
+              <option value={Depth.SOCIAL}>{t('social.depth.social')}</option>
+              <option value={Depth.PERIPHERY}>{t('social.depth.periphery')}</option>
             </select>
           </div>
           <div>
-            <span className="social-filter-label">Статус общения</span>
+            <span className="social-filter-label">{t('social.label.status')}</span>
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value as PersonStatus | 'Все')}
               className="social-filter-select"
             >
-              <option value="Все">Все статусы</option>
-              <option value={PersonStatus.ACTIVE}>Активен</option>
-              <option value={PersonStatus.OCCASIONAL}>Покой</option>
-              <option value={PersonStatus.DISTANT}>На расстоянии</option>
-              <option value={PersonStatus.CONFLICT}>В конфликте</option>
-              <option value={PersonStatus.LOST}>Не общаемся</option>
-              <option value={PersonStatus.MENTOR}>Наставник</option>
+              <option value="Все">{t('social.filter.all_statuses')}</option>
+              <option value={PersonStatus.ACTIVE}>{t('social.status.active')}</option>
+              <option value={PersonStatus.OCCASIONAL}>{t('social.status.occasional')}</option>
+              <option value={PersonStatus.DISTANT}>{t('social.status.distant')}</option>
+              <option value={PersonStatus.CONFLICT}>{t('social.status.conflict')}</option>
+              <option value={PersonStatus.LOST}>{t('social.status.lost')}</option>
+              <option value={PersonStatus.MENTOR}>{t('social.status.mentor')}</option>
             </select>
           </div>
         </div>
 
         <div className="social-sort-row">
           <div className="social-sort-label-group">
-            <span className="social-sort-label">Сортировка:</span>
+            <span className="social-sort-label">{t('social.sort.label')}</span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as 'score' | 'energy' | 'recency' | 'name')}
               className="social-sort-select"
             >
-              <option value="score">Ресурс связи</option>
-              <option value="energy">Энергия</option>
-              <option value="recency">Свежесть касания</option>
-              <option value="name">Имя</option>
+              <option value="score">{t('social.sort.score')}</option>
+              <option value="energy">{t('social.sort.energy')}</option>
+              <option value="recency">{t('social.sort.recency')}</option>
+              <option value="name">{t('social.sort.name')}</option>
             </select>
           </div>
           <button
             onClick={() => setSortOrder((o) => (o === 'asc' ? 'desc' : 'asc'))}
             className="btn btn--secondary social-sort-order-btn"
-            aria-label="Изменить порядок сортировки"
+            aria-label={t('social.sort.order_aria')}
           >
             {sortOrder === 'asc' ? '↑' : '↓'}
           </button>
@@ -166,7 +184,7 @@ export default function PersonList({ people, activeId, onSelect, onAddNew, graph
                   </div>
                   <div className="social-contact-tags">
                     <span className="social-contact-tag-depth">
-                      {depthLabels[p.depth]}
+                      {depthLabelMap[p.depth]}
                     </span>
                     <span
                       className="social-contact-tag-status"
@@ -175,7 +193,7 @@ export default function PersonList({ people, activeId, onSelect, onAddNew, graph
                         color: pill.color,
                       }}
                     >
-                      {statusLabels[p.status]}
+                      {statusLabelMap[p.status]}
                     </span>
                   </div>
                 </div>
@@ -185,12 +203,12 @@ export default function PersonList({ people, activeId, onSelect, onAddNew, graph
 
           {filteredSortedPeople.length === 0 && (
             <div className="social-contacts-empty">
-              Связи не найдены
+              {t('social.empty_list')}
             </div>
           )}
         </div>
         <div className="social-contacts-footer">
-          Всего связей: <strong>{filteredSortedPeople.length}</strong>
+          {t('social.total_label')} <strong>{filteredSortedPeople.length}</strong>
         </div>
       </div>
     </div>

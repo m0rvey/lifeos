@@ -3,6 +3,7 @@ import { type Person, type AppSettings, Depth } from '../../types';
 import { computeConnectionScore, isDecaying } from '../../cognitive/social';
 import { EmptyState } from '../../ui';
 import styles from './SocialGraph.module.css';
+import { useI18n } from '../../i18n';
 
 interface SocialGraphProps {
   people: Person[];
@@ -48,6 +49,7 @@ const getPseudoRandom = (str: string): number => {
 };
 
 export default function SocialGraph({ people, settings, activeId, onSelectNode }: SocialGraphProps) {
+  const { t } = useI18n();
   const containerRef = useRef<HTMLDivElement>(null);
   const workerRef = useRef<Worker | null>(null);
   const wasDraggedRef = useRef(false);
@@ -62,7 +64,7 @@ export default function SocialGraph({ people, settings, activeId, onSelectNode }
     const graphNodes: Node[] = [
       {
         id: 'me',
-        name: 'Я',
+        name: t('social.graph.me'),
         depth: 'Me',
         x: centerX,
         y: centerY,
@@ -151,7 +153,7 @@ export default function SocialGraph({ people, settings, activeId, onSelectNode }
     }
 
     return { initialNodes: graphNodes, initialLinks: graphLinks };
-  }, [people, centerX, centerY, settings.graphWeights]);
+  }, [people, centerX, centerY, settings.graphWeights, t]);
 
   const [positions, setPositions] = useState<Record<string, { x: number; y: number }>>({});
 
@@ -281,8 +283,8 @@ export default function SocialGraph({ people, settings, activeId, onSelectNode }
     return (
       <div className={styles.graphCanvasContainer} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '350px' }}>
         <EmptyState
-          title="Нет контактов для отображения"
-          description="Добавьте ваших друзей или коллег в список контактов, чтобы построить социальный граф связей."
+          title={t('social.graph.no_contacts_title')}
+          description={t('social.graph.no_contacts_desc')}
         />
       </div>
     );
@@ -316,10 +318,10 @@ export default function SocialGraph({ people, settings, activeId, onSelectNode }
         <circle cx={centerX} cy={centerY} r={300} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="1.5" strokeDasharray="5,5" />
 
         {/* Ring labels */}
-        <text x={centerX + 8} y={centerY - 75 - 5} fill="var(--text-secondary)" fontSize="0.65rem" opacity="0.4">Ядро</text>
-        <text x={centerX + 8} y={centerY - 150 - 5} fill="var(--text-secondary)" fontSize="0.65rem" opacity="0.4">Ближний круг</text>
-        <text x={centerX + 8} y={centerY - 225 - 5} fill="var(--text-secondary)" fontSize="0.65rem" opacity="0.4">Социальный слой</text>
-        <text x={centerX + 8} y={centerY - 300 - 5} fill="var(--text-secondary)" fontSize="0.65rem" opacity="0.4">Периферия</text>
+        <text x={centerX + 8} y={centerY - 75 - 5} fill="var(--text-secondary)" fontSize="0.65rem" opacity="0.4">{t('social.depth.core')}</text>
+        <text x={centerX + 8} y={centerY - 150 - 5} fill="var(--text-secondary)" fontSize="0.65rem" opacity="0.4">{t('social.depth.inner')}</text>
+        <text x={centerX + 8} y={centerY - 225 - 5} fill="var(--text-secondary)" fontSize="0.65rem" opacity="0.4">{t('social.depth.social')}</text>
+        <text x={centerX + 8} y={centerY - 300 - 5} fill="var(--text-secondary)" fontSize="0.65rem" opacity="0.4">{t('social.depth.periphery')}</text>
 
         {/* Glow halo under active node */}
         {nodes.map((n) => {

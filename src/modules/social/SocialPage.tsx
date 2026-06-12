@@ -2,6 +2,7 @@ import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useData } from '../../context/DataContext';
 import { useApp } from '../../context/AppContext';
+import { useI18n } from '../../i18n';
 import PersonList from './PersonList';
 import SocialGraph from './SocialGraph';
 import PersonModal from './PersonModal';
@@ -12,6 +13,7 @@ import { Depth, Person, Archetype, PersonStatus } from '../../types';
 export default function SocialPage() {
   const { data, dispatch } = useData();
   const { addToast } = useApp();
+  const { t } = useI18n();
   const navigate = useNavigate();
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -37,10 +39,10 @@ export default function SocialPage() {
       [Depth.PERIPHERY]: '#9aa0a6', // Grey
     };
     const labels: Record<Depth, string> = {
-      [Depth.CORE]: 'Ядро',
-      [Depth.INNER]: 'Ближний круг',
-      [Depth.SOCIAL]: 'Социальный слой',
-      [Depth.PERIPHERY]: 'Периферия',
+      [Depth.CORE]: t('social.depth.core'),
+      [Depth.INNER]: t('social.depth.inner'),
+      [Depth.SOCIAL]: t('social.depth.social'),
+      [Depth.PERIPHERY]: t('social.depth.periphery'),
     };
 
     return {
@@ -51,7 +53,7 @@ export default function SocialPage() {
       }),
       total: data.people.length,
     };
-  }, [data.people]);
+  }, [data.people, t]);
 
   const handleSelectNode = useCallback((id: string) => {
     navigate(`/social/${id}`);
@@ -85,8 +87,8 @@ export default function SocialPage() {
       payload: newPerson,
     });
     setIsCreateOpen(false);
-    addToast('Новое знакомство успешно зарегистрировано', 'success');
-  }, [dispatch, addToast]);
+    addToast(t('social.toast.new_contact'), 'success');
+  }, [dispatch, addToast, t]);
 
   return (
     <div className="fade-in-entry social-page-container">
@@ -108,21 +110,21 @@ export default function SocialPage() {
         <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '16px' }}>
           <div className="glass-panel social-stat-card" style={{ borderLeft: '3px solid var(--accent)' }}>
             <span style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-primary)' }}>{data.people.length}</span>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Всего контактов</span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{t('social.stat.total_contacts')}</span>
           </div>
 
           <div className="glass-panel social-stat-card" style={{ borderLeft: `3px solid ${avgScore >= 50 ? 'var(--success, #16a34a)' : 'var(--error, #ef4444)'}` }}>
             <span style={{ fontSize: '1.6rem', fontWeight: 800, color: avgScore >= 50 ? 'var(--success, #16a34a)' : 'var(--error, #ef4444)' }}>{avgScore}%</span>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Индекс ресурса</span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{t('social.stat.resource_index')}</span>
           </div>
 
           <div className="glass-panel social-stat-card" style={{ borderLeft: needingAttentionCount > 0 ? '3px solid var(--error, #ef4444)' : '3px solid var(--success, #16a34a)' }}>
             <span style={{ fontSize: '1.6rem', fontWeight: 800, color: needingAttentionCount > 0 ? 'var(--error, #ef4444)' : 'var(--success, #16a34a)' }}>{needingAttentionCount}</span>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Остывающие связи</span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{t('social.stat.decaying')}</span>
           </div>
 
           <div className="glass-panel social-stat-card" style={{ minWidth: '200px' }}>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 600 }}>Круги близости</span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 600 }}>{t('social.stat.depth_circles')}</span>
             <div style={{ display: 'flex', height: '6px', borderRadius: '3px', overflow: 'hidden', background: 'rgba(255,255,255,0.03)', marginBottom: '8px' }}>
               {depthDistribution.segments.map(seg => (
                 seg.pct > 0 && (
@@ -145,10 +147,10 @@ export default function SocialPage() {
         <div className="glass-panel social-graph-panel" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
           <div style={{ padding: '12px 20px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-primary)' }}>
-              Карта социального поля
+              {t('social.graph.title')}
             </span>
             <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>
-              Перетаскивайте узлы, кликните на контакт для диагностики
+              {t('social.graph.hint')}
             </span>
           </div>
           <div style={{ flex: 1, position: 'relative' }}>

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useData } from '../../context/DataContext';
+import { useI18n } from '../../i18n';
 import { 
   Activity, 
   Brain, 
@@ -14,6 +15,7 @@ import { formatCurrency, isInWindow } from '../../cognitive/helpers';
 import { isDecaying } from '../../cognitive/social';
 
 export default function StatisticsPage() {
+  const { t } = useI18n();
   const { data } = useData();
   const [daysRange, setDaysRange] = useState<7 | 14 | 30>(14);
 
@@ -114,11 +116,11 @@ export default function StatisticsPage() {
   const recommendations = useMemo(() => {
     const recs = [];
     const scores = [
-      { key: 'cognitive', name: 'Когнитивный ресурс', score: resourceScores.cognitive },
-      { key: 'social', name: 'Социальный баланс', score: resourceScores.social },
-      { key: 'finance', name: 'Финансовая стабильность', score: resourceScores.finance },
-      { key: 'physical', name: 'Физический тонус', score: resourceScores.physical },
-      { key: 'mindful', name: 'Ментальный фокус', score: resourceScores.mindful },
+      { key: 'cognitive', name: t('stats.resource.cognitive'), score: resourceScores.cognitive },
+      { key: 'social', name: t('stats.resource.social'), score: resourceScores.social },
+      { key: 'finance', name: t('stats.resource.finance'), score: resourceScores.finance },
+      { key: 'physical', name: t('stats.resource.physical'), score: resourceScores.physical },
+      { key: 'mindful', name: t('stats.resource.mindful'), score: resourceScores.mindful },
     ];
     
     // Sort ascending to find lowest resources
@@ -131,33 +133,33 @@ export default function StatisticsPage() {
       if (s.score < 70) {
         if (s.key === 'cognitive') {
           recs.push({
-            domain: 'Когнитивный ресурс',
-            advice: 'Обнаружено умственное утомление. Рекомендуется снизить интенсивность работы, запланировать 1-2 часа пассивного отдыха в расписании и временно не создавать новые задачи.',
+            domain: t('stats.resource.cognitive'),
+            advice: t('stats.advice.cognitive'),
             severity: s.score < 40 ? 'danger' : 'warning'
           });
         } else if (s.key === 'social') {
           const namesStr = decayingPeople.length > 0 ? `: ${decayingPeople.join(', ')}` : '';
           recs.push({
-            domain: 'Социальный баланс',
-            advice: `Часть ваших социальных связей начинает остывать. Проявите инициативу и связаться с близкими людьми${namesStr}.`,
+            domain: t('stats.resource.social'),
+            advice: t('stats.advice.social', { names: namesStr }),
             severity: s.score < 40 ? 'danger' : 'warning'
           });
         } else if (s.key === 'finance') {
           recs.push({
-            domain: 'Финансовая стабильность',
-            advice: `Низкая норма сбережений за выбранный период (${overviewStats.savingsRate}%). Рекомендуется проанализировать недавние списания и оптимизировать мелкие расходы в модуле Финансы.`,
+            domain: t('stats.resource.finance'),
+            advice: t('stats.advice.finance', { rate: overviewStats.savingsRate }),
             severity: s.score < 40 ? 'danger' : 'warning'
           });
         } else if (s.key === 'physical') {
           recs.push({
-            domain: 'Физический тонус',
-            advice: `Объем активности (${overviewStats.totalExerciseMin} мин) ниже целевой нормы для поддержания бодрости. Запланируйте велосипедный заезд или легкую кардио-тренировку.`,
+            domain: t('stats.resource.physical'),
+            advice: t('stats.advice.physical', { minutes: overviewStats.totalExerciseMin }),
             severity: s.score < 40 ? 'danger' : 'warning'
           });
         } else if (s.key === 'mindful') {
           recs.push({
-            domain: 'Ментальный фокус',
-            advice: 'Снизилась регулярность выполнения привычек или ведения рефлексии. Уделите 5 минут вечером для заполнения дневника настроения.',
+            domain: t('stats.resource.mindful'),
+            advice: t('stats.advice.mindful'),
             severity: s.score < 40 ? 'danger' : 'warning'
           });
         }
@@ -167,24 +169,24 @@ export default function StatisticsPage() {
     // Default if everything is fine
     if (recs.length === 0) {
       recs.push({
-        domain: 'Отличный баланс',
-        advice: 'Все показатели находятся на оптимальном уровне! Вы прекрасно распределяете когнитивные, социальные и физические ресурсы. Продолжайте поддерживать баланс.',
+        domain: t('stats.excellent_balance'),
+        advice: t('stats.advice.excellent'),
         severity: 'success'
       });
     }
 
     return recs;
-  }, [resourceScores, data.people, overviewStats.savingsRate, overviewStats.totalExerciseMin]);
+  }, [resourceScores, data.people, overviewStats.savingsRate, overviewStats.totalExerciseMin, t]);
 
   return (
     <div className="fade-in-entry stats-page">
       <div className="stats-header">
         <div>
           <h2 className="stats-header-title">
-            Кросс-модульная аналитика
+            {t('stats.cross_module_analytics')}
           </h2>
           <p className="stats-header-subtitle">
-            Интеллектуальная диагностика ресурсов жизнедеятельности и баланса нагрузок
+            {t('stats.subtitle')}
           </p>
         </div>
         <div className="glass-panel stats-range-switcher">
@@ -194,7 +196,7 @@ export default function StatisticsPage() {
               className={`btn ${daysRange === val ? 'btn--primary' : 'btn--secondary'} stats-range-btn`}
               onClick={() => setDaysRange(val as 7 | 14 | 30)}
             >
-              {val} дней
+              {t('stats.days', { count: val })}
             </button>
           ))}
         </div>
@@ -203,29 +205,29 @@ export default function StatisticsPage() {
       {/* Primary Analytics Grid */}
       <div className="stats-overview-grid">
         <StatCard
-          label="Когнитивная усталость"
+          label={t('stats.fatigue')}
           value={`${Math.round(data.fatigue)}%`}
-          subtitle={data.fatigue >= 80 ? 'Критическое истощение' : data.fatigue >= 50 ? 'Повышенная усталость' : 'Оптимальное состояние'}
+          subtitle={data.fatigue >= 80 ? t('stats.critical_exhaustion') : data.fatigue >= 50 ? t('stats.elevated_fatigue') : t('stats.optimal_state')}
           icon={<Brain size={20} />}
           accent={data.fatigue >= 70}
         />
         <StatCard
-          label="Чистый капитал"
+          label={t('stats.net_capital')}
           value={formatCurrency(overviewStats.netCapital)}
-          subtitle={`Норма сбережений: ${overviewStats.savingsRate}%`}
+          subtitle={t('stats.savings_rate', { rate: overviewStats.savingsRate })}
           icon={<Wallet size={20} />}
           trend={overviewStats.netCapital >= 0 ? 'up' : 'down'}
         />
         <StatCard
-          label="Велосипедный пробег"
-          value={`${overviewStats.totalRidesDist.toFixed(0)} км`}
-          subtitle="Суммарная дистанция"
+          label={t('stats.cycling_distance')}
+          value={t('stats.km', { distance: overviewStats.totalRidesDist.toFixed(0) })}
+          subtitle={t('stats.total_distance')}
           icon={<Activity size={20} />}
         />
         <StatCard
-          label="Сожжено калорий"
-          value={`${overviewStats.totalWorkoutCals.toLocaleString()} ккал`}
-          subtitle="На силовых и фитнес-тренировках"
+          label={t('stats.calories_burned')}
+          value={t('stats.kcal', { calories: overviewStats.totalWorkoutCals.toLocaleString() })}
+          subtitle={t('stats.strength_fitness')}
           icon={<Dumbbell size={20} />}
         />
       </div>
@@ -234,16 +236,16 @@ export default function StatisticsPage() {
       <div className="glass-panel stats-diagnostic-panel">
         <div>
           <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--accent)', marginBottom: '20px' }}>
-            <Compass size={18} /> Сводный радар баланса ресурсов
+            <Compass size={18} /> {t('stats.balance_radar')}
           </h3>
           
           <div className="flex-col-16">
             {[
-              { label: 'Когнитивный ресурс', val: resourceScores.cognitive, color: 'var(--primary)', desc: 'Уровень бодрости и запас ментальных сил' },
-              { label: 'Социальный баланс', val: resourceScores.social, color: 'var(--blue, #82b1ff)', desc: 'Поддержание контактов в теплом состоянии' },
-              { label: 'Финансовая стабильность', val: resourceScores.finance, color: 'var(--success, #81c784)', desc: 'Норма накоплений и прочность бюджета' },
-              { label: 'Физический тонус', val: resourceScores.physical, color: 'var(--warning, #fbbf24)', desc: 'Выполнение нормы кардио- и фитнес-нагрузок' },
-              { label: 'Ментальный фокус', val: resourceScores.mindful, color: 'var(--error, #f2b8b5)', desc: 'Регулярность привычек и дневника рефлексии' },
+              { label: t('stats.resource.cognitive'), val: resourceScores.cognitive, color: 'var(--primary)', desc: t('stats.cognitive_desc') },
+              { label: t('stats.resource.social'), val: resourceScores.social, color: 'var(--blue, #82b1ff)', desc: t('stats.social_desc') },
+              { label: t('stats.resource.finance'), val: resourceScores.finance, color: 'var(--success, #81c784)', desc: t('stats.finance_desc') },
+              { label: t('stats.resource.physical'), val: resourceScores.physical, color: 'var(--warning, #fbbf24)', desc: t('stats.physical_desc') },
+              { label: t('stats.resource.mindful'), val: resourceScores.mindful, color: 'var(--error, #f2b8b5)', desc: t('stats.mindful_desc') },
             ].map(item => (
               <div key={item.label} className="flex-col-6">
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', fontWeight: 600 }}>
@@ -262,7 +264,7 @@ export default function StatisticsPage() {
         {/* Recommendations Column */}
         <div className="stats-advice-column">
           <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-primary)', marginBottom: '4px' }}>
-            <Zap size={18} /> Рекомендации по оптимизации
+            <Zap size={18} /> {t('stats.recommendations')}
           </h3>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1, overflowY: 'auto', maxHeight: '340px', paddingRight: '4px' }}>
@@ -312,19 +314,19 @@ export default function StatisticsPage() {
         {/* Productivity Log */}
         <div className="glass-panel stats-detail-panel">
           <h3 className="stats-detail-title">
-            <Calendar size={16} /> Продуктивность & Дисциплина
+            <Calendar size={16} /> {t('stats.productivity_discipline')}
           </h3>
           <div className="stats-detail-list">
             <div className="stats-detail-row">
-              <span>Выполнено задач</span>
+              <span>{t('stats.tasks_completed')}</span>
               <strong>{overviewStats.totalCompletedTasks}</strong>
             </div>
             <div className="stats-detail-row">
-              <span>Закрыто привычек (повторений)</span>
+              <span>{t('stats.habits_closed')}</span>
               <strong>{overviewStats.completedHabitsCount}</strong>
             </div>
             <div className="stats-detail-row-last">
-              <span>Всего заметок в базе</span>
+              <span>{t('stats.total_notes')}</span>
               <strong>{data.knowledge.length}</strong>
             </div>
           </div>
@@ -333,19 +335,19 @@ export default function StatisticsPage() {
         {/* Activity & Health Log */}
         <div className="glass-panel stats-detail-panel">
           <h3 className="stats-detail-title">
-            <Dumbbell size={16} /> Физическое здоровье & Спорт
+            <Dumbbell size={16} /> {t('stats.physical_health_sport')}
           </h3>
           <div className="stats-detail-list">
             <div className="stats-detail-row">
-              <span>Всего тренировок в логе</span>
+              <span>{t('stats.total_workouts')}</span>
               <strong>{data.workouts.length}</strong>
             </div>
             <div className="stats-detail-row">
-              <span>Количество поездок на вело</span>
+              <span>{t('stats.cycling_rides_count')}</span>
               <strong>{data.rides.length}</strong>
             </div>
             <div className="stats-detail-row-last">
-              <span>Создано веломаршрутов</span>
+              <span>{t('stats.cycling_routes_created')}</span>
               <strong>{data.routes.length}</strong>
             </div>
           </div>

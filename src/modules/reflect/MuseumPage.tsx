@@ -6,10 +6,12 @@ import { Plus, BookOpen, Search, Tag, Edit2, Trash2 } from 'lucide-react';
 import { StatCard, EmptyState, ConfirmDialog } from '../../ui';
 import { uid, nowISO } from '../../cognitive/helpers';
 import MuseumModal from './MuseumModal';
+import { useI18n } from '../../i18n';
 
 export default function MuseumPage() {
   const { data, dispatch } = useData();
   const { addToast } = useApp();
+  const { t } = useI18n();
 
   const [isOpen, setIsOpen] = useState(false);
   const [editingThought, setEditingThought] = useState<Thought | null>(null);
@@ -63,7 +65,7 @@ export default function MuseumPage() {
         id: editingThought.id,
         payload: thoughtData
       });
-      addToast('Мысль успешно отредактирована', 'success');
+      addToast(t('reflect.museum.toast_edited'), 'success');
     } else {
       const newThought: Thought = {
         id: `thou_${uid()}`,
@@ -78,10 +80,10 @@ export default function MuseumPage() {
         entity: 'thoughts',
         payload: newThought
       });
-      addToast('Мысль запечатлена в музее', 'success');
+      addToast(t('reflect.museum.toast_created'), 'success');
     }
     setIsOpen(false);
-  }, [editingThought, dispatch, addToast]);
+  }, [editingThought, dispatch, addToast, t]);
 
   const handleDeleteTrigger = (id: string) => {
     setThoughtToDelete(id);
@@ -96,34 +98,34 @@ export default function MuseumPage() {
         id: thoughtToDelete
       });
       setThoughtToDelete(null);
-      addToast('Запись извлечена из музея', 'warning');
+      addToast(t('reflect.museum.toast_deleted'), 'warning');
     }
     setIsDeleteOpen(false);
-  }, [thoughtToDelete, dispatch, addToast]);
+  }, [thoughtToDelete, dispatch, addToast, t]);
 
   return (
     <div className="flex-col-24 fade-in-entry">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
-            Музей мыслей
+            {t('reflect.museum.title')}
           </h2>
           <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>
-            Коллекция цитат, мудрых изречений, инсайтов и мимолетных идей
+            {t('reflect.museum.subtitle')}
           </p>
         </div>
         <button className="btn btn--primary" onClick={handleAddNew} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <Plus size={16} />
-          <span>Запечатлеть мысль</span>
+          <span>{t('reflect.museum.add')}</span>
         </button>
       </div>
 
       {/* Summary Stat */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
         <StatCard
-          label="Всего экспонатов в музее"
+          label={t('reflect.museum.total_label')}
           value={data.thoughts.length}
-          subtitle="Сохраненных глубоких мыслей"
+          subtitle={t('reflect.museum.total_sub')}
           icon={<BookOpen size={20} />}
           accent
         />
@@ -135,7 +137,7 @@ export default function MuseumPage() {
           <Search size={16} style={{ color: 'var(--text-secondary)', marginRight: '8px' }} />
           <input
             type="text"
-            placeholder="Искать мысли по содержанию и тегам..."
+            placeholder={t('reflect.museum.search_placeholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             style={{
@@ -150,14 +152,14 @@ export default function MuseumPage() {
         </div>
 
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Рубрика:</span>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{t('reflect.museum.category_label')}</span>
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
             style={{ height: '40px', padding: '0 12px', fontSize: '0.85rem' }}
           >
             {categories.map((cat) => (
-              <option key={cat} value={cat}>{cat}</option>
+              <option key={cat} value={cat}>{cat === 'Все' ? t('filter.all') : cat}</option>
             ))}
           </select>
         </div>
@@ -217,12 +219,12 @@ export default function MuseumPage() {
           <div style={{ gridColumn: '1 / -1' }}>
             <EmptyState
               icon={<BookOpen size={48} />}
-              title="Музей мыслей пуст"
-              description="Запишите свои главные жизненные выводы, инсайты или чужие цитаты, которые заставили вас задуматься."
+              title={t('reflect.museum.empty_title')}
+              description={t('reflect.museum.empty_desc')}
               action={
                 <button className="btn btn--primary" onClick={handleAddNew}>
                   <Plus size={14} />
-                  <span>Сохранить мысль</span>
+                  <span>{t('reflect.museum.save')}</span>
                 </button>
               }
             />
@@ -244,10 +246,10 @@ export default function MuseumPage() {
             isOpen={isDeleteOpen}
             onConfirm={confirmDelete}
             onCancel={() => setIsDeleteOpen(false)}
-            title="Удалить мысль из музея?"
-            message="Вы уверены, что хотите удалить эту запись? Действие не может быть отменено."
-            confirmLabel="Удалить"
-            cancelLabel="Отмена"
+            title={t('reflect.museum.delete_title')}
+            message={t('reflect.museum.delete_message')}
+            confirmLabel={t('action.delete')}
+            cancelLabel={t('action.cancel')}
             variant="danger"
           />
         )}

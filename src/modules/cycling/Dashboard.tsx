@@ -4,12 +4,14 @@ import { Route, Gauge, TrendingUp, Clock, Bike, Wrench, AlertTriangle, ArrowRigh
 import { StatCard } from '../../ui';
 import { formatDistance, formatDuration, formatDate } from '../../cognitive/helpers';
 import { useRideStats } from '../../hooks/useRideStats';
+import { useI18n } from '../../i18n';
 
 interface DashboardProps {
   onNavigateTab: (tab: string) => void;
 }
 
 export default function Dashboard({ onNavigateTab }: DashboardProps) {
+  const { t } = useI18n();
   const { data } = useData();
   const { rides, maintenance, routes } = data;
   const { totalDistance: totalDist, totalDuration: totalTime, avgSpeed, maxSpeed, totalElevation } = useRideStats(rides);
@@ -29,29 +31,29 @@ export default function Dashboard({ onNavigateTab }: DashboardProps) {
       {/* Overview Stat Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
         <StatCard
-          label="Общий пробег"
+          label={t('cycling.dashboard.totalMileage')}
           value={formatDistance(totalDist)}
-          subtitle={`${rides.length} заездов за все время`}
+          subtitle={t('cycling.dashboard.ridesAllTime', { count: rides.length })}
           icon={<Route size={20} />}
           accent
         />
         <StatCard
-          label="Средняя скорость"
-          value={`${avgSpeed.toFixed(1)} км/ч`}
-          subtitle={`Общее время: ${formatDuration(totalTime)}`}
+          label={t('cycling.dashboard.avgSpeed')}
+          value={`${avgSpeed.toFixed(1)} ${t('cycling.common.kmh')}`}
+          subtitle={t('cycling.dashboard.totalTime', { time: formatDuration(totalTime) })}
           icon={<Gauge size={20} />}
           trend="neutral"
         />
         <StatCard
-          label="Максимальная скорость"
-          value={`${maxSpeed.toFixed(1)} км/ч`}
+          label={t('cycling.dashboard.maxSpeed')}
+          value={`${maxSpeed.toFixed(1)} ${t('cycling.common.kmh')}`}
           icon={<TrendingUp size={20} />}
           trend="up"
         />
         <StatCard
-          label="Набор высоты"
-          value={`${totalElevation.toFixed(1)} м`}
-          subtitle="Суммарный подъем"
+          label={t('cycling.dashboard.elevationGain')}
+          value={`${totalElevation.toFixed(1)} ${t('cycling.common.m')}`}
+          subtitle={t('cycling.dashboard.totalClimb')}
           icon={<Mountain size={20} />}
         />
       </div>
@@ -63,14 +65,14 @@ export default function Dashboard({ onNavigateTab }: DashboardProps) {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h3 style={{ fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Clock size={16} />
-              <span>Последние заезды</span>
+              <span>{t('cycling.dashboard.recentRides')}</span>
             </h3>
             <button 
               className="btn btn--secondary" 
               style={{ padding: '4px 8px', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '4px' }}
               onClick={() => onNavigateTab('rides')}
             >
-              <span>Все заезды</span>
+              <span>{t('cycling.dashboard.allRides')}</span>
               <ArrowRight size={12} />
             </button>
           </div>
@@ -96,14 +98,14 @@ export default function Dashboard({ onNavigateTab }: DashboardProps) {
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <strong style={{ color: 'var(--accent)', display: 'block' }}>{formatDistance(ride.distanceKm)}</strong>
-                  <span style={{ color: 'var(--text-secondary)', fontSize: '0.7rem' }}>за {formatDuration(ride.durationMin)}</span>
+                  <span style={{ color: 'var(--text-secondary)', fontSize: '0.7rem' }}>{t('cycling.dashboard.for')} {formatDuration(ride.durationMin)}</span>
                 </div>
               </div>
             ))}
 
             {recentRides.length === 0 && (
               <div style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)', fontSize: '0.8rem', fontStyle: 'italic', padding: '24px' }}>
-                Поездок не зафиксировано
+                {t('cycling.dashboard.noRides')}
               </div>
             )}
           </div>
@@ -116,14 +118,14 @@ export default function Dashboard({ onNavigateTab }: DashboardProps) {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
               <h3 style={{ fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <Wrench size={16} />
-                <span>Сервисное обслуживание</span>
+                <span>{t('cycling.dashboard.maintenance')}</span>
               </h3>
               <button 
                 className="btn btn--secondary" 
                 style={{ padding: '4px 8px', fontSize: '0.75rem' }}
                 onClick={() => onNavigateTab('maintenance')}
               >
-                Управление ТО
+                {t('cycling.dashboard.manageMaintenance')}
               </button>
             </div>
 
@@ -144,14 +146,14 @@ export default function Dashboard({ onNavigateTab }: DashboardProps) {
                 >
                   <AlertTriangle size={12} style={{ color: 'var(--error, #ef4444)', flexShrink: 0 }} />
                   <span style={{ color: 'var(--text-primary)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    Необходимо: <strong>{m.bikePart}</strong> ({m.type === 'replace' ? 'замена' : 'сервис'})
+                    {t('cycling.dashboard.maintenanceRequired', { part: m.bikePart, type: m.type === 'replace' ? t('cycling.common.replacement') : t('cycling.common.service') })}
                   </span>
                 </div>
               ))}
 
               {pendingMaintenance.length === 0 && (
                 <div style={{ color: 'var(--success, #16a34a)', fontSize: '0.8rem', fontStyle: 'italic', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  Велосипед полностью обслужен. Активных предупреждений нет.
+                  {t('cycling.dashboard.bikeFullyServiced')}
                 </div>
               )}
             </div>
@@ -161,20 +163,20 @@ export default function Dashboard({ onNavigateTab }: DashboardProps) {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
               <h3 style={{ fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <Bike size={16} />
-                <span>Запланированные маршруты</span>
+                <span>{t('cycling.dashboard.plannedRoutes')}</span>
               </h3>
               <button 
                 className="btn btn--secondary" 
                 style={{ padding: '4px 8px', fontSize: '0.75rem' }}
                 onClick={() => onNavigateTab('routes')}
               >
-                Маршруты
+                {t('cycling.dashboard.routes')}
               </button>
             </div>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-              <span>Запланировано маршрутов: <strong>{routes.filter(r => !r.isCompleted).length}</strong></span>
-              <span>Пройдено уникальных трасс: <strong>{routes.filter(r => r.isCompleted).length}</strong></span>
+              <span>{t('cycling.dashboard.routesPlanned')}: <strong>{routes.filter(r => !r.isCompleted).length}</strong></span>
+              <span>{t('cycling.dashboard.routesCompleted')}: <strong>{routes.filter(r => r.isCompleted).length}</strong></span>
             </div>
           </div>
 

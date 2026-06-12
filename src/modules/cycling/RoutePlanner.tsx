@@ -5,14 +5,8 @@ import { useApp } from '../../context/AppContext';
 import { Plus, Map, Trash2, Edit2, CheckCircle2, AlertCircle } from 'lucide-react';
 import { DataTable, EmptyState, ConfirmDialog } from '../../ui';
 import { uid, nowISO } from '../../cognitive/helpers';
+import { useI18n } from '../../i18n';
 import RouteModal from './RouteModal';
-
-const diffLabels = {
-  easy: 'Легкий',
-  medium: 'Средний',
-  hard: 'Сложный',
-  extreme: 'Экстремальный'
-};
 
 const diffColors = {
   easy: 'var(--success, #16a34a)',
@@ -22,8 +16,16 @@ const diffColors = {
 };
 
 export default function RoutePlanner() {
+  const { t } = useI18n();
   const { data, dispatch } = useData();
   const { addToast } = useApp();
+
+  const diffLabels: Record<string, string> = {
+    easy: t('cycling.routes.difficulty.easy'),
+    medium: t('cycling.routes.difficulty.medium'),
+    hard: t('cycling.routes.difficulty.hard'),
+    extreme: t('cycling.routes.difficulty.extreme')
+  };
 
   const [isOpen, setIsOpen] = useState(false);
   const [editingRoute, setEditingRoute] = useState<CycleRoute | null>(null);
@@ -47,11 +49,11 @@ export default function RoutePlanner() {
         id: editingRoute.id,
         payload: { ...routeData, updatedAt: nowISO() }
       });
-      addToast('Маршрут успешно обновлен', 'success');
+      addToast(t('cycling.routes.toastUpdated'), 'success');
     } else {
       const newRoute: CycleRoute = {
         id: `route_${uid()}`,
-        name: routeData.name || 'Новый маршрут',
+        name: routeData.name || t('cycling.routes.defaultName'),
         distanceKm: routeData.distanceKm || 0,
         elevationGainM: routeData.elevationGainM || 0,
         difficulty: routeData.difficulty || 'medium',
@@ -65,10 +67,10 @@ export default function RoutePlanner() {
         entity: 'routes',
         payload: newRoute
       });
-      addToast('Запланирован новый маршрут', 'success');
+      addToast(t('cycling.routes.toastCreated'), 'success');
     }
     setIsOpen(false);
-  }, [editingRoute, dispatch, addToast]);
+  }, [editingRoute, dispatch, addToast, t]);
 
   const handleDelete = useCallback((id: string) => {
     dispatch({
@@ -76,8 +78,8 @@ export default function RoutePlanner() {
       entity: 'routes',
       id
     });
-    addToast('Маршрут удален из плана', 'warning');
-  }, [dispatch, addToast]);
+    addToast(t('cycling.routes.toastDeleted'), 'warning');
+  }, [dispatch, addToast, t]);
 
   const handleConfirmDelete = useCallback(() => {
     if (routeToDelete) {
@@ -91,15 +93,15 @@ export default function RoutePlanner() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
-            Планировщик маршрутов
+            {t('cycling.routes.title')}
           </h2>
           <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>
-            Проектирование новых велотрасс, составление контрольных точек и ведение статистики прохождений
+            {t('cycling.routes.subtitle')}
           </p>
         </div>
         <button className="btn btn--primary" onClick={handleAddNew} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <Plus size={16} />
-          <span>Планировать маршрут</span>
+          <span>{t('cycling.routes.planRoute')}</span>
         </button>
       </div>
 
@@ -107,15 +109,15 @@ export default function RoutePlanner() {
         {data.routes.length > 0 ? (
           <DataTable
             columns={[
-              { key: 'name', label: 'Название трассы', render: (v) => (
+              { key: 'name', label: t('cycling.routes.colName'), render: (v) => (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <Map size={16} style={{ color: 'var(--accent)', flexShrink: 0 }} />
                   <span style={{ fontWeight: 600 }}>{v as string}</span>
                 </div>
               )},
-              { key: 'distanceKm', label: 'Дистанция', render: (v) => `${(v as number).toFixed(1)} км` },
-              { key: 'elevationGainM', label: 'Набор высоты', render: (v) => `${(v as number).toFixed(1)} м` },
-              { key: 'difficulty', label: 'Сложность', render: (v) => (
+              { key: 'distanceKm', label: t('cycling.routes.colDistance'), render: (v) => `${(v as number).toFixed(1)} ${t('cycling.common.km')}` },
+              { key: 'elevationGainM', label: t('cycling.dashboard.elevationGain'), render: (v) => `${(v as number).toFixed(1)} ${t('cycling.common.m')}` },
+              { key: 'difficulty', label: t('cycling.routes.colDifficulty'), render: (v) => (
                 <span 
                   className="badge" 
                   style={{ 
@@ -127,32 +129,32 @@ export default function RoutePlanner() {
                   {diffLabels[v as keyof typeof diffLabels]}
                 </span>
               )},
-              { key: 'waypoints', label: 'Ключевые точки', render: (v) => {
+              { key: 'waypoints', label: t('cycling.routes.colWaypoints'), render: (v) => {
                 const arr = v as string[];
                 return arr.length > 0 ? (
                   <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                     {arr.join(' → ')}
                   </span>
                 ) : (
-                  <span style={{ fontStyle: 'italic', color: 'var(--text-secondary)', fontSize: '0.75rem' }}>Прямой заезд</span>
+                  <span style={{ fontStyle: 'italic', color: 'var(--text-secondary)', fontSize: '0.75rem' }}>{t('cycling.routes.directRide')}</span>
                 );
               }},
-              { key: 'isCompleted', label: 'Статус', render: (v) => (
+              { key: 'isCompleted', label: t('cycling.routes.colStatus'), render: (v) => (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem' }}>
                   {v ? (
                     <>
                       <CheckCircle2 size={14} style={{ color: 'var(--success, #16a34a)' }} />
-                      <span style={{ color: 'var(--success, #16a34a)' }}>Пройден</span>
+                      <span style={{ color: 'var(--success, #16a34a)' }}>{t('cycling.routes.completed')}</span>
                     </>
                   ) : (
                     <>
                       <AlertCircle size={14} style={{ color: 'var(--warning, #f59e0b)' }} />
-                      <span style={{ color: 'var(--warning, #f59e0b)' }}>В планах</span>
+                      <span style={{ color: 'var(--warning, #f59e0b)' }}>{t('cycling.routes.inPlan')}</span>
                     </>
                   )}
                 </div>
               )},
-              { key: 'id', label: 'Действия', render: (_, row) => (
+              { key: 'id', label: t('cycling.routes.colActions'), render: (_, row) => (
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <button className="btn btn--secondary" style={{ padding: '4px 6px' }} onClick={() => handleEdit(row as CycleRoute)}>
                     <Edit2 size={12} />
@@ -164,17 +166,17 @@ export default function RoutePlanner() {
               )}
             ]}
             data={data.routes}
-            emptyMessage="У вас пока нет сохраненных маршрутов."
+            emptyMessage={t('cycling.routes.emptyMessage')}
           />
         ) : (
           <EmptyState
             icon={<Map size={48} />}
-            title="Список маршрутов пуст"
-            description="Спланируйте контрольные точки и набор высоты для вашей следующей велопоездки."
+            title={t('cycling.routes.emptyTitle')}
+            description={t('cycling.routes.emptyDescription')}
             action={
               <button className="btn btn--primary" onClick={handleAddNew}>
                 <Plus size={14} />
-                <span>Запланировать маршрут</span>
+                <span>{t('cycling.routes.planRoute')}</span>
               </button>
             }
           />
@@ -195,8 +197,8 @@ export default function RoutePlanner() {
             isOpen={routeToDelete !== null}
             onConfirm={handleConfirmDelete}
             onCancel={() => setRouteToDelete(null)}
-            title="Удалить маршрут?"
-            message="Вы действительно хотите удалить этот велосипедный маршрут? Это действие необратимо."
+            title={t('cycling.routes.deleteConfirmTitle')}
+            message={t('cycling.routes.deleteConfirmMessage')}
             variant="danger"
           />
         )}

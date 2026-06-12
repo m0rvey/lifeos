@@ -3,6 +3,7 @@ import { createContext, useContext, useState, useEffect, useCallback, useRef, ty
 import { useLocation } from 'react-router-dom';
 import { useData } from './DataContext';
 import type { ModuleKey, ThemeType, ThemeMode, ToastMessage } from '../types';
+import { useI18n } from '../i18n';
 
 interface AppContextValue {
   activeModule: ModuleKey;
@@ -43,6 +44,7 @@ function getModuleTheme(module: ModuleKey): ThemeType {
 export function AppProvider({ children }: { children: ReactNode }) {
   const location = useLocation();
   const { data, dispatch } = useData();
+  const { t } = useI18n();
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const timersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
@@ -213,7 +215,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   // 5. Sync theme, accent and font scale to document element
   useEffect(() => {
     const themes: ThemeType[] = ['mindveyz', 'cyclist', 'reflect', 'slate'];
-    themes.forEach(t => document.body.classList.remove(`theme-${t}`));
+    themes.forEach(theme => document.body.classList.remove(`theme-${theme}`));
     document.body.classList.add(`theme-${settings.theme}`);
   }, [settings.theme]);
 
@@ -230,12 +232,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const handleStorageError = (e: Event) => {
       const customEvent = e as CustomEvent;
-      const errorMsg = customEvent.detail?.message || 'Превышена квота хранилища LocalStorage!';
-      addToast(`Ошибка сохранения: ${errorMsg}`, 'error', 5000);
+      const errorMsg = customEvent.detail?.message || t('error.storage_quota');
+      addToast(t('error.save_failed', { message: errorMsg }), 'error', 5000);
     };
     window.addEventListener('storage-error', handleStorageError);
     return () => window.removeEventListener('storage-error', handleStorageError);
-  }, [addToast]);
+  }, [addToast, t]);
 
   return (
     <AppContext.Provider
