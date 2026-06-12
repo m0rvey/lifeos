@@ -1,10 +1,10 @@
 import { useState, useMemo, useRef, type ChangeEvent } from 'react';
 import { useApp } from '../context/AppContext';
 import { useData } from '../context/DataContext';
-import { exportBackup, importBackup, wipeAllData } from '../storage/backup';
+import { exportBackup, importBackup, wipeAllData, exportTransactionsCsv, exportRidesCsv, exportPeopleCsv } from '../storage/backup';
 import { ConfirmDialog, Modal } from '../ui';
 import { Database, Sliders, SlidersHorizontal, Trash2, Download, Upload, Info } from 'lucide-react';
-import type { ThemeType } from '../types';
+import type { ThemeType, ThemeMode } from '../types';
 
 interface SettingsModalProps {
   onClose: () => void;
@@ -14,6 +14,8 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
   const {
     theme,
     setTheme,
+    themeMode,
+    setThemeMode,
     isAdaptive,
     setIsAdaptive,
     accentColor,
@@ -195,17 +197,20 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                 </h3>
                 
                 {/* Theme mode */}
-                <div className="settings-row-align">
-                  <span>Автоматическая тема модулей</span>
-                  <input
-                    type="checkbox"
-                    checked={isAdaptive}
-                    onChange={e => setIsAdaptive(e.target.checked)}
-                    className="settings-checkbox"
-                  />
+                <div className="settings-form-group">
+                  <label className="settings-label">Режим темы</label>
+                  <select
+                    value={themeMode}
+                    onChange={e => setThemeMode(e.target.value as ThemeMode)}
+                    className="settings-select"
+                  >
+                    <option value="manual">Ручной выбор</option>
+                    <option value="adaptive">Авто по модулям</option>
+                    <option value="system">По системным настройкам</option>
+                  </select>
                 </div>
-                
-                {!isAdaptive && (
+
+                {themeMode === 'manual' && (
                   <div className="settings-form-group">
                     <label className="settings-label">Тема оформления</label>
                     <select
@@ -219,6 +224,12 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                       <option value="reflect">Reflect (Минималистично-светлая)</option>
                     </select>
                   </div>
+                )}
+
+                {themeMode === 'system' && (
+                  <p className="settings-hint">
+                    Тема будет автоматически переключаться между темной (Slate) и светлой (Reflect) в зависимости от настроек вашей ОС.
+                  </p>
                 )}
 
                 {/* Accent Color switcher */}
@@ -475,6 +486,30 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                     <Info size={12} /> {importError}
                   </p>
                 )}
+
+                <div className="settings-csv-section">
+                  <span className="settings-csv-title">Экспорт в CSV</span>
+                  <div className="settings-actions-row">
+                    <button
+                      className="btn btn--secondary settings-actions-btn"
+                      onClick={() => { exportTransactionsCsv(data); addToast('Транзакции экспортированы', 'success'); }}
+                    >
+                      <Download size={14} /> Транзакции
+                    </button>
+                    <button
+                      className="btn btn--secondary settings-actions-btn"
+                      onClick={() => { exportRidesCsv(data); addToast('Поездки экспортированы', 'success'); }}
+                    >
+                      <Download size={14} /> Поездки
+                    </button>
+                    <button
+                      className="btn btn--secondary settings-actions-btn"
+                      onClick={() => { exportPeopleCsv(data); addToast('Контакты экспортированы', 'success'); }}
+                    >
+                      <Download size={14} /> Контакты
+                    </button>
+                  </div>
+                </div>
 
                 <div className="settings-wipe-panel">
                   <span className="settings-wipe-text">

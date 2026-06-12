@@ -1,6 +1,63 @@
 import type { AppData } from '../types';
 import { migrateData } from './migrations';
 
+function escapeCsv(value: unknown): string {
+  if (value === null || value === undefined) return '';
+  const str = String(value);
+  if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+    return `"${str.replace(/"/g, '""')}"`;
+  }
+  return str;
+}
+
+function arrayToCsv(headers: string[], rows: unknown[][]): string {
+  const lines = [headers.join(',')];
+  for (const row of rows) {
+    lines.push(row.map(escapeCsv).join(','));
+  }
+  return lines.join('\n');
+}
+
+function downloadCsv(content: string, filename: string): void {
+  const BOM = '\uFEFF';
+  const blob = new Blob([BOM + content], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+export function exportTransactionsCsv(data: AppData): void {
+  const headers = ['ID', 'Тип', 'Сумма', 'Категория', 'Описание', 'Дата'];
+  const rows = data.transactions.map(tx => [
+    tx.id, tx.type === 'income' ? 'Доход' : 'Расход',
+    tx.amount, tx.category, tx.description, tx.dateISO
+  ]);
+  downloadCsv(arrayToCsv(headers, rows), `transactions_${new Date().toISOString().slice(0, 10)}.csv`);
+}
+
+export function exportRidesCsv(data: AppData): void {
+  const headers = ['ID', 'Название', 'Дата', 'Дистанция (км)', 'Время (мин)', 'Ср. скорость', 'Макс. скорость', 'Набор высоты (м)'];
+  const rows = data.rides.map(r => [
+    r.id, r.title, r.dateISO, r.distanceKm, r.durationMin,
+    r.avgSpeedKmh, r.maxSpeedKmh, r.elevationGainM
+  ]);
+  downloadCsv(arrayToCsv(headers, rows), `rides_${new Date().toISOString().slice(0, 10)}.csv`);
+}
+
+export function exportPeopleCsv(data: AppData): void {
+  const headers = ['ID', 'Имя', 'Круг', 'Архетип', 'Статус', 'Энергия', 'Резонанс', 'Взаимность', 'Последний контакт'];
+  const rows = data.people.map(p => [
+    p.id, p.name, p.depth, p.archetype, p.status,
+    p.energy, p.resonance, p.reciprocity, p.lastContactISO
+  ]);
+  downloadCsv(arrayToCsv(headers, rows), `people_${new Date().toISOString().slice(0, 10)}.csv`);
+}
+
 export function exportBackup(data: AppData): void {
   let url: string | null = null;
   try {

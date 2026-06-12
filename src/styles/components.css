@@ -722,6 +722,13 @@ tr:nth-child(even) td { background: color-mix(in srgb, var(--surface) 50%, trans
   color: var(--text-secondary);
 }
 
+.settings-hint {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-top: var(--sp-2);
+  line-height: 1.5;
+}
+
 .settings-select {
   width: 100%;
   padding: 6px 10px;
@@ -860,6 +867,20 @@ tr:nth-child(even) td { background: color-mix(in srgb, var(--surface) 50%, trans
   display: flex;
   align-items: center;
   gap: 4px;
+}
+
+.settings-csv-section {
+  margin-top: var(--sp-4);
+  border-top: 1px solid var(--border);
+  padding-top: var(--sp-4);
+}
+
+.settings-csv-title {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  display: block;
+  margin-bottom: var(--sp-2);
 }
 
 .settings-wipe-panel {

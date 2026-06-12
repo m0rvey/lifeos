@@ -8,3 +8,4 @@ export { default as ConfirmDialog } from './ConfirmDialog';
 export { default as ErrorBoundary } from './ErrorBoundary';
 export { default as Skeleton } from './Skeleton';
 export { default as ShortcutsHelp } from './ShortcutsHelp';
+export { default as PageTransition } from './PageTransition';

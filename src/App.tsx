@@ -3,12 +3,9 @@ import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { DataProvider, useData } from './context/DataContext';
 import { AppProvider, useApp } from './context/AppContext';
 import AppShell from './shell/AppShell';
-import { ErrorBoundary } from './ui';
+import { ErrorBoundary, PageTransition } from './ui';
 import { useKeyPress } from './hooks/useKeyPress';
 import { exportBackup } from './storage/backup';
-
-// ... (keep the rest unchanged until App component)
-
 
 // Lazy load module components
 const HubPage = lazy(() => import('./modules/hub/HubPage'));
@@ -17,6 +14,23 @@ const FinanceModule = lazy(() => import('./modules/finance/FinanceModule'));
 const CyclingModule = lazy(() => import('./modules/cycling/CyclingModule'));
 const ReflectModule = lazy(() => import('./modules/reflect/ReflectModule'));
 const StatisticsPage = lazy(() => import('./modules/analytics/StatisticsPage'));
+
+function ModuleErrorFallback({ moduleName }: { moduleName: string }) {
+  return (
+    <div className="error-boundary-container">
+      <h2 className="error-boundary-title">Ошибка в модуле «{moduleName}»</h2>
+      <p className="error-boundary-desc">
+        Произошла ошибка. Попробуйте перезагрузить страницу или вернуться на главную.
+      </p>
+      <button
+        className="btn btn--primary"
+        onClick={() => window.location.reload()}
+      >
+        Перезагрузить
+      </button>
+    </div>
+  );
+}
 
 function AppInner() {
   const navigate = useNavigate();
@@ -65,15 +79,17 @@ function AppInner() {
           <span style={{ fontSize: '0.85rem' }}>Загрузка модуля платформы...</span>
         </div>
       }>
-        <Routes>
-          <Route path="/" element={<Navigate to="/hub" replace />} />
-          <Route path="/hub" element={<HubPage />} />
-          <Route path="/social/*" element={<SocialModule />} />
-          <Route path="/finance/*" element={<FinanceModule />} />
-          <Route path="/cycling/*" element={<CyclingModule />} />
-          <Route path="/reflect/*" element={<ReflectModule />} />
-          <Route path="/analytics" element={<StatisticsPage />} />
-        </Routes>
+        <PageTransition>
+          <Routes>
+            <Route path="/" element={<Navigate to="/hub" replace />} />
+            <Route path="/hub" element={<ErrorBoundary><HubPage /></ErrorBoundary>} />
+            <Route path="/social/*" element={<ErrorBoundary><SocialModule /></ErrorBoundary>} />
+            <Route path="/finance/*" element={<ErrorBoundary><FinanceModule /></ErrorBoundary>} />
+            <Route path="/cycling/*" element={<ErrorBoundary><CyclingModule /></ErrorBoundary>} />
+            <Route path="/reflect/*" element={<ErrorBoundary><ReflectModule /></ErrorBoundary>} />
+            <Route path="/analytics" element={<ErrorBoundary><StatisticsPage /></ErrorBoundary>} />
+          </Routes>
+        </PageTransition>
       </Suspense>
     </AppShell>
   );

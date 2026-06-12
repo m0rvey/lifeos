@@ -8,14 +8,17 @@ export type ModuleKey = 'hub' | 'social' | 'finance' | 'cycling' | 'reflect' | '
 
 export type ThemeType = 'mindveyz' | 'cyclist' | 'reflect' | 'slate';
 
+export type ThemeMode = 'manual' | 'adaptive' | 'system';
+
 export interface AppSettings {
   theme: ThemeType;
+  themeMode: ThemeMode;
   accentColor: 'purple' | 'orange' | 'green' | 'blue' | 'rose';
-  fontSizeScale: number; // 0.8 — 1.2, шаг 0.05
-  isAdaptive: boolean; // авто-смена темы под модуль
-  graphSensitivity: number; // 1–10
+  fontSizeScale: number;
+  isAdaptive: boolean;
+  graphSensitivity: number;
   graphWeights: GraphWeights;
-  weekStartDay: 0 | 1; // 0=воскресенье, 1=понедельник
+  weekStartDay: 0 | 1;
 }
 
 export interface GraphWeights {

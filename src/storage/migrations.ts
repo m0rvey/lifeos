@@ -298,10 +298,14 @@ export function sanitizeData(data: unknown): AppData {
   const accentStr = typeof rawSettings.accentColor === 'string' ? rawSettings.accentColor : '';
   const accentVal = ['purple', 'orange', 'green', 'blue', 'rose'].includes(accentStr) ? (accentStr as AppData['settings']['accentColor']) : def.settings.accentColor;
 
+  const themeModeStr = typeof rawSettings.themeMode === 'string' ? rawSettings.themeMode : '';
+  const themeModeVal = ['manual', 'adaptive', 'system'].includes(themeModeStr) ? (themeModeStr as AppData['settings']['themeMode']) : def.settings.themeMode;
+
   return {
     version: 3,
     settings: {
       theme: themeVal,
+      themeMode: themeModeVal,
       accentColor: accentVal,
       fontSizeScale: typeof rawSettings.fontSizeScale === 'number' ? Math.max(0.8, Math.min(1.2, rawSettings.fontSizeScale)) : def.settings.fontSizeScale,
       isAdaptive: typeof rawSettings.isAdaptive === 'boolean' ? rawSettings.isAdaptive : def.settings.isAdaptive,

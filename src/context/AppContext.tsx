@@ -2,12 +2,14 @@
 import { createContext, useContext, useState, useEffect, useCallback, useRef, type ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useData } from './DataContext';
-import type { ModuleKey, ThemeType, ToastMessage } from '../types';
+import type { ModuleKey, ThemeType, ThemeMode, ToastMessage } from '../types';
 
 interface AppContextValue {
   activeModule: ModuleKey;
   theme: ThemeType;
   setTheme: (theme: ThemeType) => void;
+  themeMode: ThemeMode;
+  setThemeMode: (mode: ThemeMode) => void;
   isAdaptive: boolean;
   setIsAdaptive: (adaptive: boolean) => void;
   accentColor: 'purple' | 'orange' | 'green' | 'blue' | 'rose';
@@ -62,6 +64,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
         settings: {
           ...settingsRef.current,
           theme: t,
+          themeMode: 'manual',
+        },
+      },
+    });
+  }, [dispatch]);
+
+  const setThemeMode = useCallback((mode: ThemeMode) => {
+    dispatch({
+      type: 'SET_DATA',
+      payload: {
+        settings: {
+          ...settingsRef.current,
+          themeMode: mode,
+          isAdaptive: mode === 'adaptive',
         },
       },
     });
@@ -137,7 +153,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   // 4. Adaptive theme update on module change
   useEffect(() => {
-    if (settings.isAdaptive) {
+    if (settings.themeMode === 'adaptive' || (settings.isAdaptive && settings.themeMode !== 'system')) {
       const targetTheme = getModuleTheme(activeModule);
       if (targetTheme !== settings.theme) {
         dispatch({
@@ -151,7 +167,33 @@ export function AppProvider({ children }: { children: ReactNode }) {
         });
       }
     }
-  }, [activeModule, settings.isAdaptive, settings.theme, dispatch]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [activeModule, settings.themeMode, settings.isAdaptive, settings.theme, dispatch]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // 4b. System theme detection
+  useEffect(() => {
+    if (settings.themeMode !== 'system') return;
+
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const applySystemTheme = (isDark: boolean) => {
+      const systemTheme: ThemeType = isDark ? 'slate' : 'reflect';
+      if (systemTheme !== settings.theme) {
+        dispatch({
+          type: 'SET_DATA',
+          payload: {
+            settings: {
+              ...settingsRef.current,
+              theme: systemTheme,
+            },
+          },
+        });
+      }
+    };
+
+    applySystemTheme(mq.matches);
+    const handler = (e: MediaQueryListEvent) => applySystemTheme(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, [settings.themeMode, settings.theme, dispatch]);
 
 
   // 5. Sync theme, accent and font scale to document element
@@ -187,6 +229,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         activeModule,
         theme: settings.theme,
         setTheme,
+        themeMode: settings.themeMode,
+        setThemeMode,
         isAdaptive: settings.isAdaptive,
         setIsAdaptive,
         accentColor: settings.accentColor,
