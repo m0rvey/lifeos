@@ -1,6 +1,8 @@
-# m0rveyZ Platform v3.0.0
+# m0rveyZ Platform v3.1.0
 
 Персональная платформа для управления ключевыми аспектами жизни: социальными связями, финансами, велосипедной активностью, рефлексией и привычками.
+
+> Автор: [m0rvey](https://github.com/m0rvey)
 
 ## Модули
 
@@ -62,7 +64,7 @@ src/
 ├── cognitive/      # Бизнес-логика (расчёты, хелперы)
 ├── context/        # React Context (AppContext, DataContext)
 ├── data/           # Данные (workouts JSON)
-├── hooks/          # Кастомные хуки
+├── hooks/          # Кастомные хуки (useRideStats, useCrudEntity, useKeyPress)
 ├── modules/        # Модули приложения
 │   ├── hub/        # Главный дашборд
 │   ├── social/     # Социальный граф
