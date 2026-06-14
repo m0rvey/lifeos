@@ -17,6 +17,31 @@ vi.mock('../storage/defaults', () => ({
   getDefaultData: vi.fn(),
 }));
 
+vi.mock('../i18n', () => {
+  const ru: Record<string, string> = {
+    'toast.created': 'Создано: {title}',
+    'toast.updated': 'Обновлено: {title}',
+    'toast.deleted': 'Удалено: {title}',
+    'action.close': 'Закрыть',
+  };
+  return {
+    I18nProvider: ({ children }: { children: React.ReactNode }) => children,
+    useI18n: () => ({
+      lang: 'ru',
+      setLang: vi.fn(),
+      t: (key: string, vars?: Record<string, string | number>) => {
+        let text = ru[key] || key;
+        if (vars) {
+          for (const [k, v] of Object.entries(vars)) {
+            text = text.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v));
+          }
+        }
+        return text;
+      }
+    })
+  };
+});
+
 const mockLoadData = vi.mocked(loadData);
 const mockGetDefaultData = vi.mocked(getDefaultData);
 

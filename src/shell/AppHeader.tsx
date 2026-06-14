@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, type ComponentType } from 'react';
+import { useState, useEffect, useRef, useMemo, type ComponentType } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Home, Share2, Wallet, Bike, BrainCircuit, BarChart3, Settings, Menu, Search } from 'lucide-react';
 import { useApp } from '../context/AppContext';
@@ -47,7 +47,7 @@ export default function AppHeader({ onOpenSettings, onOpenSearch }: AppHeaderPro
     navigate(route);
   };
 
-  const overdueContactsCount = data.people.filter(isDecaying).length;
+  const overdueContactsCount = useMemo(() => data.people.filter(isDecaying).length, [data.people]);
   const showSidebarToggle = activeModule !== 'hub' && activeModule !== 'analytics' && activeModule !== 'settings';
 
   return (

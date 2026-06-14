@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { openDB } from 'idb';
+import { clearCacheIDB } from '../storage/idbEngine';
 
 vi.mock('idb', () => ({
   openDB: vi.fn(),
@@ -8,11 +9,46 @@ vi.mock('idb', () => ({
 const mockOpenDB = vi.mocked(openDB);
 
 function makeMockDb() {
-  const store = new Map<string, unknown>();
+  const dbStores = new Map<string, Map<string, unknown>>();
+  
+  const getStoreMap = (storeName: string) => {
+    if (!dbStores.has(storeName)) {
+      dbStores.set(storeName, new Map());
+    }
+    return dbStores.get(storeName)!;
+  };
+
+  const getFn = vi.fn(async (storeName: string, key: string) => {
+    return getStoreMap(storeName).get(key);
+  });
+
+  const putFn = vi.fn(async (storeName: string, value: unknown, key: string) => {
+    getStoreMap(storeName).set(key, value);
+  });
+
+  const transactionFn = vi.fn((_storeNames: string | string[], _mode?: string) => {
+    return {
+      objectStore: vi.fn((storeName: string) => {
+        return {
+          put: vi.fn(async (value: unknown, key: string) => {
+            getStoreMap(storeName).set(key, value);
+          }),
+          get: vi.fn(async (key: string) => {
+            return getStoreMap(storeName).get(key);
+          })
+        };
+      }),
+      done: Promise.resolve()
+    };
+  });
+
   return {
-    get: vi.fn(async (_storeName: string, key: string) => store.get(key)),
-    put: vi.fn(async (_storeName: string, value: unknown, key: string) => { store.set(key, value); }),
-    objectStoreNames: { contains: vi.fn(() => true) },
+    get: getFn,
+    put: putFn,
+    transaction: transactionFn,
+    objectStoreNames: {
+      contains: vi.fn((name: string) => name === 'appData' || name === 'metadata')
+    },
     createObjectStore: vi.fn(),
   };
 }
@@ -20,14 +56,14 @@ function makeMockDb() {
 describe('idbEngine', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Reset the module-level dbPromise by clearing the module registry
+    clearCacheIDB();
     vi.resetModules();
   });
 
   describe('hasIDBData', () => {
     it('returns true when data exists in store', async () => {
       const mockDb = makeMockDb();
-      await mockDb.put('appData', { version: 3 }, 'lifeos_platform_v1');
+      await mockDb.put('metadata', 3, 'version');
       mockOpenDB.mockResolvedValue(mockDb as never);
 
       const { hasIDBData } = await import('../storage/idbEngine');
@@ -37,6 +73,7 @@ describe('idbEngine', () => {
 
     it('returns false when store is empty', async () => {
       const mockDb = makeMockDb();
+      mockDb.objectStoreNames.contains = vi.fn((name: string) => name === 'appData');
       mockOpenDB.mockResolvedValue(mockDb as never);
 
       const { hasIDBData } = await import('../storage/idbEngine');
@@ -54,15 +91,18 @@ describe('idbEngine', () => {
   });
 
   describe('saveDataIDB', () => {
-    it('saves data to store', async () => {
+    it('saves data to stores', async () => {
       const mockDb = makeMockDb();
       mockOpenDB.mockResolvedValue(mockDb as never);
 
       const { saveDataIDB } = await import('../storage/idbEngine');
-      const data = { version: 3, tasks: [] };
+      const data = { version: 3, tasks: [], settings: {} };
+      // @ts-expect-error: Incomplete mock data for test
       await saveDataIDB(data);
 
-      expect(mockDb.put).toHaveBeenCalledWith('appData', data, 'lifeos_platform_v1');
+      // Verify that it saved settings and metadata
+      const versionSaved = await mockDb.get('metadata', 'version');
+      expect(versionSaved).toBe(3);
     });
 
     it('dispatches storage-error on failure', async () => {
@@ -79,25 +119,29 @@ describe('idbEngine', () => {
   });
 
   describe('loadDataIDB', () => {
-    it('loads and migrates data from store', async () => {
+    it('loads data from modular stores', async () => {
       const mockDb = makeMockDb();
-      const rawData = { version: 2, tasks: [] };
-      await mockDb.put('appData', rawData, 'lifeos_platform_v1');
+      await mockDb.put('metadata', 3, 'version');
+      await mockDb.put('tasks', [{ id: 't1', title: 'Test' }], 'value');
       mockOpenDB.mockResolvedValue(mockDb as never);
 
       const { loadDataIDB } = await import('../storage/idbEngine');
       const result = await loadDataIDB();
       expect(result).toBeDefined();
       expect(result.version).toBe(3);
+      expect(result.tasks).toHaveLength(1);
+      expect(result.tasks[0].title).toBe('Test');
     });
 
     it('returns defaults when store is empty', async () => {
       const mockDb = makeMockDb();
+      mockDb.objectStoreNames.contains = vi.fn(() => false);
       mockOpenDB.mockResolvedValue(mockDb as never);
 
       const { loadDataIDB } = await import('../storage/idbEngine');
       const result = await loadDataIDB();
       expect(result).toBeDefined();
+      expect(result.tasks).toEqual([]);
     });
 
     it('returns defaults on error', async () => {
@@ -114,16 +158,18 @@ describe('idbEngine', () => {
       localStorage.clear();
     });
 
-    it('migrates data from localStorage to IDB', async () => {
-      localStorage.setItem('lifeos_platform_v1', JSON.stringify({ version: 3, tasks: [] }));
+    it('migrates data from localStorage to IDB modular stores', async () => {
+      localStorage.setItem('lifeos_platform_v1', JSON.stringify({ version: 3, tasks: [{ id: '1' }] }));
       const mockDb = makeMockDb();
+      mockDb.objectStoreNames.contains = vi.fn(() => false); // simulate empty IDB
       mockOpenDB.mockResolvedValue(mockDb as never);
 
       const { migrateFromLocalStorage } = await import('../storage/idbEngine');
       const result = await migrateFromLocalStorage();
 
       expect(result).toBe(true);
-      expect(mockDb.put).toHaveBeenCalled();
+      const versionSaved = await mockDb.get('metadata', 'version');
+      expect(versionSaved).toBe(3);
     });
 
     it('returns false when no localStorage data', async () => {
@@ -139,7 +185,7 @@ describe('idbEngine', () => {
     it('returns false if IDB already has data', async () => {
       localStorage.setItem('lifeos_platform_v1', JSON.stringify({ version: 3 }));
       const mockDb = makeMockDb();
-      await mockDb.put('appData', { version: 3 }, 'lifeos_platform_v1');
+      await mockDb.put('metadata', 3, 'version');
       mockOpenDB.mockResolvedValue(mockDb as never);
 
       const { migrateFromLocalStorage } = await import('../storage/idbEngine');

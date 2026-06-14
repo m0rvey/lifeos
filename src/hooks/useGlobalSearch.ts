@@ -105,5 +105,5 @@ export function useGlobalSearch(query: string): SearchResult[] {
     }
 
     return results.slice(0, 20);
-  }, [query, data]);
+  }, [query, data.journal, data.knowledge, data.thoughts, data.people, data.tasks]);
 }
