@@ -25,17 +25,19 @@ import {
 export default function HubPage() {
   const { data } = useData();
   const navigate = useNavigate();
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
 
-  // Current date in Russian format
+  // Current date in selected language format with capitalized weekday
   const formattedDate = useMemo(() => {
-    return new Date().toLocaleDateString('ru-RU', {
+    const locale = lang === 'ru' ? 'ru-RU' : 'en-US';
+    const dateStr = new Date().toLocaleDateString(locale, {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
       year: 'numeric',
     });
-  }, []);
+    return dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+  }, [lang]);
 
   // 1. Tasks Data
   const activeTasks = useMemo(() => {

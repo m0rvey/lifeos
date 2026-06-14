@@ -108,7 +108,8 @@ export function formatDate(iso: string): string {
     }
 
     if (isNaN(parsed.getTime())) return '';
-    const locale = typeof navigator !== 'undefined' ? navigator.language : 'ru-RU';
+    const lang = getCurrentLanguage();
+    const locale = lang === 'en' ? 'en-US' : 'ru-RU';
     return parsed.toLocaleDateString(locale, {
       day: 'numeric',
       month: 'long',
@@ -121,7 +122,8 @@ export function formatDate(iso: string): string {
 }
 
 export function formatCurrency(amount: number): string {
-  const locale = typeof navigator !== 'undefined' ? navigator.language : 'ru-RU';
+  const lang = getCurrentLanguage();
+  const locale = lang === 'en' ? 'en-US' : 'ru-RU';
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: 'RUB',

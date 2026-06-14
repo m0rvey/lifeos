@@ -326,10 +326,11 @@ export default function HabitsPage() {
                 </th>
                 {last7Days.map((date) => {
                   const dayNum = new Date(date).getDate();
-                  const weekday = new Date(date).toLocaleDateString(
+                  const rawWeekday = new Date(date).toLocaleDateString(
                     lang === 'en' ? 'en-US' : 'ru-RU',
                     { weekday: 'short' }
                   );
+                  const weekday = rawWeekday.charAt(0).toUpperCase() + rawWeekday.slice(1);
                   return (
                     <th key={date} style={{ width: '60px', textAlign: 'center' }}>
                       <span className="habits-table-weekday">{weekday}</span>
