@@ -19,23 +19,6 @@ function extractAllTags(data: AppData): string[] {
   return [...set].sort((a, b) => a.localeCompare(b));
 }
 
-function renameIn(items: EntityArray, oldName: string, newName: string): unknown[] {
-  return items.map(item => {
-    if (item.tags?.includes(oldName)) {
-      return { ...item, tags: item.tags.map(t => t === oldName ? newName : t) };
-    }
-    return item;
-  });
-}
-
-function removeFrom(items: EntityArray, tag: string): unknown[] {
-  return items.map(item => {
-    if (item.tags?.includes(tag)) {
-      return { ...item, tags: item.tags.filter(t => t !== tag) };
-    }
-    return item;
-  });
-}
 
 interface TagRegistryValue {
   allTags: string[];
@@ -52,33 +35,58 @@ export function TagRegistryProvider({ children }: { children: ReactNode }) {
 
   const renameTag = (oldName: string, newName: string) => {
     if (!oldName || !newName || oldName === newName) return;
-    dispatch({
-      type: 'SET_DATA',
-      payload: {
-        people: renameIn(data.people, oldName, newName) as typeof data.people,
-        tasks: renameIn(data.tasks, oldName, newName) as typeof data.tasks,
-        galleryNotes: renameIn(data.galleryNotes, oldName, newName) as typeof data.galleryNotes,
-        journal: renameIn(data.journal, oldName, newName) as typeof data.journal,
-        knowledge: renameIn(data.knowledge, oldName, newName) as typeof data.knowledge,
-        schedule: renameIn(data.schedule, oldName, newName) as typeof data.schedule,
-        thoughts: renameIn(data.thoughts, oldName, newName) as typeof data.thoughts,
-      },
-    });
+
+    const collections = [
+      { name: 'people' as const, items: data.people },
+      { name: 'tasks' as const, items: data.tasks },
+      { name: 'galleryNotes' as const, items: data.galleryNotes },
+      { name: 'journal' as const, items: data.journal },
+      { name: 'knowledge' as const, items: data.knowledge },
+      { name: 'schedule' as const, items: data.schedule },
+      { name: 'thoughts' as const, items: data.thoughts },
+    ];
+
+    for (const col of collections) {
+      for (const item of col.items) {
+        if (item.tags?.includes(oldName)) {
+          const newTags = item.tags.map(t => t === oldName ? newName : t);
+          dispatch({
+            type: 'UPDATE_ENTITY',
+            entity: col.name,
+            id: item.id,
+            payload: { tags: newTags }
+          });
+        }
+      }
+    }
   };
 
   const deleteTag = (tag: string) => {
-    dispatch({
-      type: 'SET_DATA',
-      payload: {
-        people: removeFrom(data.people, tag) as typeof data.people,
-        tasks: removeFrom(data.tasks, tag) as typeof data.tasks,
-        galleryNotes: removeFrom(data.galleryNotes, tag) as typeof data.galleryNotes,
-        journal: removeFrom(data.journal, tag) as typeof data.journal,
-        knowledge: removeFrom(data.knowledge, tag) as typeof data.knowledge,
-        schedule: removeFrom(data.schedule, tag) as typeof data.schedule,
-        thoughts: removeFrom(data.thoughts, tag) as typeof data.thoughts,
-      },
-    });
+    if (!tag) return;
+
+    const collections = [
+      { name: 'people' as const, items: data.people },
+      { name: 'tasks' as const, items: data.tasks },
+      { name: 'galleryNotes' as const, items: data.galleryNotes },
+      { name: 'journal' as const, items: data.journal },
+      { name: 'knowledge' as const, items: data.knowledge },
+      { name: 'schedule' as const, items: data.schedule },
+      { name: 'thoughts' as const, items: data.thoughts },
+    ];
+
+    for (const col of collections) {
+      for (const item of col.items) {
+        if (item.tags?.includes(tag)) {
+          const newTags = item.tags.filter(t => t !== tag);
+          dispatch({
+            type: 'UPDATE_ENTITY',
+            entity: col.name,
+            id: item.id,
+            payload: { tags: newTags }
+          });
+        }
+      }
+    }
   };
 
   return (

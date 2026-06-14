@@ -1,22 +1,45 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useMemo } from 'react';
 import { useData } from '../../context/DataContext';
-import { useApp } from '../../context/AppContext';
 import { useI18n } from '../../i18n';
 import { type JournalEntry } from '../../types';
 import { Plus, BookOpen, Smile, Edit2, Trash2 } from 'lucide-react';
 import { StatCard, EmptyState, ConfirmDialog } from '../../ui';
 import { formatDate, uid, nowISO, getMoodEmoji } from '../../cognitive/helpers';
 import JournalModal from './JournalModal';
+import { useCrudModal } from '../../hooks/useCrudModal';
 
 export default function JournalPage() {
-  const { data, dispatch } = useData();
-  const { addToast } = useApp();
+  const { data } = useData();
   const { t } = useI18n();
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [editingEntry, setEditingEntry] = useState<JournalEntry | null>(null);
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [entryToDelete, setEntryToDelete] = useState<string | null>(null);
+  const {
+    isOpen,
+    editingItem: editingEntry,
+    isDeleteOpen,
+    openAdd: handleAddNew,
+    openEdit: handleEdit,
+    openDelete: handleDeleteTrigger,
+    handleSave: handleSaveEntry,
+    confirmDelete,
+    closeAll
+  } = useCrudModal<JournalEntry>({
+    entity: 'journal',
+    toastKeys: {
+      created: 'reflect.journal.toast_created',
+      updated: 'journal.saved',
+      deleted: 'reflect.journal.toast_deleted'
+    },
+    createDefaults: (entryData) => ({
+      id: `journ_${uid()}`,
+      title: entryData?.title || '',
+      content: entryData?.content || '',
+      mood: entryData?.mood ?? 50,
+      dateISO: entryData?.dateISO || new Date().toISOString(),
+      tags: [],
+      createdAt: nowISO(),
+      updatedAt: nowISO()
+    })
+  });
 
   const sortedEntries = useMemo(() => {
     return [...data.journal].sort(
@@ -29,64 +52,6 @@ export default function JournalPage() {
     const sum = data.journal.reduce((acc, e) => acc + e.mood, 0);
     return Math.round(sum / data.journal.length);
   }, [data.journal]);
-
-  const handleAddNew = () => {
-    setEditingEntry(null);
-    setIsOpen(true);
-  };
-
-  const handleEdit = (entry: JournalEntry) => {
-    setEditingEntry(entry);
-    setIsOpen(true);
-  };
-
-  const handleSaveEntry = useCallback((entryData: Partial<JournalEntry>) => {
-    if (editingEntry) {
-      dispatch({
-        type: 'UPDATE_ENTITY',
-        entity: 'journal',
-        id: editingEntry.id,
-        payload: { ...entryData, updatedAt: nowISO() }
-      });
-      addToast(t('journal.saved'), 'success');
-    } else {
-      const newEntry: JournalEntry = {
-        id: `journ_${uid()}`,
-        title: entryData.title || '',
-        content: entryData.content || '',
-        mood: entryData.mood ?? 50,
-        dateISO: entryData.dateISO || new Date().toISOString(),
-        tags: [],
-        createdAt: nowISO(),
-        updatedAt: nowISO()
-      };
-      dispatch({
-        type: 'ADD_ENTITY',
-        entity: 'journal',
-        payload: newEntry
-      });
-      addToast(t('reflect.journal.toast_created'), 'success');
-    }
-    setIsOpen(false);
-  }, [editingEntry, dispatch, addToast, t]);
-
-  const handleDeleteTrigger = (id: string) => {
-    setEntryToDelete(id);
-    setIsDeleteOpen(true);
-  };
-
-  const confirmDelete = useCallback(() => {
-    if (entryToDelete) {
-      dispatch({
-        type: 'DELETE_ENTITY',
-        entity: 'journal',
-        id: entryToDelete
-      });
-      setEntryToDelete(null);
-      addToast(t('reflect.journal.toast_deleted'), 'warning');
-    }
-    setIsDeleteOpen(false);
-  }, [entryToDelete, dispatch, addToast, t]);
 
   return (
     <div className="flex-col-24 fade-in-entry">
@@ -160,6 +125,7 @@ export default function JournalPage() {
                     <button className="btn btn--secondary btn-padding-4-6-red" onClick={() => handleDeleteTrigger(entry.id)}>
                       <Trash2 size={12} />
                     </button>
+
                   </div>
                 </div>
 
@@ -184,27 +150,27 @@ export default function JournalPage() {
         )}
       </div>
 
-        {isOpen && (
-          <JournalModal
-            isOpen={isOpen}
-            entry={editingEntry}
-            onClose={() => setIsOpen(false)}
-            onSave={handleSaveEntry}
-          />
-        )}
+      {isOpen && (
+        <JournalModal
+          isOpen={isOpen}
+          entry={editingEntry}
+          onClose={closeAll}
+          onSave={handleSaveEntry}
+        />
+      )}
 
-        {isDeleteOpen && (
-          <ConfirmDialog
-            isOpen={isDeleteOpen}
-            onConfirm={confirmDelete}
-            onCancel={() => setIsDeleteOpen(false)}
-            title={t('reflect.journal.confirm_delete_title')}
-            message={t('reflect.journal.confirm_delete_message')}
-            confirmLabel={t('common.delete')}
-            cancelLabel={t('common.cancel')}
-            variant="danger"
-          />
-        )}
+      {isDeleteOpen && (
+        <ConfirmDialog
+          isOpen={isDeleteOpen}
+          onConfirm={confirmDelete}
+          onCancel={closeAll}
+          title={t('reflect.journal.confirm_delete_title')}
+          message={t('reflect.journal.confirm_delete_message')}
+          confirmLabel={t('common.delete')}
+          cancelLabel={t('common.cancel')}
+          variant="danger"
+        />
+      )}
     </div>
   );
 }

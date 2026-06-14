@@ -1,26 +1,27 @@
-import { createContext, useContext, useMemo, type ReactNode } from 'react';
-import { useData } from '../DataContext';
-
-function useFinanceData() {
-  const { data, dispatch } = useData();
-  const transactions = useMemo(() => data.transactions, [data.transactions]);
-  const reminders = useMemo(() => data.reminders, [data.reminders]);
-  return { transactions, reminders, dispatch };
-}
-
-const FinanceContext = createContext<ReturnType<typeof useFinanceData> | null>(null);
+import { useContext, useSyncExternalStore, type ReactNode } from 'react';
+import { useDataStore, DataDispatchContext } from '../DataContext';
 
 export function FinanceProvider({ children }: { children: ReactNode }) {
-  const value = useFinanceData();
-  return (
-    <FinanceContext.Provider value={value}>
-      {children}
-    </FinanceContext.Provider>
-  );
+  return <>{children}</>;
 }
 
 export function useFinance() {
-  const ctx = useContext(FinanceContext);
-  if (!ctx) throw new Error('useFinance must be used within FinanceProvider');
-  return ctx;
+  const dispatch = useContext(DataDispatchContext);
+  if (!dispatch) {
+    throw new Error('useFinance must be used within DataProvider');
+  }
+
+  const store = useDataStore();
+
+  const transactions = useSyncExternalStore(
+    store.subscribe,
+    () => store.getSnapshot().transactions
+  );
+
+  const reminders = useSyncExternalStore(
+    store.subscribe,
+    () => store.getSnapshot().reminders
+  );
+
+  return { transactions, reminders, dispatch };
 }

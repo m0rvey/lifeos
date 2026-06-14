@@ -1,7 +1,6 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useData } from '../../context/DataContext';
-import { useApp } from '../../context/AppContext';
 import { useI18n } from '../../i18n';
 import PersonList from './PersonList';
 import SocialGraph from './SocialGraph';
@@ -10,13 +9,43 @@ import { isDecaying, computeConnectionScore } from '../../cognitive/social';
 import { uid, nowISO, todayISO } from '../../cognitive/helpers';
 import { Depth, Person, Archetype, PersonStatus } from '../../types';
 
+import { useCrudModal } from '../../hooks/useCrudModal';
+
 export default function SocialPage() {
-  const { data, dispatch } = useData();
-  const { addToast } = useApp();
+  const { data } = useData();
   const { t } = useI18n();
   const navigate = useNavigate();
 
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const {
+    isOpen: isCreateOpen,
+    openAdd: handleAddNew,
+    handleSave: handleSaveNewPerson,
+    closeAll
+  } = useCrudModal<Person>({
+    entity: 'people',
+    toastKeys: {
+      created: 'social.toast.new_contact',
+      updated: '',
+      deleted: ''
+    },
+    createDefaults: (personData) => ({
+      id: `p_${uid()}`,
+      name: personData?.name || '',
+      depth: personData?.depth || Depth.INNER,
+      archetype: personData?.archetype || Archetype.INTELLECTUAL,
+      status: personData?.status || PersonStatus.ACTIVE,
+      energy: personData?.energy ?? 60,
+      resonance: personData?.resonance ?? 60,
+      reciprocity: personData?.reciprocity ?? 60,
+      volatility: personData?.volatility ?? 30,
+      lastContactISO: personData?.lastContactISO || todayISO(),
+      reflection: personData?.reflection || '',
+      notes: personData?.notes || '',
+      tags: [],
+      createdAt: nowISO(),
+      updatedAt: nowISO(),
+    })
+  });
 
   // Statistics
   const avgScore = useMemo(() => {
@@ -58,38 +87,6 @@ export default function SocialPage() {
   const handleSelectNode = useCallback((id: string) => {
     navigate(`/social/${id}`);
   }, [navigate]);
-
-  const handleAddNew = useCallback(() => {
-    setIsCreateOpen(true);
-  }, []);
-
-  const handleSaveNewPerson = useCallback((personData: Partial<Person>) => {
-    const newPerson: Person = {
-      id: `p_${uid()}`,
-      name: personData.name || '',
-      depth: personData.depth || Depth.INNER,
-      archetype: personData.archetype || Archetype.INTELLECTUAL,
-      status: personData.status || PersonStatus.ACTIVE,
-      energy: personData.energy ?? 60,
-      resonance: personData.resonance ?? 60,
-      reciprocity: personData.reciprocity ?? 60,
-      volatility: personData.volatility ?? 30,
-      lastContactISO: personData.lastContactISO || todayISO(),
-      reflection: personData.reflection || '',
-      notes: personData.notes || '',
-      tags: [],
-      createdAt: nowISO(),
-      updatedAt: nowISO(),
-    };
-
-    dispatch({
-      type: 'ADD_ENTITY',
-      entity: 'people',
-      payload: newPerson,
-    });
-    setIsCreateOpen(false);
-    addToast(t('social.toast.new_contact'), 'success');
-  }, [dispatch, addToast, t]);
 
   return (
     <div className="fade-in-entry social-page-container">
@@ -169,7 +166,7 @@ export default function SocialPage() {
         <PersonModal
           isOpen={isCreateOpen}
           person={null}
-          onClose={() => setIsCreateOpen(false)}
+          onClose={closeAll}
           onSave={handleSaveNewPerson}
         />
       )}

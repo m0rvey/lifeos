@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { DataProvider, useData } from '../context/DataContext';
+import { DataProvider, useData, useUndoRedo } from '../context/DataContext';
 import { loadData } from '../storage/engine';
 import { getDefaultData } from '../storage/defaults';
 
@@ -274,5 +274,83 @@ describe('DataContext', () => {
     });
 
     expect(result.current.data.people).toHaveLength(0);
+  });
+
+  it('handles undo and redo with action log integrity', () => {
+    const { result } = renderHook(() => ({
+      data: useData(),
+      history: useUndoRedo()
+    }), {
+      wrapper: DataProvider,
+    });
+
+    const newPerson = {
+      id: '1',
+      name: 'John Doe',
+      depth: 'core' as const,
+      archetype: 'intellectual' as const,
+      status: 'active' as const,
+      energy: 80,
+      resonance: 70,
+      reciprocity: 90,
+      volatility: 20,
+      lastContactISO: '2026-01-01',
+      reflection: '',
+      notes: '',
+      createdAt: '2026-01-01T00:00:00Z',
+      updatedAt: '2026-01-01T00:00:00Z',
+    };
+
+    expect(result.current.history.canUndo).toBe(false);
+    expect(result.current.history.canRedo).toBe(false);
+
+    act(() => {
+      result.current.data.dispatch({ type: 'ADD_ENTITY', entity: 'people', payload: newPerson });
+    });
+
+    expect(result.current.data.data.people).toHaveLength(1);
+    expect(result.current.history.canUndo).toBe(true);
+    expect(result.current.history.canRedo).toBe(false);
+
+    act(() => {
+      result.current.history.undo();
+    });
+
+    expect(result.current.data.data.people).toHaveLength(0);
+    expect(result.current.history.canUndo).toBe(false);
+    expect(result.current.history.canRedo).toBe(true);
+
+    act(() => {
+      result.current.history.redo();
+    });
+
+    expect(result.current.data.data.people).toHaveLength(1);
+    expect(result.current.history.canUndo).toBe(true);
+    expect(result.current.history.canRedo).toBe(false);
+
+    act(() => {
+      result.current.data.dispatch({ type: 'UPDATE_ENTITY', entity: 'people', id: '1', payload: { name: 'Jane Doe' } });
+    });
+
+    expect(result.current.data.data.people[0].name).toBe('Jane Doe');
+
+    act(() => {
+      result.current.history.undo();
+    });
+
+    expect(result.current.data.data.people[0].name).toBe('John Doe');
+
+    act(() => {
+      result.current.data.dispatch({ type: 'DELETE_ENTITY', entity: 'people', id: '1' });
+    });
+
+    expect(result.current.data.data.people).toHaveLength(0);
+
+    act(() => {
+      result.current.history.undo();
+    });
+
+    expect(result.current.data.data.people).toHaveLength(1);
+    expect(result.current.data.data.people[0].name).toBe('John Doe');
   });
 });

@@ -47,7 +47,7 @@ export function useGlobalSearch(query: string): SearchResult[] {
           title: entry.title,
           preview: highlightMatches(entry.content, q),
           module: 'reflect',
-          url: `/reflect/journal`,
+          url: `/reflect/journal/${entry.id}`,
         });
       }
     }

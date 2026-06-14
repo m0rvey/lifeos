@@ -23,9 +23,10 @@ test.describe('Smoke tests', () => {
     await expect(page).toHaveURL(/\/reflect/);
   });
 
-  test('search overlay opens with Cmd+K', async ({ page }) => {
+  test('search overlay opens with Cmd+K or Control+K', async ({ page }) => {
     await page.goto('/hub');
-    await page.keyboard.press('Meta+k');
+    await page.locator('body').click();
+    await page.keyboard.press('Control+k');
     await expect(page.locator('.search-overlay-input')).toBeVisible();
   });
 });

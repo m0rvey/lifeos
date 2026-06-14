@@ -1,25 +1,22 @@
-import { createContext, useContext, useMemo, type ReactNode } from 'react';
-import { useData } from '../DataContext';
-
-function usePeopleData() {
-  const { data, dispatch } = useData();
-  const people = useMemo(() => data.people, [data.people]);
-  return { people, dispatch };
-}
-
-const SocialContext = createContext<ReturnType<typeof usePeopleData> | null>(null);
+import { useContext, useSyncExternalStore, type ReactNode } from 'react';
+import { useDataStore, DataDispatchContext } from '../DataContext';
 
 export function SocialProvider({ children }: { children: ReactNode }) {
-  const value = usePeopleData();
-  return (
-    <SocialContext.Provider value={value}>
-      {children}
-    </SocialContext.Provider>
-  );
+  return <>{children}</>;
 }
 
 export function useSocial() {
-  const ctx = useContext(SocialContext);
-  if (!ctx) throw new Error('useSocial must be used within SocialProvider');
-  return ctx;
+  const dispatch = useContext(DataDispatchContext);
+  if (!dispatch) {
+    throw new Error('useSocial must be used within DataProvider');
+  }
+
+  const store = useDataStore();
+
+  const people = useSyncExternalStore(
+    store.subscribe,
+    () => store.getSnapshot().people
+  );
+
+  return { people, dispatch };
 }

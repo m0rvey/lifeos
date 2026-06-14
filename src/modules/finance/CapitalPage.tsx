@@ -1,6 +1,5 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo } from 'react';
 import { useData } from '../../context/DataContext';
-import { useApp } from '../../context/AppContext';
 import { type Transaction } from '../../types';
 import { Plus, Wallet, TrendingUp, TrendingDown, Edit2, Trash2, Search } from 'lucide-react';
 import { StatCard, DataTable, EmptyState, ConfirmDialog } from '../../ui';
@@ -10,17 +9,43 @@ import BalanceChart from './BalanceChart';
 import ReminderList from './ReminderList';
 import TransactionModal from './TransactionModal';
 
-export default function CapitalPage() {
-  const { data, dispatch } = useData();
-  const { addToast } = useApp();
-  const { t } = useI18n();
+import { useCrudModal } from '../../hooks/useCrudModal';
 
-  const [showForm, setShowForm] = useState(false);
-  const [editingTx, setEditingTx] = useState<Transaction | null>(null);
-  const [txToDelete, setTxToDelete] = useState<string | null>(null);
+export default function CapitalPage() {
+  const { data } = useData();
+  const { t } = useI18n();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
+
+  const {
+    isOpen: showForm,
+    editingItem: editingTx,
+    isDeleteOpen,
+    openAdd: handleAddNewClick,
+    openEdit: handleEditClick,
+    openDelete: setTxToDelete,
+    handleSave: handleSaveTransaction,
+    confirmDelete: handleConfirmDelete,
+    closeAll
+  } = useCrudModal<Transaction>({
+    entity: 'transactions',
+    toastKeys: {
+      created: 'toast.transaction.added',
+      updated: 'toast.transaction.updated',
+      deleted: 'toast.transaction.deleted'
+    },
+    createDefaults: (txData) => ({
+      id: `tx_${uid()}`,
+      type: txData?.type || 'expense',
+      amount: txData?.amount !== undefined && txData.amount > 0 ? txData.amount : 1,
+      category: txData?.category || '',
+      description: txData?.description || '',
+      dateISO: txData?.dateISO || todayISO(),
+      createdAt: nowISO(),
+      updatedAt: nowISO()
+    })
+  });
 
   const categories = useMemo(() => {
     const cats = new Set(data.transactions.map((t) => t.category));
@@ -60,62 +85,6 @@ export default function CapitalPage() {
       (a, b) => b.dateISO.localeCompare(a.dateISO)
     );
   }, [filteredTransactions]);
-
-  const handleAddNewClick = () => {
-    setEditingTx(null);
-    setShowForm(true);
-  };
-
-  const handleEditClick = (tx: Transaction) => {
-    setEditingTx(tx);
-    setShowForm(true);
-  };
-
-  const handleSaveTransaction = useCallback((txData: Partial<Transaction>) => {
-    if (editingTx) {
-      dispatch({
-        type: 'UPDATE_ENTITY',
-        entity: 'transactions',
-        id: editingTx.id,
-        payload: { ...txData, updatedAt: nowISO() }
-      });
-      addToast(t('toast.transaction.updated'), 'success');
-    } else {
-      const newTx: Transaction = {
-        id: `tx_${uid()}`,
-        type: txData.type || 'expense',
-        amount: txData.amount !== undefined && txData.amount > 0 ? txData.amount : 1,
-        category: txData.category || '',
-        description: txData.description || '',
-        dateISO: txData.dateISO || todayISO(),
-        createdAt: nowISO(),
-        updatedAt: nowISO()
-      };
-      dispatch({
-        type: 'ADD_ENTITY',
-        entity: 'transactions',
-        payload: newTx
-      });
-      addToast(t('toast.transaction.added'), 'success');
-    }
-    setShowForm(false);
-  }, [editingTx, dispatch, addToast, t]);
-
-  const handleDelete = useCallback((id: string) => {
-    dispatch({
-      type: 'DELETE_ENTITY',
-      entity: 'transactions',
-      id
-    });
-    addToast(t('toast.transaction.deleted'), 'warning');
-  }, [dispatch, addToast, t]);
-
-  const handleConfirmDelete = useCallback(() => {
-    if (txToDelete) {
-      handleDelete(txToDelete);
-      setTxToDelete(null);
-    }
-  }, [txToDelete, handleDelete]);
 
   return (
     <div className="fade-in-entry flex-col-24">
@@ -263,16 +232,16 @@ export default function CapitalPage() {
           <TransactionModal
             isOpen={showForm}
             transaction={editingTx}
-            onClose={() => setShowForm(false)}
+            onClose={closeAll}
             onSave={handleSaveTransaction}
           />
         )}
 
-        {txToDelete !== null && (
+        {isDeleteOpen && (
           <ConfirmDialog
-            isOpen={txToDelete !== null}
+            isOpen={isDeleteOpen}
             onConfirm={handleConfirmDelete}
-            onCancel={() => setTxToDelete(null)}
+            onCancel={closeAll}
             title={t('finance.confirm.deleteTitle')}
             message={t('finance.confirm.deleteMessage')}
             variant="danger"

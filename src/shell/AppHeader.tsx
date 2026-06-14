@@ -6,7 +6,6 @@ import { useData } from '../context/DataContext';
 import { useI18n } from '../i18n';
 import type { ModuleKey } from '../types';
 import { isDecaying } from '../cognitive/social';
-import '../styles/header-dropdown.css';
 
 interface AppHeaderProps {
   onOpenSettings: () => void;

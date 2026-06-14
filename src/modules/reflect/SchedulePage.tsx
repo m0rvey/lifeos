@@ -7,6 +7,7 @@ import { StatCard, EmptyState, ConfirmDialog } from '../../ui';
 import { uid, nowISO, todayISO, formatDuration, formatDate } from '../../cognitive/helpers';
 import { useI18n } from '../../i18n';
 import ScheduleModal from './ScheduleModal';
+import { useCrudModal } from '../../hooks/useCrudModal';
 
 const typeColors: Record<ScheduleBlock['type'], string> = {
   work: '#3b82f6',      // Blue
@@ -35,18 +36,40 @@ export default function SchedulePage() {
   const { t } = useI18n();
 
   const [activeDate, setActiveDate] = useState(todayISO());
-  const [isOpen, setIsOpen] = useState(false);
-  const [editingBlock, setEditingBlock] = useState<ScheduleBlock | null>(null);
-  
-  // For clicking on gaps
   const [defaultStart, setDefaultStart] = useState('09:00');
   const [defaultDur, setDefaultDur] = useState(60);
 
-  // Delete dialog
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [blockToDelete, setBlockToDelete] = useState<string | null>(null);
+  const {
+    isOpen,
+    editingItem: editingBlock,
+    isDeleteOpen,
+    openAdd,
+    openEdit: handleEdit,
+    openDelete: handleDeleteTrigger,
+    handleSave: handleSaveBlock,
+    confirmDelete,
+    closeAll
+  } = useCrudModal<ScheduleBlock>({
+    entity: 'schedule',
+    toastKeys: {
+      created: 'reflect.schedule.toast_created',
+      updated: 'reflect.schedule.toast_updated',
+      deleted: 'reflect.schedule.toast_deleted'
+    },
+    createDefaults: (blockData) => ({
+      id: `sched_${uid()}`,
+      title: blockData?.title || '',
+      dateISO: blockData?.dateISO || new Date(activeDate).toISOString(),
+      startTime: blockData?.startTime || '09:00',
+      durationMin: blockData?.durationMin || 60,
+      type: blockData?.type || 'work',
+      isCompleted: blockData?.isCompleted || false,
+      tags: [],
+      createdAt: nowISO(),
+      updatedAt: nowISO()
+    })
+  });
 
-  // Filter schedule for the selected date
   const dayBlocks = useMemo(() => {
     return data.schedule
       .filter((b) => b.dateISO.startsWith(activeDate))
@@ -58,66 +81,10 @@ export default function SchedulePage() {
   }, [dayBlocks]);
 
   const handleAddNew = () => {
-    setEditingBlock(null);
     setDefaultStart('09:00');
     setDefaultDur(60);
-    setIsOpen(true);
+    openAdd();
   };
-
-  const handleEdit = (block: ScheduleBlock) => {
-    setEditingBlock(block);
-    setIsOpen(true);
-  };
-
-  const handleSaveBlock = useCallback((blockData: Partial<ScheduleBlock>) => {
-    if (editingBlock) {
-      dispatch({
-        type: 'UPDATE_ENTITY',
-        entity: 'schedule',
-        id: editingBlock.id,
-        payload: blockData
-      });
-      addToast(t('reflect.schedule.toast_updated'), 'success');
-    } else {
-      const newBlock: ScheduleBlock = {
-        id: `sched_${uid()}`,
-        title: blockData.title || '',
-        dateISO: blockData.dateISO || new Date(activeDate).toISOString(),
-        startTime: blockData.startTime || '09:00',
-        durationMin: blockData.durationMin || 60,
-        type: blockData.type || 'work',
-        isCompleted: blockData.isCompleted || false,
-        tags: [],
-        createdAt: nowISO(),
-        updatedAt: nowISO()
-      };
-      dispatch({
-        type: 'ADD_ENTITY',
-        entity: 'schedule',
-        payload: newBlock
-      });
-      addToast(t('reflect.schedule.toast_created'), 'success');
-    }
-    setIsOpen(false);
-  }, [editingBlock, activeDate, dispatch, addToast, t]);
-
-  const handleDeleteTrigger = (id: string) => {
-    setBlockToDelete(id);
-    setIsDeleteOpen(true);
-  };
-
-  const confirmDelete = useCallback(() => {
-    if (blockToDelete) {
-      dispatch({
-        type: 'DELETE_ENTITY',
-        entity: 'schedule',
-        id: blockToDelete
-      });
-      setBlockToDelete(null);
-      addToast(t('reflect.schedule.toast_deleted'), 'warning');
-    }
-    setIsDeleteOpen(false);
-  }, [blockToDelete, dispatch, addToast, t]);
 
   const handleToggleComplete = useCallback((block: ScheduleBlock) => {
     dispatch({
@@ -130,10 +97,9 @@ export default function SchedulePage() {
   }, [dispatch, addToast, t]);
 
   const handleGapClick = (startTime: string, duration: number) => {
-    setEditingBlock(null);
     setDefaultStart(startTime);
     setDefaultDur(duration);
-    setIsOpen(true);
+    openAdd();
   };
 
   const translateType = (type: ScheduleBlock['type']): string => {
@@ -306,7 +272,7 @@ export default function SchedulePage() {
           <ScheduleModal
             isOpen={isOpen}
             block={editingBlock}
-            onClose={() => setIsOpen(false)}
+            onClose={closeAll}
             onSave={handleSaveBlock}
             defaultStartTime={defaultStart}
             defaultDuration={defaultDur}
@@ -318,7 +284,7 @@ export default function SchedulePage() {
           <ConfirmDialog
             isOpen={isDeleteOpen}
             onConfirm={confirmDelete}
-            onCancel={() => setIsDeleteOpen(false)}
+            onCancel={closeAll}
             title={t('reflect.schedule.confirm_delete_title')}
             message={t('reflect.schedule.confirm_delete_message')}
             confirmLabel={t('common.delete')}

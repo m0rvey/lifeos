@@ -149,4 +149,30 @@ describe('TagRegistry', () => {
       renderHook(() => useTagRegistry());
     }).toThrow('useTagRegistry must be used within TagRegistryProvider');
   });
+
+  it('renameTag and deleteTag trigger granular updates on entities', () => {
+    mockLoadData.mockReturnValue(defaultData({
+      people: [
+        { id: 'p1', name: 'Alice', tags: ['oldtag'], depth: 'core', archetype: 'intellectual', status: 'active', energy: 80, resonance: 70, reciprocity: 90, volatility: 20, lastContactISO: '2026-01-01', reflection: '', notes: '', createdAt: '', updatedAt: '' },
+      ],
+      tasks: [
+        { id: 't1', title: 'Task 1', tags: ['oldtag', 'keeptag'], isCompleted: false, emotion: 50, urgency: 50, deadlineISO: null, description: '', createdAt: '', updatedAt: '' },
+      ],
+    }));
+    mockGetDefaultData.mockReturnValue(defaultData());
+
+    const { result } = renderHook(() => useTagRegistry(), { wrapper: Wrapper });
+
+    act(() => {
+      result.current.renameTag('oldtag', 'newtag');
+    });
+
+    expect(result.current.allTags).toEqual(['keeptag', 'newtag']);
+
+    act(() => {
+      result.current.deleteTag('newtag');
+    });
+
+    expect(result.current.allTags).toEqual(['keeptag']);
+  });
 });

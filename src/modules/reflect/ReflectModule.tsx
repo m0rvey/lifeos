@@ -4,6 +4,7 @@ import { useI18n } from '../../i18n';
 
 const Dashboard = lazy(() => import('./Dashboard'));
 const JournalPage = lazy(() => import('./JournalPage'));
+const JournalDetail = lazy(() => import('./JournalDetail'));
 const KnowledgePage = lazy(() => import('./KnowledgePage'));
 const SchedulePage = lazy(() => import('./SchedulePage'));
 const HabitsPage = lazy(() => import('./HabitsPage'));
@@ -17,6 +18,7 @@ export default function ReflectModule() {
       <Routes>
         <Route index element={<Dashboard />} />
         <Route path="journal" element={<JournalPage />} />
+        <Route path="journal/:id" element={<JournalDetail />} />
         <Route path="knowledge" element={<KnowledgePage />} />
         <Route path="schedule" element={<SchedulePage />} />
         <Route path="habits" element={<HabitsPage />} />

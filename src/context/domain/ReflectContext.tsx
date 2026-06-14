@@ -1,30 +1,24 @@
-import { createContext, useContext, useMemo, type ReactNode } from 'react';
-import { useData } from '../DataContext';
-
-function useReflectData() {
-  const { data, dispatch } = useData();
-  const journal = useMemo(() => data.journal, [data.journal]);
-  const knowledge = useMemo(() => data.knowledge, [data.knowledge]);
-  const schedule = useMemo(() => data.schedule, [data.schedule]);
-  const habits = useMemo(() => data.habits, [data.habits]);
-  const workouts = useMemo(() => data.workouts, [data.workouts]);
-  const thoughts = useMemo(() => data.thoughts, [data.thoughts]);
-  return { journal, knowledge, schedule, habits, workouts, thoughts, dispatch };
-}
-
-const ReflectContext = createContext<ReturnType<typeof useReflectData> | null>(null);
+import { useContext, useSyncExternalStore, type ReactNode } from 'react';
+import { useDataStore, DataDispatchContext } from '../DataContext';
 
 export function ReflectProvider({ children }: { children: ReactNode }) {
-  const value = useReflectData();
-  return (
-    <ReflectContext.Provider value={value}>
-      {children}
-    </ReflectContext.Provider>
-  );
+  return <>{children}</>;
 }
 
 export function useReflect() {
-  const ctx = useContext(ReflectContext);
-  if (!ctx) throw new Error('useReflect must be used within ReflectProvider');
-  return ctx;
+  const dispatch = useContext(DataDispatchContext);
+  if (!dispatch) {
+    throw new Error('useReflect must be used within DataProvider');
+  }
+
+  const store = useDataStore();
+
+  const journal = useSyncExternalStore(store.subscribe, () => store.getSnapshot().journal);
+  const knowledge = useSyncExternalStore(store.subscribe, () => store.getSnapshot().knowledge);
+  const schedule = useSyncExternalStore(store.subscribe, () => store.getSnapshot().schedule);
+  const habits = useSyncExternalStore(store.subscribe, () => store.getSnapshot().habits);
+  const workouts = useSyncExternalStore(store.subscribe, () => store.getSnapshot().workouts);
+  const thoughts = useSyncExternalStore(store.subscribe, () => store.getSnapshot().thoughts);
+
+  return { journal, knowledge, schedule, habits, workouts, thoughts, dispatch };
 }

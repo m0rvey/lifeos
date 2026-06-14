@@ -7,3 +7,10 @@ mimo
 *.log
 *.local
 push.sh
+
+# Storybook
+storybook-static/
+
+# Playwright / Testing
+playwright-report/
+test-results/

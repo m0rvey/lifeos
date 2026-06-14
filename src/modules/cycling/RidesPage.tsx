@@ -1,6 +1,5 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo } from 'react';
 import { useData } from '../../context/DataContext';
-import { useApp } from '../../context/AppContext';
 import { type RideRecord } from '../../types';
 import { Plus, Bike, Route, Gauge, TrendingUp, Mountain, Clock, Award, Edit2, Trash2 } from 'lucide-react';
 import { EmptyState, ConfirmDialog } from '../../ui';
@@ -9,15 +8,48 @@ import { useRideStats } from '../../hooks/useRideStats';
 import { useI18n } from '../../i18n';
 import RideModal from './RideModal';
 
+import { useCrudModal } from '../../hooks/useCrudModal';
+
 export default function RidesPage() {
   const { t } = useI18n();
-  const { data, dispatch } = useData();
-  const { addToast } = useApp();
+  const { data } = useData();
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [editingRide, setEditingRide] = useState<RideRecord | null>(null);
   const [filter, setFilter] = useState<'all' | 'recent'>('all');
-  const [rideToDelete, setRideToDelete] = useState<string | null>(null);
+
+  const {
+    isOpen,
+    editingItem: editingRide,
+    isDeleteOpen,
+    openAdd: handleAddNew,
+    openEdit: handleEdit,
+    openDelete: setRideToDelete,
+    handleSave: handleSaveRide,
+    confirmDelete: handleConfirmDelete,
+    closeAll
+  } = useCrudModal<RideRecord>({
+    entity: 'rides',
+    toastKeys: {
+      created: 'cycling.rides.toastCreated',
+      updated: 'cycling.rides.toastEdited',
+      deleted: 'cycling.rides.toastDeleted'
+    },
+    createDefaults: (rideData) => ({
+      id: `ride_${uid()}`,
+      dateISO: rideData?.dateISO || new Date().toISOString(),
+      title: rideData?.title || t('cycling.rides.defaultTitle'),
+      distanceKm: rideData?.distanceKm || 0,
+      durationMin: rideData?.durationMin || 0,
+      avgSpeedKmh: rideData?.avgSpeedKmh || 0,
+      maxSpeedKmh: rideData?.maxSpeedKmh || 0,
+      elevationGainM: rideData?.elevationGainM || 0,
+      avgPowerW: rideData?.avgPowerW ?? null,
+      avgHrBpm: rideData?.avgHrBpm ?? null,
+      description: rideData?.description || '',
+      routeId: rideData?.routeId || null,
+      createdAt: nowISO(),
+      updatedAt: nowISO()
+    })
+  });
 
   const { totalDistance, totalDuration, avgSpeed: averageSpeed, maxSpeed: recordSpeed, totalElevation, maxDistance } = useRideStats(data.rides);
 
@@ -27,68 +59,6 @@ export default function RidesPage() {
     );
     return filter === 'recent' ? sorted.slice(0, 5) : sorted;
   }, [data.rides, filter]);
-
-  const handleAddNew = () => {
-    setEditingRide(null);
-    setIsOpen(true);
-  };
-
-  const handleEdit = (ride: RideRecord) => {
-    setEditingRide(ride);
-    setIsOpen(true);
-  };
-
-  const handleSaveRide = useCallback((rideData: Partial<RideRecord>) => {
-    if (editingRide) {
-      dispatch({
-        type: 'UPDATE_ENTITY',
-        entity: 'rides',
-        id: editingRide.id,
-        payload: { ...rideData, updatedAt: nowISO() }
-      });
-      addToast(t('cycling.rides.toastEdited'), 'success');
-    } else {
-      const newRide: RideRecord = {
-        id: `ride_${uid()}`,
-        dateISO: rideData.dateISO || new Date().toISOString(),
-        title: rideData.title || t('cycling.rides.defaultTitle'),
-        distanceKm: rideData.distanceKm || 0,
-        durationMin: rideData.durationMin || 0,
-        avgSpeedKmh: rideData.avgSpeedKmh || 0,
-        maxSpeedKmh: rideData.maxSpeedKmh || 0,
-        elevationGainM: rideData.elevationGainM || 0,
-        avgPowerW: rideData.avgPowerW ?? null,
-        avgHrBpm: rideData.avgHrBpm ?? null,
-        description: rideData.description || '',
-        routeId: rideData.routeId || null,
-        createdAt: nowISO(),
-        updatedAt: nowISO()
-      };
-      dispatch({
-        type: 'ADD_ENTITY',
-        entity: 'rides',
-        payload: newRide
-      });
-      addToast(t('cycling.rides.toastCreated'), 'success');
-    }
-    setIsOpen(false);
-  }, [editingRide, dispatch, addToast, t]);
-
-  const handleDelete = useCallback((id: string) => {
-    dispatch({
-      type: 'DELETE_ENTITY',
-      entity: 'rides',
-      id
-    });
-    addToast(t('cycling.rides.toastDeleted'), 'warning');
-  }, [dispatch, addToast, t]);
-
-  const handleConfirmDelete = useCallback(() => {
-    if (rideToDelete) {
-      handleDelete(rideToDelete);
-      setRideToDelete(null);
-    }
-  }, [rideToDelete, handleDelete]);
 
   return (
     <div className="fade-in-entry cycling-page">
@@ -243,16 +213,16 @@ export default function RidesPage() {
             isOpen={isOpen}
             ride={editingRide}
             routes={data.routes}
-            onClose={() => setIsOpen(false)}
+            onClose={closeAll}
             onSave={handleSaveRide}
           />
         )}
 
-        {rideToDelete !== null && (
+        {isDeleteOpen && (
           <ConfirmDialog
-            isOpen={rideToDelete !== null}
+            isOpen={isDeleteOpen}
             onConfirm={handleConfirmDelete}
-            onCancel={() => setRideToDelete(null)}
+            onCancel={closeAll}
             title={t('cycling.rides.deleteConfirmTitle')}
             message={t('cycling.rides.deleteConfirmMessage')}
             variant="danger"
