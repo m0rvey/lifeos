@@ -9,3 +9,4 @@ export { default as ErrorBoundary } from './ErrorBoundary';
 export { default as Skeleton } from './Skeleton';
 export { default as ShortcutsHelp } from './ShortcutsHelp';
 export { default as PageTransition } from './PageTransition';
+export { default as LoadingScreen } from './LoadingScreen';

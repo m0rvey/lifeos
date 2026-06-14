@@ -1,4 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
+import { getCurrentLanguage } from '../i18n';
 
 interface Props {
   children: ReactNode;
@@ -7,14 +8,6 @@ interface Props {
 interface State {
   hasError: boolean;
   error: Error | null;
-}
-
-function getCurrentLanguage(): 'ru' | 'en' {
-  if (typeof localStorage !== 'undefined') {
-    const saved = localStorage.getItem('lifeos-lang');
-    if (saved === 'en' || saved === 'ru') return saved;
-  }
-  return 'ru';
 }
 
 export default class ErrorBoundary extends Component<Props, State> {

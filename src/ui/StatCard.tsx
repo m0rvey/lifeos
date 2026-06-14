@@ -23,13 +23,13 @@ export default function StatCard({
         <span className="stat-card__label">{label}</span>
         {icon && <div className="stat-card__icon">{icon}</div>}
       </div>
-      <div className="stat-card__value-wrapper">
+      <div className="stat-card__value-wrapper" role="status" aria-live="polite" aria-atomic="true">
         <span className="stat-card__value">{value}</span>
         {trend && (
-          <span className={`stat-card__trend stat-card__trend--${trend}`}>
-            {trend === 'up' && '▲'}
-            {trend === 'down' && '▼'}
-            {trend === 'neutral' && '●'}
+          <span className={`stat-card__trend stat-card__trend--${trend}`} aria-hidden="true">
+            {trend === 'up' && '\u25B2'}
+            {trend === 'down' && '\u25BC'}
+            {trend === 'neutral' && '\u25CF'}
           </span>
         )}
       </div>

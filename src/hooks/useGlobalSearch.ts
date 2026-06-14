@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useData } from '../context/DataContext';
 
 export interface SearchResult {
@@ -31,92 +31,114 @@ function highlightMatches(text: string, query: string): string {
   return preview;
 }
 
+function search(query: string, data: ReturnType<typeof useData>['data']): SearchResult[] {
+  if (!query.trim()) return [];
+  const q = query.toLowerCase();
+
+  const results: SearchResult[] = [];
+
+  for (const entry of data.journal) {
+    if (entry.title.toLowerCase().includes(q) || entry.content.toLowerCase().includes(q)) {
+      results.push({
+        id: entry.id,
+        type: 'journal',
+        title: entry.title,
+        preview: highlightMatches(entry.content, q),
+        module: 'reflect',
+        url: `/reflect/journal/${entry.id}`,
+      });
+    }
+  }
+
+  for (const item of data.knowledge) {
+    if (
+      item.title.toLowerCase().includes(q) ||
+      item.content.toLowerCase().includes(q) ||
+      item.tags.some((t) => t.toLowerCase().includes(q))
+    ) {
+      results.push({
+        id: item.id,
+        type: 'knowledge',
+        title: item.title,
+        preview: highlightMatches(item.content, q),
+        module: 'reflect',
+        url: `/reflect/knowledge`,
+      });
+    }
+  }
+
+  for (const thought of data.thoughts) {
+    if (
+      thought.content.toLowerCase().includes(q) ||
+      thought.tags.some((t) => t.toLowerCase().includes(q))
+    ) {
+      results.push({
+        id: thought.id,
+        type: 'thought',
+        title: thought.content.slice(0, 60),
+        preview: highlightMatches(thought.content, q),
+        module: 'reflect',
+        url: `/reflect/museum/${thought.id}`,
+      });
+    }
+  }
+
+  for (const person of data.people) {
+    if (person.name.toLowerCase().includes(q) || person.notes.toLowerCase().includes(q)) {
+      results.push({
+        id: person.id,
+        type: 'person',
+        title: person.name,
+        preview: highlightMatches(person.notes || person.reflection, q) || person.depth,
+        module: 'social',
+        url: `/social/${person.id}`,
+      });
+    }
+  }
+
+  for (const task of data.tasks) {
+    if (
+      task.title.toLowerCase().includes(q) ||
+      (task.description && task.description.toLowerCase().includes(q))
+    ) {
+      results.push({
+        id: task.id,
+        type: 'task',
+        title: task.title,
+        preview:
+          highlightMatches(task.description || '', q) ||
+          (task.isCompleted ? 'Completed' : 'Pending'),
+        module: 'hub',
+        url: '/hub',
+      });
+    }
+  }
+
+  return results.slice(0, 20);
+}
+
 export function useGlobalSearch(query: string): SearchResult[] {
   const { data } = useData();
+  const [debouncedQuery, setDebouncedQuery] = useState('');
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  return useMemo(() => {
-    if (!query.trim()) return [];
-    const q = query.toLowerCase();
+  useEffect(() => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => setDebouncedQuery(query), 300);
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [query]);
 
-    const results: SearchResult[] = [];
+  const [results, setResults] = useState<SearchResult[]>([]);
 
-    for (const entry of data.journal) {
-      if (entry.title.toLowerCase().includes(q) || entry.content.toLowerCase().includes(q)) {
-        results.push({
-          id: entry.id,
-          type: 'journal',
-          title: entry.title,
-          preview: highlightMatches(entry.content, q),
-          module: 'reflect',
-          url: `/reflect/journal/${entry.id}`,
-        });
-      }
+  useEffect(() => {
+    if (!debouncedQuery.trim()) {
+      setResults([]);
+      return;
     }
+    setResults(search(debouncedQuery, data));
+  }, [debouncedQuery, data.journal, data.knowledge, data.thoughts, data.people, data.tasks]);
 
-    for (const item of data.knowledge) {
-      if (
-        item.title.toLowerCase().includes(q) ||
-        item.content.toLowerCase().includes(q) ||
-        item.tags.some((t) => t.toLowerCase().includes(q))
-      ) {
-        results.push({
-          id: item.id,
-          type: 'knowledge',
-          title: item.title,
-          preview: highlightMatches(item.content, q),
-          module: 'reflect',
-          url: `/reflect/knowledge`,
-        });
-      }
-    }
-
-    for (const thought of data.thoughts) {
-      if (
-        thought.content.toLowerCase().includes(q) ||
-        thought.tags.some((t) => t.toLowerCase().includes(q))
-      ) {
-        results.push({
-          id: thought.id,
-          type: 'thought',
-          title: thought.content.slice(0, 60),
-          preview: highlightMatches(thought.content, q),
-          module: 'reflect',
-          url: `/reflect/museum/${thought.id}`,
-        });
-      }
-    }
-
-    for (const person of data.people) {
-      if (person.name.toLowerCase().includes(q) || person.notes.toLowerCase().includes(q)) {
-        results.push({
-          id: person.id,
-          type: 'person',
-          title: person.name,
-          preview: highlightMatches(person.notes || person.reflection, q) || person.depth,
-          module: 'social',
-          url: `/social/${person.id}`,
-        });
-      }
-    }
-
-    for (const task of data.tasks) {
-      if (
-        task.title.toLowerCase().includes(q) ||
-        (task.description && task.description.toLowerCase().includes(q))
-      ) {
-        results.push({
-          id: task.id,
-          type: 'task',
-          title: task.title,
-          preview:
-            highlightMatches(task.description || '', q) ||
-            (task.isCompleted ? 'Completed' : 'Pending'),
-          module: 'hub',
-          url: '/hub',
-        });
-      }
-    }
-
-    return results.slice(0, 20);
-  }, [query, data.journal, data.knowledge, data.thoughts, data.people, data.tasks]);
+  return results;
 }

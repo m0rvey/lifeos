@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { renderHook } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { act, renderHook } from '@testing-library/react';
 import { DataProvider } from '../context/DataContext';
 import { useGlobalSearch } from '../hooks/useGlobalSearch';
 import { loadData } from '../storage/engine';
@@ -9,10 +9,6 @@ vi.mock('../storage/engine', () => ({
   loadData: vi.fn(),
   saveDataAsync: vi.fn(),
   hasIDBData: vi.fn(() => Promise.resolve(false)),
-}));
-
-vi.mock('../storage/defaults', () => ({
-  getDefaultData: vi.fn(),
 }));
 
 vi.mock('../storage/defaults', () => ({
@@ -65,9 +61,20 @@ function Wrapper({ children }: { children: React.ReactNode }) {
   return <DataProvider>{children}</DataProvider>;
 }
 
+function tick() {
+  act(() => {
+    vi.advanceTimersByTime(301);
+  });
+}
+
 describe('useGlobalSearch', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it('returns empty array for empty query', () => {
@@ -75,6 +82,7 @@ describe('useGlobalSearch', () => {
     mockGetDefaultData.mockReturnValue(defaultData());
 
     const { result } = renderHook(() => useGlobalSearch(''), { wrapper: Wrapper });
+    tick();
     expect(result.current).toEqual([]);
   });
 
@@ -108,6 +116,7 @@ describe('useGlobalSearch', () => {
     mockGetDefaultData.mockReturnValue(defaultData());
 
     const { result } = renderHook(() => useGlobalSearch('Paris'), { wrapper: Wrapper });
+    tick();
     expect(result.current).toHaveLength(1);
     expect(result.current[0].id).toBe('j1');
     expect(result.current[0].type).toBe('journal');
@@ -133,6 +142,7 @@ describe('useGlobalSearch', () => {
     mockGetDefaultData.mockReturnValue(defaultData());
 
     const { result } = renderHook(() => useGlobalSearch('hiking'), { wrapper: Wrapper });
+    tick();
     expect(result.current).toHaveLength(1);
     expect(result.current[0].id).toBe('j1');
   });
@@ -164,6 +174,7 @@ describe('useGlobalSearch', () => {
     mockGetDefaultData.mockReturnValue(defaultData());
 
     const { result } = renderHook(() => useGlobalSearch('alice'), { wrapper: Wrapper });
+    tick();
     expect(result.current).toHaveLength(1);
     expect(result.current[0].type).toBe('person');
     expect(result.current[0].url).toBe('/social/p1');
@@ -190,6 +201,7 @@ describe('useGlobalSearch', () => {
     mockGetDefaultData.mockReturnValue(defaultData());
 
     const { result } = renderHook(() => useGlobalSearch('frontend'), { wrapper: Wrapper });
+    tick();
     expect(result.current).toHaveLength(1);
     expect(result.current[0].type).toBe('knowledge');
   });
@@ -216,6 +228,7 @@ describe('useGlobalSearch', () => {
     mockGetDefaultData.mockReturnValue(defaultData());
 
     const { result } = renderHook(() => useGlobalSearch('groceries'), { wrapper: Wrapper });
+    tick();
     expect(result.current).toHaveLength(1);
     expect(result.current[0].type).toBe('task');
   });
@@ -238,6 +251,7 @@ describe('useGlobalSearch', () => {
     mockGetDefaultData.mockReturnValue(defaultData());
 
     const { result } = renderHook(() => useGlobalSearch('meditating'), { wrapper: Wrapper });
+    tick();
     expect(result.current).toHaveLength(1);
     expect(result.current[0].type).toBe('thought');
   });
@@ -257,6 +271,7 @@ describe('useGlobalSearch', () => {
     mockGetDefaultData.mockReturnValue(defaultData());
 
     const { result } = renderHook(() => useGlobalSearch('test'), { wrapper: Wrapper });
+    tick();
     expect(result.current).toHaveLength(20);
   });
 
@@ -280,6 +295,7 @@ describe('useGlobalSearch', () => {
     mockGetDefaultData.mockReturnValue(defaultData());
 
     const { result } = renderHook(() => useGlobalSearch('uppercase'), { wrapper: Wrapper });
+    tick();
     expect(result.current).toHaveLength(1);
   });
 });

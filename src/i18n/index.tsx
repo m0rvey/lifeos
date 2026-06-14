@@ -7,14 +7,24 @@ import {
   useEffect,
   type ReactNode,
 } from 'react';
+import LoadingScreen from '../ui/LoadingScreen';
 
 export type Language = 'ru' | 'en';
 
+export function getCurrentLanguage(): Language {
+  if (typeof localStorage !== 'undefined') {
+    const saved = localStorage.getItem('lifeos-lang') as Language | null;
+    if (saved && (saved === 'ru' || saved === 'en')) return saved;
+  }
+  if (typeof navigator !== 'undefined') {
+    const nav = navigator.language || 'ru';
+    return nav.startsWith('en') ? 'en' : 'ru';
+  }
+  return 'ru';
+}
+
 function detectLanguage(): Language {
-  const saved = localStorage.getItem('lifeos-lang') as Language | null;
-  if (saved && (saved === 'ru' || saved === 'en')) return saved;
-  const nav = typeof navigator !== 'undefined' ? navigator.language || 'ru' : 'ru';
-  return nav.startsWith('en') ? 'en' : 'ru';
+  return getCurrentLanguage();
 }
 
 interface I18nContextValue {
@@ -80,31 +90,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const value = useMemo(() => ({ lang, setLang, t }), [lang, setLang, t]);
 
   if (isLoading) {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100vh',
-          background: 'var(--bg-primary)',
-          color: 'var(--text-secondary)',
-          gap: '16px',
-        }}
-      >
-        <div
-          style={{
-            width: '40px',
-            height: '40px',
-            border: '3px solid var(--border)',
-            borderTopColor: 'var(--accent)',
-            borderRadius: '50%',
-            animation: 'spin 1s linear infinite',
-          }}
-        />
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;

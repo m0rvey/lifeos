@@ -6,6 +6,7 @@ export interface Column<T> {
   key: keyof T & string;
   label: string;
   render?: (val: T[keyof T], row: T) => ReactNode;
+  truncate?: boolean;
 }
 
 interface DataTableProps<T> {
@@ -13,6 +14,8 @@ interface DataTableProps<T> {
   data: T[];
   onDelete?: (id: string) => void;
   emptyMessage?: string;
+  rowHeight?: number;
+  maxHeight?: string;
 }
 
 export default function DataTable<T extends { id: string }>({
@@ -20,6 +23,8 @@ export default function DataTable<T extends { id: string }>({
   data,
   onDelete,
   emptyMessage,
+  rowHeight = 52,
+  maxHeight = '600px',
 }: DataTableProps<T>) {
   const { t } = useI18n();
   const displayEmptyMessage = emptyMessage || t('common.no_data');
@@ -62,9 +67,7 @@ export default function DataTable<T extends { id: string }>({
     return <div className="data-table-empty">{displayEmptyMessage}</div>;
   }
 
-  // Virtualization constants
-  const rowHeight = 52; // Average height of table row in pixels
-  const buffer = 5; // Number of extra rows to render above/below viewport
+  const buffer = 5;
   const colCount = columns.length + (onDelete ? 1 : 0);
 
   const startIdx = Math.max(0, Math.floor(scrollTop / rowHeight) - buffer);
@@ -82,21 +85,21 @@ export default function DataTable<T extends { id: string }>({
     <div
       className="table-container"
       ref={containerRef}
-      style={{ overflowY: 'auto', maxHeight: '600px', position: 'relative' }}
+      style={{ maxHeight }}
     >
       <table className="table">
-        <thead style={{ position: 'sticky', top: 0, zIndex: 1, background: 'var(--surface)' }}>
+        <thead className="table-thead-sticky">
           <tr>
             {columns.map((col) => (
               <th key={col.key}>{col.label}</th>
             ))}
-            {onDelete && <th style={{ width: '60px' }}>{t('common.actions')}</th>}
+            {onDelete && <th className="table-th-actions">{t('common.actions')}</th>}
           </tr>
         </thead>
         <tbody>
           {topSpacerHeight > 0 && (
             <tr style={{ height: `${topSpacerHeight}px` }}>
-              <td colSpan={colCount} style={{ padding: 0, border: 'none' }} />
+              <td colSpan={colCount} className="table-spacer" />
             </tr>
           )}
           {visibleData.map((row) => (
@@ -104,7 +107,10 @@ export default function DataTable<T extends { id: string }>({
               {columns.map((col) => {
                 const cellValue = row[col.key];
                 return (
-                  <td key={col.key}>
+                  <td
+                    key={col.key}
+                    className={col.truncate !== false ? 'table-cell-truncate' : undefined}
+                  >
                     {col.render ? col.render(cellValue, row) : String(cellValue ?? '')}
                   </td>
                 );
@@ -125,7 +131,7 @@ export default function DataTable<T extends { id: string }>({
           ))}
           {bottomSpacerHeight > 0 && (
             <tr style={{ height: `${bottomSpacerHeight}px` }}>
-              <td colSpan={colCount} style={{ padding: 0, border: 'none' }} />
+              <td colSpan={colCount} className="table-spacer" />
             </tr>
           )}
         </tbody>

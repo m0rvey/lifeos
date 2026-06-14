@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, FileText, Lightbulb, Users, CheckSquare, BrainCircuit } from 'lucide-react';
 import { useGlobalSearch, type SearchResult } from '../hooks/useGlobalSearch';
+import { useI18n } from '../i18n';
 
 const TYPE_ICONS: Record<SearchResult['type'], typeof FileText> = {
   journal: FileText,
@@ -12,17 +13,20 @@ const TYPE_ICONS: Record<SearchResult['type'], typeof FileText> = {
 };
 
 export default function SearchOverlay({ onClose }: { onClose: () => void }) {
+  const { t } = useI18n();
   const [query, setQuery] = useState('');
   const results = useGlobalSearch(query);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [prevQuery, setPrevQuery] = useState('');
+  const prevQueryRef = useRef(query);
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
-  if (prevQuery !== query) {
-    setPrevQuery(query);
-    setSelectedIndex(0);
-  }
+  useEffect(() => {
+    if (prevQueryRef.current !== query) {
+      prevQueryRef.current = query;
+      setSelectedIndex(0);
+    }
+  }, [query]);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -63,7 +67,7 @@ export default function SearchOverlay({ onClose }: { onClose: () => void }) {
             ref={inputRef}
             className="search-overlay-input"
             type="text"
-            placeholder="Search journal, knowledge, thoughts, people, tasks..."
+            placeholder={t('search.placeholder')}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -73,7 +77,7 @@ export default function SearchOverlay({ onClose }: { onClose: () => void }) {
         {query && (
           <div className="search-overlay-results">
             {results.length === 0 ? (
-              <div className="search-overlay-empty">No results found</div>
+              <div className="search-overlay-empty">{t('search.no_results')}</div>
             ) : (
               results.map((result, index) => {
                 const Icon = TYPE_ICONS[result.type];

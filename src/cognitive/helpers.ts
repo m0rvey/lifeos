@@ -1,4 +1,5 @@
 import type { AppData } from '../types';
+import { getCurrentLanguage } from '../i18n/index';
 
 export function uid(): string {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
@@ -129,18 +130,6 @@ export function formatCurrency(amount: number): string {
     currency: 'RUB',
     maximumFractionDigits: 0,
   }).format(amount);
-}
-
-function getCurrentLanguage(): 'ru' | 'en' {
-  if (typeof localStorage !== 'undefined') {
-    const saved = localStorage.getItem('lifeos-lang');
-    if (saved === 'en' || saved === 'ru') return saved;
-  }
-  if (typeof navigator !== 'undefined') {
-    const nav = navigator.language || 'ru';
-    return nav.startsWith('en') ? 'en' : 'ru';
-  }
-  return 'ru';
 }
 
 export function formatDuration(min: number): string {

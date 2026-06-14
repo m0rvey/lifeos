@@ -26,6 +26,10 @@ const ru: Record<string, string> = {
   'common.delete': 'Удалить',
   'common.delete_record': 'Удалить запись',
 
+  // SEARCH
+  'search.placeholder': 'Поиск по дневнику, знаниям, мыслям, людям и задачам...',
+  'search.no_results': 'Ничего не найдено',
+
   // CONFIRM
   'confirm.import_confirm': 'Импортировать',
   'confirm.import_message':

@@ -14,14 +14,13 @@ import {
   CheckCircle2,
   Clock,
 } from 'lucide-react';
-import { StatCard } from '../../ui';
+import { StatCard, EmptyState } from '../../ui';
 import { formatDate, todayISO, getMoodLabel } from '../../cognitive/helpers';
 
 export default function Dashboard() {
   const { data } = useData();
   const { t } = useI18n();
 
-  // 1. Calculations
   const journalStats = useMemo(() => {
     const total = data.journal.length;
     if (total === 0) return { total, avgMood: 0, lastEntry: null };
@@ -61,7 +60,6 @@ export default function Dashboard() {
 
   const museumThought = useMemo(() => {
     if (data.thoughts.length === 0) return null;
-    // Generate semi-random index based on day of month/year so it doesn't change every render
     const day = new Date().getDate();
     const index = day % data.thoughts.length;
     return data.thoughts[index];
@@ -70,27 +68,14 @@ export default function Dashboard() {
   return (
     <div className="flex-col-24 fade-in-entry">
       <div>
-        <h2
-          style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}
-        >
-          {t('dashboard.title')}
-        </h2>
-        <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>
-          {t('dashboard.description')}
-        </p>
+        <h2 className="dash-title">{t('dashboard.title')}</h2>
+        <p className="dash-subtitle">{t('dashboard.description')}</p>
       </div>
 
-      {/* Grid of stats */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: '16px',
-        }}
-      >
+      <div className="dash-stats-grid">
         <StatCard
           label={t('dashboard.moodIndex')}
-          value={journalStats.total > 0 ? `${journalStats.avgMood}%` : '—'}
+          value={journalStats.total > 0 ? `${journalStats.avgMood}%` : '\u2014'}
           subtitle={
             journalStats.total > 0 ? getMoodLabel(journalStats.avgMood) : t('dashboard.noEntries')
           }
@@ -126,164 +111,66 @@ export default function Dashboard() {
         />
       </div>
 
-      {/* Dashboard sections details */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: '20px',
-        }}
-      >
-        {/* Recent Journal Entry */}
-        <div
-          className="glass-panel padding-20-flex-col-12"
-          style={{ border: '1px solid var(--border)' }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h3
-              style={{
-                fontSize: '0.95rem',
-                fontWeight: 700,
-                margin: 0,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                color: 'var(--text-primary)',
-              }}
-            >
+      <div className="dash-panels-grid">
+        <div className="glass-panel padding-20-flex-col-12">
+          <div className="dash-panel-header">
+            <h3 className="dash-panel-h3">
               <BookOpen size={16} /> {t('dashboard.latestJournalEntry')}
             </h3>
-            <Link
-              to="/reflect/journal"
-              className="btn btn--secondary"
-              style={{
-                padding: '4px 8px',
-                fontSize: '0.75rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-              }}
-            >
+            <Link to="/reflect/journal" className="btn btn--secondary dash-btn-sm">
               <span>{t('dashboard.journal')}</span>
               <ArrowRight size={12} />
             </Link>
           </div>
 
           {journalStats.lastEntry ? (
-            <div className="flex-col-8" style={{ flex: 1 }}>
-              <div
-                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-              >
-                <strong style={{ fontSize: '0.85rem', color: 'var(--text-primary)' }}>
+            <div className="flex-col-8 dash-flex-1">
+              <div className="dash-panel-header">
+                <strong className="dash-info-label">
                   {journalStats.lastEntry.title}
                 </strong>
-                <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                <span className="dash-info-sub">
                   {formatDate(journalStats.lastEntry.dateISO)}
                 </span>
               </div>
-              <p
-                style={{
-                  fontSize: '0.8rem',
-                  color: 'var(--text-secondary)',
-                  margin: 0,
-                  lineClamp: 3,
-                  WebkitLineClamp: 3,
-                  display: '-webkit-box',
-                  WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden',
-                  lineHeight: 1.4,
-                }}
-              >
+              <p className="dash-line-clamp">
                 {journalStats.lastEntry.content}
               </p>
-              <div
-                style={{
-                  fontSize: '0.75rem',
-                  marginTop: 'auto',
-                  alignSelf: 'flex-start',
-                  background: 'rgba(255,255,255,0.03)',
-                  padding: '2px 8px',
-                  borderRadius: '12px',
-                  border: '1px solid var(--border)',
-                }}
-              >
+              <div className="dash-mood-badge">
                 {t('dashboard.mood')}: {journalStats.lastEntry.mood}%
               </div>
             </div>
           ) : (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '100px',
-                color: 'var(--text-secondary)',
-                fontSize: '0.8rem',
-              }}
-            >
-              {t('dashboard.noReflectionEntries')}
-            </div>
+            <EmptyState
+              icon={<BookOpen size={32} />}
+              title={t('dashboard.noReflectionEntries')}
+            />
           )}
         </div>
 
-        {/* Schedule & Habits summary */}
-        <div
-          className="glass-panel padding-20-flex-col-12"
-          style={{ border: '1px solid var(--border)' }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h3
-              style={{
-                fontSize: '0.95rem',
-                fontWeight: 700,
-                margin: 0,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                color: 'var(--text-primary)',
-              }}
-            >
+        <div className="glass-panel padding-20-flex-col-12">
+          <div className="dash-panel-header">
+            <h3 className="dash-panel-h3">
               <Calendar size={16} /> {t('dashboard.productivityToday')}
             </h3>
-            <div style={{ display: 'flex', gap: '6px' }}>
-              <Link
-                to="/reflect/schedule"
-                className="btn btn--secondary"
-                style={{ padding: '4px 8px', fontSize: '0.75rem' }}
-              >
+            <div className="dash-btn-group">
+              <Link to="/reflect/schedule" className="btn btn--secondary dash-btn-sm">
                 {t('dashboard.plan')}
               </Link>
-              <Link
-                to="/reflect/habits"
-                className="btn btn--secondary"
-                style={{ padding: '4px 8px', fontSize: '0.75rem' }}
-              >
+              <Link to="/reflect/habits" className="btn btn--secondary dash-btn-sm">
                 {t('dashboard.habits')}
               </Link>
             </div>
           </div>
 
-          <div className="flex-col-12" style={{ flex: 1, justifyContent: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div
-                style={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '8px',
-                  backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: 'var(--accent)',
-                }}
-              >
+          <div className="flex-col-12 dash-flex-1 dash-justify-center">
+            <div className="flex-row-center-gap12">
+              <div className="dash-icon-box dash-icon-box--accent">
                 <Clock size={20} />
               </div>
               <div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)' }}>
-                  {t('dashboard.daySchedule')}
-                </div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                <div className="dash-info-label">{t('dashboard.daySchedule')}</div>
+                <div className="dash-info-sub">
                   {scheduleStats.todayTotal > 0
                     ? `${t('dashboard.planned')} ${scheduleStats.todayTotal} ${t('dashboard.events')}, ${t('dashboard.completed')} ${scheduleStats.todayCompleted}`
                     : t('dashboard.noEventsToday')}
@@ -291,26 +178,13 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div
-                style={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '8px',
-                  backgroundColor: 'rgba(22, 163, 74, 0.1)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: 'var(--success)',
-                }}
-              >
+            <div className="flex-row-center-gap12">
+              <div className="dash-icon-box dash-icon-box--success">
                 <CheckCircle2 size={20} />
               </div>
               <div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)' }}>
-                  {t('dashboard.habitTracker')}
-                </div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                <div className="dash-info-label">{t('dashboard.habitTracker')}</div>
+                <div className="dash-info-sub">
                   {habitsStats.totalActive > 0
                     ? `${t('dashboard.completed')} ${habitsStats.completedToday} ${t('dashboard.of')} ${habitsStats.totalActive} ${t('dashboard.activeHabits')}`
                     : t('dashboard.noActiveHabits')}
@@ -321,111 +195,39 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Inspirational thought from Museum */}
-      <div
-        className="glass-panel"
-        style={{
-          padding: '20px',
-          border: '1px solid var(--border)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '12px',
-        }}
-      >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h3
-            style={{
-              fontSize: '0.95rem',
-              fontWeight: 700,
-              margin: 0,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              color: 'var(--text-primary)',
-            }}
-          >
+      <div className="glass-panel padding-20-flex-col-12">
+        <div className="dash-panel-header">
+          <h3 className="dash-panel-h3">
             <Quote size={16} /> {t('dashboard.randomThoughtOfDay')}
           </h3>
-          <Link
-            to="/reflect/thoughts"
-            className="btn btn--secondary"
-            style={{
-              padding: '4px 8px',
-              fontSize: '0.75rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-            }}
-          >
+          <Link to="/reflect/thoughts" className="btn btn--secondary dash-btn-sm">
             <span>{t('dashboard.museumOfThoughts')}</span>
             <ArrowRight size={12} />
           </Link>
         </div>
 
         {museumThought ? (
-          <div
-            style={{
-              position: 'relative',
-              padding: '10px 16px',
-              borderLeft: '3px solid var(--accent)',
-              margin: '4px 0',
-            }}
-          >
-            <p
-              style={{
-                fontSize: '0.85rem',
-                fontStyle: 'italic',
-                color: 'var(--text-primary)',
-                margin: '0 0 8px 0',
-                lineHeight: 1.5,
-                whiteSpace: 'pre-wrap',
-              }}
-            >
-              "{museumThought.content}"
+          <div className="dash-thought-block">
+            <p className="dash-thought-quote">
+              &ldquo;{museumThought.content}&rdquo;
             </p>
-            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-              <span
-                style={{
-                  fontSize: '0.7rem',
-                  color: 'var(--text-secondary)',
-                  background: 'rgba(255,255,255,0.02)',
-                  padding: '2px 6px',
-                  borderRadius: '4px',
-                  border: '1px solid var(--border)',
-                }}
-              >
+            <div className="dash-chip-group">
+              <span className="dash-chip">
                 {museumThought.category || t('dashboard.general')}
               </span>
               {museumThought.tags.map((tag, idx) => (
-                <span
-                  key={idx}
-                  style={{
-                    fontSize: '0.7rem',
-                    color: 'var(--accent)',
-                    background: 'rgba(99,102,241,0.05)',
-                    padding: '2px 6px',
-                    borderRadius: '4px',
-                  }}
-                >
+                <span key={idx} className="dash-chip--accent dash-chip">
                   #{tag}
                 </span>
               ))}
             </div>
           </div>
         ) : (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '80px',
-              color: 'var(--text-secondary)',
-              fontSize: '0.8rem',
-            }}
-          >
-            {t('dashboard.museumEmpty')}
-          </div>
-        )}
+            <EmptyState
+              icon={<Quote size={32} />}
+              title={t('dashboard.museumEmpty')}
+            />
+          )}
       </div>
     </div>
   );

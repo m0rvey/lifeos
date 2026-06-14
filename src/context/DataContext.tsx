@@ -13,6 +13,7 @@ import type { AppData } from '../types';
 import { loadData, loadDataAsync, saveData, saveDataAsync } from '../storage/engine';
 import { getDefaultData } from '../storage/defaults';
 import { dataReducer, type DataAction, type HistoryState } from './dataHistory';
+import LoadingScreen from '../ui/LoadingScreen';
 
 export interface DataStore {
   subscribe: (listener: () => void) => () => void;
@@ -116,31 +117,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   }, [history.present, isInitialized]);
 
   if (!isInitialized) {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100vh',
-          background: 'var(--bg-primary)',
-          color: 'var(--text-secondary)',
-          gap: '16px',
-        }}
-      >
-        <div
-          style={{
-            width: '40px',
-            height: '40px',
-            border: '3px solid var(--border)',
-            borderTopColor: 'var(--accent)',
-            borderRadius: '50%',
-            animation: 'spin 1s linear infinite',
-          }}
-        />
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   return (

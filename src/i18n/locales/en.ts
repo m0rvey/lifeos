@@ -26,6 +26,10 @@ const en: Record<string, string> = {
   'common.delete': 'Delete',
   'common.delete_record': 'Delete record',
 
+  // SEARCH
+  'search.placeholder': 'Search journal, knowledge, thoughts, people, tasks...',
+  'search.no_results': 'No results found',
+
   // CONFIRM
   'confirm.import_confirm': 'Import',
   'confirm.import_message':
