@@ -13,7 +13,14 @@ export default function WorkoutsPage() {
   const { data, dispatch } = useData();
   const { addToast } = useApp();
   const { t } = useI18n();
-  const { editing: editingWorkout, deleting: workoutToDelete, openAdd, openEdit, openDelete, closeAll } = useCrudEntity<WorkoutRecord>();
+  const {
+    editing: editingWorkout,
+    deleting: workoutToDelete,
+    openAdd,
+    openEdit,
+    openDelete,
+    closeAll,
+  } = useCrudEntity<WorkoutRecord>();
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -45,37 +52,40 @@ export default function WorkoutsPage() {
     setIsOpen(true);
   };
 
-  const handleSaveWorkout = useCallback((workoutData: Partial<WorkoutRecord>) => {
-    if (editingWorkout) {
-      dispatch({
-        type: 'UPDATE_ENTITY',
-        entity: 'workouts',
-        id: editingWorkout.id,
-        payload: workoutData
-      });
-      addToast(t('reflect.workout.toast_updated'), 'success');
-    } else {
-      const newWorkout: WorkoutRecord = {
-        id: `work_${uid()}`,
-        type: workoutData.type || 'gym',
-        dateISO: workoutData.dateISO || todayISO(),
-        durationMin: workoutData.durationMin || 45,
-        intensity: workoutData.intensity || 3,
-        description: workoutData.description || '',
-        calories: workoutData.calories ?? null,
-        createdAt: nowISO(),
-        updatedAt: nowISO()
-      };
-      dispatch({
-        type: 'ADD_ENTITY',
-        entity: 'workouts',
-        payload: newWorkout
-      });
-      addToast(t('reflect.workout.toast_created'), 'success');
-    }
-    setIsOpen(false);
-    closeAll();
-  }, [editingWorkout, dispatch, addToast, closeAll, t]);
+  const handleSaveWorkout = useCallback(
+    (workoutData: Partial<WorkoutRecord>) => {
+      if (editingWorkout) {
+        dispatch({
+          type: 'UPDATE_ENTITY',
+          entity: 'workouts',
+          id: editingWorkout.id,
+          payload: workoutData,
+        });
+        addToast(t('reflect.workout.toast_updated'), 'success');
+      } else {
+        const newWorkout: WorkoutRecord = {
+          id: `work_${uid()}`,
+          type: workoutData.type || 'gym',
+          dateISO: workoutData.dateISO || todayISO(),
+          durationMin: workoutData.durationMin || 45,
+          intensity: workoutData.intensity || 3,
+          description: workoutData.description || '',
+          calories: workoutData.calories ?? null,
+          createdAt: nowISO(),
+          updatedAt: nowISO(),
+        };
+        dispatch({
+          type: 'ADD_ENTITY',
+          entity: 'workouts',
+          payload: newWorkout,
+        });
+        addToast(t('reflect.workout.toast_created'), 'success');
+      }
+      setIsOpen(false);
+      closeAll();
+    },
+    [editingWorkout, dispatch, addToast, closeAll, t]
+  );
 
   const handleDeleteTrigger = (id: string) => {
     openDelete({ id } as WorkoutRecord);
@@ -86,7 +96,7 @@ export default function WorkoutsPage() {
       dispatch({
         type: 'DELETE_ENTITY',
         entity: 'workouts',
-        id: workoutToDelete.id
+        id: workoutToDelete.id,
       });
       addToast(t('reflect.workout.toast_deleted'), 'warning');
     }
@@ -95,13 +105,20 @@ export default function WorkoutsPage() {
 
   const translateWorkoutType = (type: WorkoutRecord['type']): string => {
     switch (type) {
-      case 'gym': return t('reflect.workout.type_gym_short');
-      case 'running': return t('reflect.workout.type_running_short');
-      case 'swimming': return t('reflect.workout.type_swimming_short');
-      case 'yoga': return t('reflect.workout.type_yoga_short');
-      case 'walking': return t('reflect.workout.type_walking_short');
-      case 'other': return t('reflect.workout.type_other_short');
-      default: return type;
+      case 'gym':
+        return t('reflect.workout.type_gym_short');
+      case 'running':
+        return t('reflect.workout.type_running_short');
+      case 'swimming':
+        return t('reflect.workout.type_swimming_short');
+      case 'yoga':
+        return t('reflect.workout.type_yoga_short');
+      case 'walking':
+        return t('reflect.workout.type_walking_short');
+      case 'other':
+        return t('reflect.workout.type_other_short');
+      default:
+        return type;
     }
   };
 
@@ -117,21 +134,33 @@ export default function WorkoutsPage() {
     <div className="flex-col-24 fade-in-entry">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+          <h2
+            style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}
+          >
             {t('reflect.workout.title')}
           </h2>
           <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>
             {t('reflect.workout.subtitle')}
           </p>
         </div>
-        <button className="btn btn--primary" onClick={handleAddNew} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <button
+          className="btn btn--primary"
+          onClick={handleAddNew}
+          style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+        >
           <Plus size={16} />
           <span>{t('reflect.workout.action_add')}</span>
         </button>
       </div>
 
       {/* Stats row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: '16px',
+        }}
+      >
         <StatCard
           label={t('reflect.workout.stat_total')}
           value={stats.total}
@@ -169,7 +198,9 @@ export default function WorkoutsPage() {
               {
                 key: 'dateISO',
                 label: t('reflect.workout.column_date'),
-                render: (v) => <span style={{ whiteSpace: 'nowrap' }}>{formatDate(v as string)}</span>
+                render: (v) => (
+                  <span style={{ whiteSpace: 'nowrap' }}>{formatDate(v as string)}</span>
+                ),
               },
               {
                 key: 'type',
@@ -178,12 +209,14 @@ export default function WorkoutsPage() {
                   <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
                     {translateWorkoutType(v as WorkoutRecord['type'])}
                   </span>
-                )
+                ),
               },
               {
                 key: 'durationMin',
                 label: t('reflect.workout.column_time'),
-                render: (v) => <span>{t('reflect.workout.minutes_unit', { val: v as number })}</span>
+                render: (v) => (
+                  <span>{t('reflect.workout.minutes_unit', { val: v as number })}</span>
+                ),
               },
               {
                 key: 'intensity',
@@ -198,17 +231,21 @@ export default function WorkoutsPage() {
                       fontWeight: 600,
                       backgroundColor: 'rgba(255,255,255,0.03)',
                       border: `1px solid ${getIntensityBadgeColor(v as number)}`,
-                      color: getIntensityBadgeColor(v as number)
+                      color: getIntensityBadgeColor(v as number),
                     }}
                   >
                     {t('reflect.workout.intensity_of_five', { val: v as number })}
                   </span>
-                )
+                ),
               },
               {
                 key: 'calories',
                 label: t('reflect.workout.column_calories'),
-                render: (v) => <span>{v !== null ? t('reflect.workout.calories_unit', { val: v as number }) : '—'}</span>
+                render: (v) => (
+                  <span>
+                    {v !== null ? t('reflect.workout.calories_unit', { val: v as number }) : '—'}
+                  </span>
+                ),
               },
               {
                 key: 'description',
@@ -222,28 +259,35 @@ export default function WorkoutsPage() {
                       maxWidth: '300px',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap'
+                      whiteSpace: 'nowrap',
                     }}
                     title={v as string}
                   >
                     {(v as string) || '—'}
                   </span>
-                )
+                ),
               },
               {
                 key: 'id',
                 label: '',
                 render: (_, row) => (
                   <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
-                    <button className="btn btn--secondary" style={{ padding: '6px' }} onClick={() => handleEdit(row as WorkoutRecord)}>
+                    <button
+                      className="btn btn--secondary"
+                      style={{ padding: '6px' }}
+                      onClick={() => handleEdit(row as WorkoutRecord)}
+                    >
                       <Edit2 size={12} />
                     </button>
-                    <button className="btn btn--secondary btn-padding-4-6-red" onClick={() => handleDeleteTrigger((row as WorkoutRecord).id)}>
+                    <button
+                      className="btn btn--secondary btn-padding-4-6-red"
+                      onClick={() => handleDeleteTrigger((row as WorkoutRecord).id)}
+                    >
                       <Trash2 size={12} />
                     </button>
                   </div>
-                )
-              }
+                ),
+              },
             ]}
           />
         ) : (
@@ -261,27 +305,30 @@ export default function WorkoutsPage() {
         )}
       </div>
 
-        {isOpen && (
-          <WorkoutModal
-            isOpen={isOpen}
-            workout={editingWorkout}
-            onClose={() => { setIsOpen(false); closeAll(); }}
-            onSave={handleSaveWorkout}
-          />
-        )}
+      {isOpen && (
+        <WorkoutModal
+          isOpen={isOpen}
+          workout={editingWorkout}
+          onClose={() => {
+            setIsOpen(false);
+            closeAll();
+          }}
+          onSave={handleSaveWorkout}
+        />
+      )}
 
-        {workoutToDelete && (
-          <ConfirmDialog
-            isOpen={!!workoutToDelete}
-            onConfirm={confirmDelete}
-            onCancel={closeAll}
-            title={t('reflect.workout.confirm_delete_title')}
-            message={t('reflect.workout.confirm_delete_message')}
-            confirmLabel={t('common.delete')}
-            cancelLabel={t('common.cancel')}
-            variant="danger"
-          />
-        )}
+      {workoutToDelete && (
+        <ConfirmDialog
+          isOpen={!!workoutToDelete}
+          onConfirm={confirmDelete}
+          onCancel={closeAll}
+          title={t('reflect.workout.confirm_delete_title')}
+          message={t('reflect.workout.confirm_delete_message')}
+          confirmLabel={t('common.delete')}
+          cancelLabel={t('common.cancel')}
+          variant="danger"
+        />
+      )}
     </div>
   );
 }

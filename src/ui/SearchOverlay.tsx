@@ -28,18 +28,21 @@ export default function SearchOverlay({ onClose }: { onClose: () => void }) {
     inputRef.current?.focus();
   }, []);
 
-  const handleSelect = useCallback((result: SearchResult) => {
-    onClose();
-    navigate(result.url);
-  }, [onClose, navigate]);
+  const handleSelect = useCallback(
+    (result: SearchResult) => {
+      onClose();
+      navigate(result.url);
+    },
+    [onClose, navigate]
+  );
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      setSelectedIndex(i => Math.min(i + 1, results.length - 1));
+      setSelectedIndex((i) => Math.min(i + 1, results.length - 1));
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      setSelectedIndex(i => Math.max(i - 1, 0));
+      setSelectedIndex((i) => Math.max(i - 1, 0));
     } else if (e.key === 'Enter' && results[selectedIndex]) {
       handleSelect(results[selectedIndex]);
     } else if (e.key === 'Escape') {
@@ -49,7 +52,11 @@ export default function SearchOverlay({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="search-overlay-backdrop" onClick={onClose}>
-      <div className="search-overlay" onClick={e => e.stopPropagation()} onKeyDown={handleKeyDown}>
+      <div
+        className="search-overlay"
+        onClick={(e) => e.stopPropagation()}
+        onKeyDown={handleKeyDown}
+      >
         <div className="search-overlay-input-wrapper">
           <Search size={18} className="search-overlay-icon" />
           <input
@@ -58,7 +65,7 @@ export default function SearchOverlay({ onClose }: { onClose: () => void }) {
             type="text"
             placeholder="Search journal, knowledge, thoughts, people, tasks..."
             value={query}
-            onChange={e => setQuery(e.target.value)}
+            onChange={(e) => setQuery(e.target.value)}
           />
           <kbd className="search-overlay-hint">ESC</kbd>
         </div>

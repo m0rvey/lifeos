@@ -33,7 +33,13 @@ function defaultData(overrides?: Record<string, unknown>) {
       fontSizeScale: 1,
       isAdaptive: false,
       graphSensitivity: 50,
-      graphWeights: { energy: 0.3, resonance: 0.3, reciprocity: 0.2, volatility: 0.1, recency: 0.1 },
+      graphWeights: {
+        energy: 0.3,
+        resonance: 0.3,
+        reciprocity: 0.2,
+        volatility: 0.1,
+        recency: 0.1,
+      },
       weekStartDay: 0 as const,
     },
     people: [],
@@ -73,12 +79,32 @@ describe('useGlobalSearch', () => {
   });
 
   it('finds journal entries by title', () => {
-    mockLoadData.mockReturnValue(defaultData({
-      journal: [
-        { id: 'j1', title: 'My Trip to Paris', content: 'It was amazing', mood: 80, dateISO: '2026-06-01', tags: [], createdAt: '', updatedAt: '' },
-        { id: 'j2', title: 'Work Notes', content: 'Meeting notes', mood: 50, dateISO: '2026-06-02', tags: [], createdAt: '', updatedAt: '' },
-      ],
-    }));
+    mockLoadData.mockReturnValue(
+      defaultData({
+        journal: [
+          {
+            id: 'j1',
+            title: 'My Trip to Paris',
+            content: 'It was amazing',
+            mood: 80,
+            dateISO: '2026-06-01',
+            tags: [],
+            createdAt: '',
+            updatedAt: '',
+          },
+          {
+            id: 'j2',
+            title: 'Work Notes',
+            content: 'Meeting notes',
+            mood: 50,
+            dateISO: '2026-06-02',
+            tags: [],
+            createdAt: '',
+            updatedAt: '',
+          },
+        ],
+      })
+    );
     mockGetDefaultData.mockReturnValue(defaultData());
 
     const { result } = renderHook(() => useGlobalSearch('Paris'), { wrapper: Wrapper });
@@ -88,11 +114,22 @@ describe('useGlobalSearch', () => {
   });
 
   it('finds journal entries by content', () => {
-    mockLoadData.mockReturnValue(defaultData({
-      journal: [
-        { id: 'j1', title: 'Daily Log', content: 'Went hiking in the mountains', mood: 75, dateISO: '2026-06-01', tags: [], createdAt: '', updatedAt: '' },
-      ],
-    }));
+    mockLoadData.mockReturnValue(
+      defaultData({
+        journal: [
+          {
+            id: 'j1',
+            title: 'Daily Log',
+            content: 'Went hiking in the mountains',
+            mood: 75,
+            dateISO: '2026-06-01',
+            tags: [],
+            createdAt: '',
+            updatedAt: '',
+          },
+        ],
+      })
+    );
     mockGetDefaultData.mockReturnValue(defaultData());
 
     const { result } = renderHook(() => useGlobalSearch('hiking'), { wrapper: Wrapper });
@@ -101,11 +138,29 @@ describe('useGlobalSearch', () => {
   });
 
   it('finds people by name', () => {
-    mockLoadData.mockReturnValue(defaultData({
-      people: [
-        { id: 'p1', name: 'Alice Johnson', tags: [], depth: 'core', archetype: 'intellectual', status: 'active', energy: 80, resonance: 70, reciprocity: 90, volatility: 20, lastContactISO: '2026-06-01', reflection: 'Great friend', notes: '', createdAt: '', updatedAt: '' },
-      ],
-    }));
+    mockLoadData.mockReturnValue(
+      defaultData({
+        people: [
+          {
+            id: 'p1',
+            name: 'Alice Johnson',
+            tags: [],
+            depth: 'core',
+            archetype: 'intellectual',
+            status: 'active',
+            energy: 80,
+            resonance: 70,
+            reciprocity: 90,
+            volatility: 20,
+            lastContactISO: '2026-06-01',
+            reflection: 'Great friend',
+            notes: '',
+            createdAt: '',
+            updatedAt: '',
+          },
+        ],
+      })
+    );
     mockGetDefaultData.mockReturnValue(defaultData());
 
     const { result } = renderHook(() => useGlobalSearch('alice'), { wrapper: Wrapper });
@@ -115,11 +170,23 @@ describe('useGlobalSearch', () => {
   });
 
   it('finds knowledge items by tags', () => {
-    mockLoadData.mockReturnValue(defaultData({
-      knowledge: [
-        { id: 'k1', title: 'React Patterns', content: 'Advanced patterns', category: 'Books', source: '', url: '', tags: ['react', 'frontend'], createdAt: '', updatedAt: '' },
-      ],
-    }));
+    mockLoadData.mockReturnValue(
+      defaultData({
+        knowledge: [
+          {
+            id: 'k1',
+            title: 'React Patterns',
+            content: 'Advanced patterns',
+            category: 'Books',
+            source: '',
+            url: '',
+            tags: ['react', 'frontend'],
+            createdAt: '',
+            updatedAt: '',
+          },
+        ],
+      })
+    );
     mockGetDefaultData.mockReturnValue(defaultData());
 
     const { result } = renderHook(() => useGlobalSearch('frontend'), { wrapper: Wrapper });
@@ -128,11 +195,24 @@ describe('useGlobalSearch', () => {
   });
 
   it('finds tasks', () => {
-    mockLoadData.mockReturnValue(defaultData({
-      tasks: [
-        { id: 't1', title: 'Buy groceries', description: 'Milk, eggs, bread', isCompleted: false, emotion: 50, urgency: 30, deadlineISO: null, tags: [], createdAt: '', updatedAt: '' },
-      ],
-    }));
+    mockLoadData.mockReturnValue(
+      defaultData({
+        tasks: [
+          {
+            id: 't1',
+            title: 'Buy groceries',
+            description: 'Milk, eggs, bread',
+            isCompleted: false,
+            emotion: 50,
+            urgency: 30,
+            deadlineISO: null,
+            tags: [],
+            createdAt: '',
+            updatedAt: '',
+          },
+        ],
+      })
+    );
     mockGetDefaultData.mockReturnValue(defaultData());
 
     const { result } = renderHook(() => useGlobalSearch('groceries'), { wrapper: Wrapper });
@@ -141,11 +221,20 @@ describe('useGlobalSearch', () => {
   });
 
   it('finds thoughts by content', () => {
-    mockLoadData.mockReturnValue(defaultData({
-      thoughts: [
-        { id: 'th1', content: 'I should start meditating daily', category: 'health', tags: [], createdAt: '', updatedAt: '' },
-      ],
-    }));
+    mockLoadData.mockReturnValue(
+      defaultData({
+        thoughts: [
+          {
+            id: 'th1',
+            content: 'I should start meditating daily',
+            category: 'health',
+            tags: [],
+            createdAt: '',
+            updatedAt: '',
+          },
+        ],
+      })
+    );
     mockGetDefaultData.mockReturnValue(defaultData());
 
     const { result } = renderHook(() => useGlobalSearch('meditating'), { wrapper: Wrapper });
@@ -155,7 +244,14 @@ describe('useGlobalSearch', () => {
 
   it('returns max 20 results', () => {
     const journal = Array.from({ length: 25 }, (_, i) => ({
-      id: `j${i}`, title: `Entry ${i}`, content: 'test content', mood: 50, dateISO: '2026-06-01', tags: [], createdAt: '', updatedAt: '',
+      id: `j${i}`,
+      title: `Entry ${i}`,
+      content: 'test content',
+      mood: 50,
+      dateISO: '2026-06-01',
+      tags: [],
+      createdAt: '',
+      updatedAt: '',
     }));
     mockLoadData.mockReturnValue(defaultData({ journal }));
     mockGetDefaultData.mockReturnValue(defaultData());
@@ -165,11 +261,22 @@ describe('useGlobalSearch', () => {
   });
 
   it('handles case-insensitive search', () => {
-    mockLoadData.mockReturnValue(defaultData({
-      journal: [
-        { id: 'j1', title: 'UpperCase Title', content: 'Some content', mood: 50, dateISO: '2026-06-01', tags: [], createdAt: '', updatedAt: '' },
-      ],
-    }));
+    mockLoadData.mockReturnValue(
+      defaultData({
+        journal: [
+          {
+            id: 'j1',
+            title: 'UpperCase Title',
+            content: 'Some content',
+            mood: 50,
+            dateISO: '2026-06-01',
+            tags: [],
+            createdAt: '',
+            updatedAt: '',
+          },
+        ],
+      })
+    );
     mockGetDefaultData.mockReturnValue(defaultData());
 
     const { result } = renderHook(() => useGlobalSearch('uppercase'), { wrapper: Wrapper });

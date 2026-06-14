@@ -29,7 +29,13 @@ function defaultData(overrides?: Record<string, unknown>) {
       fontSizeScale: 1,
       isAdaptive: false,
       graphSensitivity: 50,
-      graphWeights: { energy: 0.3, resonance: 0.3, reciprocity: 0.2, volatility: 0.1, recency: 0.1 },
+      graphWeights: {
+        energy: 0.3,
+        resonance: 0.3,
+        reciprocity: 0.2,
+        volatility: 0.1,
+        recency: 0.1,
+      },
       weekStartDay: 0 as const,
     },
     people: [],
@@ -65,14 +71,43 @@ describe('TagRegistry', () => {
   });
 
   it('extracts unique sorted tags from all entities', () => {
-    mockLoadData.mockReturnValue(defaultData({
-      people: [
-        { id: '1', name: 'Alice', tags: ['friend', 'work'], depth: 'core', archetype: 'intellectual', status: 'active', energy: 80, resonance: 70, reciprocity: 90, volatility: 20, lastContactISO: '2026-01-01', reflection: '', notes: '', createdAt: '', updatedAt: '' },
-      ],
-      tasks: [
-        { id: 't1', title: 'Task', tags: ['work', 'urgent'], isCompleted: false, emotion: 50, urgency: 50, deadlineISO: null, description: '', createdAt: '', updatedAt: '' },
-      ],
-    }));
+    mockLoadData.mockReturnValue(
+      defaultData({
+        people: [
+          {
+            id: '1',
+            name: 'Alice',
+            tags: ['friend', 'work'],
+            depth: 'core',
+            archetype: 'intellectual',
+            status: 'active',
+            energy: 80,
+            resonance: 70,
+            reciprocity: 90,
+            volatility: 20,
+            lastContactISO: '2026-01-01',
+            reflection: '',
+            notes: '',
+            createdAt: '',
+            updatedAt: '',
+          },
+        ],
+        tasks: [
+          {
+            id: 't1',
+            title: 'Task',
+            tags: ['work', 'urgent'],
+            isCompleted: false,
+            emotion: 50,
+            urgency: 50,
+            deadlineISO: null,
+            description: '',
+            createdAt: '',
+            updatedAt: '',
+          },
+        ],
+      })
+    );
     mockGetDefaultData.mockReturnValue(defaultData());
 
     const { result } = renderHook(() => useTagRegistry(), { wrapper: Wrapper });
@@ -90,11 +125,29 @@ describe('TagRegistry', () => {
   });
 
   it('renameTag renames tag in all entities', () => {
-    mockLoadData.mockReturnValue(defaultData({
-      people: [
-        { id: '1', name: 'Alice', tags: ['oldtag'], depth: 'core', archetype: 'intellectual', status: 'active', energy: 80, resonance: 70, reciprocity: 90, volatility: 20, lastContactISO: '2026-01-01', reflection: '', notes: '', createdAt: '', updatedAt: '' },
-      ],
-    }));
+    mockLoadData.mockReturnValue(
+      defaultData({
+        people: [
+          {
+            id: '1',
+            name: 'Alice',
+            tags: ['oldtag'],
+            depth: 'core',
+            archetype: 'intellectual',
+            status: 'active',
+            energy: 80,
+            resonance: 70,
+            reciprocity: 90,
+            volatility: 20,
+            lastContactISO: '2026-01-01',
+            reflection: '',
+            notes: '',
+            createdAt: '',
+            updatedAt: '',
+          },
+        ],
+      })
+    );
     mockGetDefaultData.mockReturnValue(defaultData());
 
     const { result } = renderHook(() => useTagRegistry(), { wrapper: Wrapper });
@@ -108,14 +161,43 @@ describe('TagRegistry', () => {
   });
 
   it('deleteTag removes tag from all entities', () => {
-    mockLoadData.mockReturnValue(defaultData({
-      people: [
-        { id: '1', name: 'Alice', tags: ['remove-me'], depth: 'core', archetype: 'intellectual', status: 'active', energy: 80, resonance: 70, reciprocity: 90, volatility: 20, lastContactISO: '2026-01-01', reflection: '', notes: '', createdAt: '', updatedAt: '' },
-      ],
-      tasks: [
-        { id: 't1', title: 'Task', tags: ['remove-me', 'keep'], isCompleted: false, emotion: 50, urgency: 50, deadlineISO: null, description: '', createdAt: '', updatedAt: '' },
-      ],
-    }));
+    mockLoadData.mockReturnValue(
+      defaultData({
+        people: [
+          {
+            id: '1',
+            name: 'Alice',
+            tags: ['remove-me'],
+            depth: 'core',
+            archetype: 'intellectual',
+            status: 'active',
+            energy: 80,
+            resonance: 70,
+            reciprocity: 90,
+            volatility: 20,
+            lastContactISO: '2026-01-01',
+            reflection: '',
+            notes: '',
+            createdAt: '',
+            updatedAt: '',
+          },
+        ],
+        tasks: [
+          {
+            id: 't1',
+            title: 'Task',
+            tags: ['remove-me', 'keep'],
+            isCompleted: false,
+            emotion: 50,
+            urgency: 50,
+            deadlineISO: null,
+            description: '',
+            createdAt: '',
+            updatedAt: '',
+          },
+        ],
+      })
+    );
     mockGetDefaultData.mockReturnValue(defaultData());
 
     const { result } = renderHook(() => useTagRegistry(), { wrapper: Wrapper });
@@ -128,11 +210,29 @@ describe('TagRegistry', () => {
   });
 
   it('renameTag is no-op when old and new are identical', () => {
-    mockLoadData.mockReturnValue(defaultData({
-      people: [
-        { id: '1', name: 'Alice', tags: ['same'], depth: 'core', archetype: 'intellectual', status: 'active', energy: 80, resonance: 70, reciprocity: 90, volatility: 20, lastContactISO: '2026-01-01', reflection: '', notes: '', createdAt: '', updatedAt: '' },
-      ],
-    }));
+    mockLoadData.mockReturnValue(
+      defaultData({
+        people: [
+          {
+            id: '1',
+            name: 'Alice',
+            tags: ['same'],
+            depth: 'core',
+            archetype: 'intellectual',
+            status: 'active',
+            energy: 80,
+            resonance: 70,
+            reciprocity: 90,
+            volatility: 20,
+            lastContactISO: '2026-01-01',
+            reflection: '',
+            notes: '',
+            createdAt: '',
+            updatedAt: '',
+          },
+        ],
+      })
+    );
     mockGetDefaultData.mockReturnValue(defaultData());
 
     const { result } = renderHook(() => useTagRegistry(), { wrapper: Wrapper });
@@ -151,14 +251,43 @@ describe('TagRegistry', () => {
   });
 
   it('renameTag and deleteTag trigger granular updates on entities', () => {
-    mockLoadData.mockReturnValue(defaultData({
-      people: [
-        { id: 'p1', name: 'Alice', tags: ['oldtag'], depth: 'core', archetype: 'intellectual', status: 'active', energy: 80, resonance: 70, reciprocity: 90, volatility: 20, lastContactISO: '2026-01-01', reflection: '', notes: '', createdAt: '', updatedAt: '' },
-      ],
-      tasks: [
-        { id: 't1', title: 'Task 1', tags: ['oldtag', 'keeptag'], isCompleted: false, emotion: 50, urgency: 50, deadlineISO: null, description: '', createdAt: '', updatedAt: '' },
-      ],
-    }));
+    mockLoadData.mockReturnValue(
+      defaultData({
+        people: [
+          {
+            id: 'p1',
+            name: 'Alice',
+            tags: ['oldtag'],
+            depth: 'core',
+            archetype: 'intellectual',
+            status: 'active',
+            energy: 80,
+            resonance: 70,
+            reciprocity: 90,
+            volatility: 20,
+            lastContactISO: '2026-01-01',
+            reflection: '',
+            notes: '',
+            createdAt: '',
+            updatedAt: '',
+          },
+        ],
+        tasks: [
+          {
+            id: 't1',
+            title: 'Task 1',
+            tags: ['oldtag', 'keeptag'],
+            isCompleted: false,
+            emotion: 50,
+            urgency: 50,
+            deadlineISO: null,
+            description: '',
+            createdAt: '',
+            updatedAt: '',
+          },
+        ],
+      })
+    );
     mockGetDefaultData.mockReturnValue(defaultData());
 
     const { result } = renderHook(() => useTagRegistry(), { wrapper: Wrapper });

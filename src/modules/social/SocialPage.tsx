@@ -20,13 +20,13 @@ export default function SocialPage() {
     isOpen: isCreateOpen,
     openAdd: handleAddNew,
     handleSave: handleSaveNewPerson,
-    closeAll
+    closeAll,
   } = useCrudModal<Person>({
     entity: 'people',
     toastKeys: {
       created: 'social.toast.new_contact',
       updated: '',
-      deleted: ''
+      deleted: '',
     },
     createDefaults: (personData) => ({
       id: `p_${uid()}`,
@@ -44,18 +44,21 @@ export default function SocialPage() {
       tags: [],
       createdAt: nowISO(),
       updatedAt: nowISO(),
-    })
+    }),
   });
 
   // Statistics
   const avgScore = useMemo(() => {
     if (data.people.length === 0) return 0;
-    const total = data.people.reduce((acc, p) => acc + computeConnectionScore(p, data.settings.graphWeights), 0);
+    const total = data.people.reduce(
+      (acc, p) => acc + computeConnectionScore(p, data.settings.graphWeights),
+      0
+    );
     return Math.round(total / data.people.length);
   }, [data.people, data.settings.graphWeights]);
 
   const needingAttentionCount = useMemo(() => {
-    return data.people.filter(p => isDecaying(p)).length;
+    return data.people.filter((p) => isDecaying(p)).length;
   }, [data.people]);
 
   const depthDistribution = useMemo(() => {
@@ -84,18 +87,21 @@ export default function SocialPage() {
     };
   }, [data.people, t]);
 
-  const handleSelectNode = useCallback((id: string) => {
-    navigate(`/social/${id}`);
-  }, [navigate]);
+  const handleSelectNode = useCallback(
+    (id: string) => {
+      navigate(`/social/${id}`);
+    },
+    [navigate]
+  );
 
   return (
     <div className="fade-in-entry social-page-container">
       {/* Sidebar - list of people */}
       <div className="social-sidebar">
-        <PersonList 
-          people={data.people} 
-          activeId={null} 
-          onSelect={handleSelectNode} 
+        <PersonList
+          people={data.people}
+          activeId={null}
+          onSelect={handleSelectNode}
           onAddNew={handleAddNew}
           graphWeights={data.settings.graphWeights}
         />
@@ -103,37 +109,121 @@ export default function SocialPage() {
 
       {/* Main workspace */}
       <div className="social-main">
-        
         {/* Stats Row */}
-        <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '16px' }}>
-          <div className="glass-panel social-stat-card" style={{ borderLeft: '3px solid var(--accent)' }}>
-            <span style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-primary)' }}>{data.people.length}</span>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{t('social.stat.total_contacts')}</span>
+        <section
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+            gap: '16px',
+          }}
+        >
+          <div
+            className="glass-panel social-stat-card"
+            style={{ borderLeft: '3px solid var(--accent)' }}
+          >
+            <span style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+              {data.people.length}
+            </span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+              {t('social.stat.total_contacts')}
+            </span>
           </div>
 
-          <div className="glass-panel social-stat-card" style={{ borderLeft: `3px solid ${avgScore >= 50 ? 'var(--success, #16a34a)' : 'var(--error, #ef4444)'}` }}>
-            <span style={{ fontSize: '1.6rem', fontWeight: 800, color: avgScore >= 50 ? 'var(--success, #16a34a)' : 'var(--error, #ef4444)' }}>{avgScore}%</span>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{t('social.stat.resource_index')}</span>
+          <div
+            className="glass-panel social-stat-card"
+            style={{
+              borderLeft: `3px solid ${avgScore >= 50 ? 'var(--success, #16a34a)' : 'var(--error, #ef4444)'}`,
+            }}
+          >
+            <span
+              style={{
+                fontSize: '1.6rem',
+                fontWeight: 800,
+                color: avgScore >= 50 ? 'var(--success, #16a34a)' : 'var(--error, #ef4444)',
+              }}
+            >
+              {avgScore}%
+            </span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+              {t('social.stat.resource_index')}
+            </span>
           </div>
 
-          <div className="glass-panel social-stat-card" style={{ borderLeft: needingAttentionCount > 0 ? '3px solid var(--error, #ef4444)' : '3px solid var(--success, #16a34a)' }}>
-            <span style={{ fontSize: '1.6rem', fontWeight: 800, color: needingAttentionCount > 0 ? 'var(--error, #ef4444)' : 'var(--success, #16a34a)' }}>{needingAttentionCount}</span>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{t('social.stat.decaying')}</span>
+          <div
+            className="glass-panel social-stat-card"
+            style={{
+              borderLeft:
+                needingAttentionCount > 0
+                  ? '3px solid var(--error, #ef4444)'
+                  : '3px solid var(--success, #16a34a)',
+            }}
+          >
+            <span
+              style={{
+                fontSize: '1.6rem',
+                fontWeight: 800,
+                color:
+                  needingAttentionCount > 0 ? 'var(--error, #ef4444)' : 'var(--success, #16a34a)',
+              }}
+            >
+              {needingAttentionCount}
+            </span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+              {t('social.stat.decaying')}
+            </span>
           </div>
 
           <div className="glass-panel social-stat-card" style={{ minWidth: '200px' }}>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 600 }}>{t('social.stat.depth_circles')}</span>
-            <div style={{ display: 'flex', height: '6px', borderRadius: '3px', overflow: 'hidden', background: 'rgba(255,255,255,0.03)', marginBottom: '8px' }}>
-              {depthDistribution.segments.map(seg => (
-                seg.pct > 0 && (
-                  <div key={seg.depth} style={{ width: `${seg.pct}%`, background: seg.color, height: '100%' }} />
-                )
-              ))}
+            <span
+              style={{
+                fontSize: '0.75rem',
+                color: 'var(--text-secondary)',
+                marginBottom: '6px',
+                fontWeight: 600,
+              }}
+            >
+              {t('social.stat.depth_circles')}
+            </span>
+            <div
+              style={{
+                display: 'flex',
+                height: '6px',
+                borderRadius: '3px',
+                overflow: 'hidden',
+                background: 'rgba(255,255,255,0.03)',
+                marginBottom: '8px',
+              }}
+            >
+              {depthDistribution.segments.map(
+                (seg) =>
+                  seg.pct > 0 && (
+                    <div
+                      key={seg.depth}
+                      style={{ width: `${seg.pct}%`, background: seg.color, height: '100%' }}
+                    />
+                  )
+              )}
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', fontSize: '0.65rem' }}>
-              {depthDistribution.segments.map(seg => (
-                <span key={seg.depth} style={{ display: 'flex', alignItems: 'center', gap: '3px', color: 'var(--text-secondary)' }}>
-                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: seg.color, display: 'inline-block' }} />
+              {depthDistribution.segments.map((seg) => (
+                <span
+                  key={seg.depth}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '3px',
+                    color: 'var(--text-secondary)',
+                  }}
+                >
+                  <span
+                    style={{
+                      width: '6px',
+                      height: '6px',
+                      borderRadius: '50%',
+                      background: seg.color,
+                      display: 'inline-block',
+                    }}
+                  />
                   {seg.label} ({seg.count})
                 </span>
               ))}
@@ -142,9 +232,28 @@ export default function SocialPage() {
         </section>
 
         {/* Force graph panel */}
-        <div className="glass-panel social-graph-panel" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-          <div style={{ padding: '12px 20px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-primary)' }}>
+        <div
+          className="glass-panel social-graph-panel"
+          style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+        >
+          <div
+            style={{
+              padding: '12px 20px',
+              borderBottom: '1px solid var(--border)',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <span
+              style={{
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                color: 'var(--text-primary)',
+              }}
+            >
               {t('social.graph.title')}
             </span>
             <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>
@@ -152,11 +261,11 @@ export default function SocialPage() {
             </span>
           </div>
           <div style={{ flex: 1, position: 'relative' }}>
-            <SocialGraph 
-              people={data.people} 
+            <SocialGraph
+              people={data.people}
               settings={data.settings}
-              activeId={null} 
-              onSelectNode={handleSelectNode} 
+              activeId={null}
+              onSelectNode={handleSelectNode}
             />
           </div>
         </div>
@@ -173,5 +282,3 @@ export default function SocialPage() {
     </div>
   );
 }
-
-

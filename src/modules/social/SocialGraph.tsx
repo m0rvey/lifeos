@@ -31,11 +31,11 @@ interface Link {
 }
 
 const depthColors: Record<Depth | 'Me', string> = {
-  'Me': 'var(--text-primary)',
-  [Depth.CORE]: 'var(--error)',       // Purple/Violet (mapped to error/alert style)
-  [Depth.INNER]: 'var(--warning)',      // Orange (mapped to warning/attention style)
-  [Depth.SOCIAL]: 'var(--primary)',     // Green (mapped to primary/active style)
-  [Depth.PERIPHERY]: 'var(--text-tertiary)',  // Grey (mapped to tertiary/muted style)
+  Me: 'var(--text-primary)',
+  [Depth.CORE]: 'var(--error)', // Purple/Violet (mapped to error/alert style)
+  [Depth.INNER]: 'var(--warning)', // Orange (mapped to warning/attention style)
+  [Depth.SOCIAL]: 'var(--primary)', // Green (mapped to primary/active style)
+  [Depth.PERIPHERY]: 'var(--text-tertiary)', // Grey (mapped to tertiary/muted style)
 };
 
 // Deterministic pseudo-random angle generator
@@ -48,12 +48,16 @@ const getPseudoRandom = (str: string): number => {
   return x - Math.floor(x);
 };
 
-export default function SocialGraph({ people, settings, activeId, onSelectNode }: SocialGraphProps) {
+export default function SocialGraph({
+  people,
+  settings,
+  activeId,
+  onSelectNode,
+}: SocialGraphProps) {
   const { t } = useI18n();
   const containerRef = useRef<HTMLDivElement>(null);
   const workerRef = useRef<Worker | null>(null);
   const wasDraggedRef = useRef(false);
-
 
   // Center coordinates
   const centerX = 400;
@@ -122,7 +126,8 @@ export default function SocialGraph({ people, settings, activeId, onSelectNode }
     // Link Inner Circle to Social Layer
     const socialNodes = people.filter((p) => p.depth === Depth.SOCIAL);
     socialNodes.forEach((social) => {
-      const matchingInner = innerNodes.find((i) => i.archetype === social.archetype) || innerNodes[0];
+      const matchingInner =
+        innerNodes.find((i) => i.archetype === social.archetype) || innerNodes[0];
       if (matchingInner) {
         graphLinks.push({ source: matchingInner.id, target: social.id, value: 1.2 });
       } else {
@@ -133,7 +138,8 @@ export default function SocialGraph({ people, settings, activeId, onSelectNode }
     // Link Social Layer to Peripheral
     const peripheralNodes = people.filter((p) => p.depth === Depth.PERIPHERY);
     peripheralNodes.forEach((periph) => {
-      const matchingSocial = socialNodes.find((s) => s.archetype === periph.archetype) || socialNodes[0];
+      const matchingSocial =
+        socialNodes.find((s) => s.archetype === periph.archetype) || socialNodes[0];
       if (matchingSocial) {
         graphLinks.push({ source: matchingSocial.id, target: periph.id, value: 0.8 });
       } else {
@@ -168,12 +174,13 @@ export default function SocialGraph({ people, settings, activeId, onSelectNode }
 
   // Initialize Web Worker once
   useEffect(() => {
-    const worker = new Worker(
-      new URL('./graphPhysics.worker.ts', import.meta.url),
-      { type: 'module' }
-    );
+    const worker = new Worker(new URL('./graphPhysics.worker.ts', import.meta.url), {
+      type: 'module',
+    });
 
-    worker.onmessage = (e: MessageEvent<{ type: string; nodes: { id: string; x: number; y: number }[] }>) => {
+    worker.onmessage = (
+      e: MessageEvent<{ type: string; nodes: { id: string; x: number; y: number }[] }>
+    ) => {
       if (e.data.type === 'TICK') {
         const tickNodes = e.data.nodes;
         setPositions((prev) => {
@@ -202,30 +209,32 @@ export default function SocialGraph({ people, settings, activeId, onSelectNode }
 
     // Send initial configuration to worker
     // targetRadius is determined by Depth
-    const workerNodes = initialData.initialNodes.map(node => {
+    const workerNodes = initialData.initialNodes.map((node) => {
       let targetRadius = 0;
       if (node.depth === Depth.CORE) targetRadius = 75;
       else if (node.depth === Depth.INNER) targetRadius = 150;
       else if (node.depth === Depth.SOCIAL) targetRadius = 225;
       else if (node.depth === Depth.PERIPHERY) targetRadius = 300;
 
-      const idx = initialData.initialNodes.findIndex(n => n.id === node.id);
-      const angle = (idx / (initialData.initialNodes.length || 1)) * Math.PI * 2 + getPseudoRandom(node.id) * 0.5;
+      const idx = initialData.initialNodes.findIndex((n) => n.id === node.id);
+      const angle =
+        (idx / (initialData.initialNodes.length || 1)) * Math.PI * 2 +
+        getPseudoRandom(node.id) * 0.5;
 
       return {
         id: node.id,
         targetRadius,
-        angle
+        angle,
       };
     });
 
     worker.postMessage({
       type: 'INIT',
       nodes: workerNodes,
-      links: initialData.initialLinks.map(l => ({
+      links: initialData.initialLinks.map((l) => ({
         source: l.source,
         target: l.target,
-        strength: l.value * 0.01 * (settings.graphSensitivity / 5)
+        strength: l.value * 0.01 * (settings.graphSensitivity / 5),
       })),
       centerX,
       centerY,
@@ -281,7 +290,15 @@ export default function SocialGraph({ people, settings, activeId, onSelectNode }
 
   if (people.length === 0) {
     return (
-      <div className={styles.graphCanvasContainer} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '350px' }}>
+      <div
+        className={styles.graphCanvasContainer}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '350px',
+        }}
+      >
         <EmptyState
           title={t('social.graph.no_contacts_title')}
           description={t('social.graph.no_contacts_desc')}
@@ -312,16 +329,80 @@ export default function SocialGraph({ people, settings, activeId, onSelectNode }
         </defs>
 
         {/* Concentric rings guidelines */}
-        <circle cx={centerX} cy={centerY} r={75} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="1.5" strokeDasharray="5,5" />
-        <circle cx={centerX} cy={centerY} r={150} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="1.5" strokeDasharray="5,5" />
-        <circle cx={centerX} cy={centerY} r={225} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="1.5" strokeDasharray="5,5" />
-        <circle cx={centerX} cy={centerY} r={300} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="1.5" strokeDasharray="5,5" />
+        <circle
+          cx={centerX}
+          cy={centerY}
+          r={75}
+          fill="none"
+          stroke="rgba(255,255,255,0.04)"
+          strokeWidth="1.5"
+          strokeDasharray="5,5"
+        />
+        <circle
+          cx={centerX}
+          cy={centerY}
+          r={150}
+          fill="none"
+          stroke="rgba(255,255,255,0.04)"
+          strokeWidth="1.5"
+          strokeDasharray="5,5"
+        />
+        <circle
+          cx={centerX}
+          cy={centerY}
+          r={225}
+          fill="none"
+          stroke="rgba(255,255,255,0.04)"
+          strokeWidth="1.5"
+          strokeDasharray="5,5"
+        />
+        <circle
+          cx={centerX}
+          cy={centerY}
+          r={300}
+          fill="none"
+          stroke="rgba(255,255,255,0.04)"
+          strokeWidth="1.5"
+          strokeDasharray="5,5"
+        />
 
         {/* Ring labels */}
-        <text x={centerX + 8} y={centerY - 75 - 5} fill="var(--text-secondary)" fontSize="0.65rem" opacity="0.4">{t('social.depth.core')}</text>
-        <text x={centerX + 8} y={centerY - 150 - 5} fill="var(--text-secondary)" fontSize="0.65rem" opacity="0.4">{t('social.depth.inner')}</text>
-        <text x={centerX + 8} y={centerY - 225 - 5} fill="var(--text-secondary)" fontSize="0.65rem" opacity="0.4">{t('social.depth.social')}</text>
-        <text x={centerX + 8} y={centerY - 300 - 5} fill="var(--text-secondary)" fontSize="0.65rem" opacity="0.4">{t('social.depth.periphery')}</text>
+        <text
+          x={centerX + 8}
+          y={centerY - 75 - 5}
+          fill="var(--text-secondary)"
+          fontSize="0.65rem"
+          opacity="0.4"
+        >
+          {t('social.depth.core')}
+        </text>
+        <text
+          x={centerX + 8}
+          y={centerY - 150 - 5}
+          fill="var(--text-secondary)"
+          fontSize="0.65rem"
+          opacity="0.4"
+        >
+          {t('social.depth.inner')}
+        </text>
+        <text
+          x={centerX + 8}
+          y={centerY - 225 - 5}
+          fill="var(--text-secondary)"
+          fontSize="0.65rem"
+          opacity="0.4"
+        >
+          {t('social.depth.social')}
+        </text>
+        <text
+          x={centerX + 8}
+          y={centerY - 300 - 5}
+          fill="var(--text-secondary)"
+          fontSize="0.65rem"
+          opacity="0.4"
+        >
+          {t('social.depth.periphery')}
+        </text>
 
         {/* Glow halo under active node */}
         {nodes.map((n) => {
@@ -340,7 +421,7 @@ export default function SocialGraph({ people, settings, activeId, onSelectNode }
 
         {/* Links */}
         {(() => {
-          const nodeMap = new Map(nodes.map(n => [n.id, n]));
+          const nodeMap = new Map(nodes.map((n) => [n.id, n]));
           return initialData.initialLinks.map((link, i) => {
             const s = nodeMap.get(link.source);
             const t = nodeMap.get(link.target);

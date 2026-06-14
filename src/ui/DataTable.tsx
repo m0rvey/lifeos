@@ -68,7 +68,10 @@ export default function DataTable<T extends { id: string }>({
   const colCount = columns.length + (onDelete ? 1 : 0);
 
   const startIdx = Math.max(0, Math.floor(scrollTop / rowHeight) - buffer);
-  const endIdx = Math.min(data.length, Math.ceil((scrollTop + containerHeight) / rowHeight) + buffer);
+  const endIdx = Math.min(
+    data.length,
+    Math.ceil((scrollTop + containerHeight) / rowHeight) + buffer
+  );
 
   const topSpacerHeight = startIdx * rowHeight;
   const bottomSpacerHeight = (data.length - endIdx) * rowHeight;
@@ -76,9 +79,9 @@ export default function DataTable<T extends { id: string }>({
   const visibleData = data.slice(startIdx, endIdx);
 
   return (
-    <div 
-      className="table-container" 
-      ref={containerRef} 
+    <div
+      className="table-container"
+      ref={containerRef}
       style={{ overflowY: 'auto', maxHeight: '600px', position: 'relative' }}
     >
       <table className="table">

@@ -26,7 +26,8 @@ function highlightMatches(text: string, query: string): string {
   if (idx < 0) return text;
   const start = Math.max(0, idx - 40);
   const end = Math.min(text.length, idx + 80);
-  const preview = (start > 0 ? '...' : '') + text.slice(start, end) + (end < text.length ? '...' : '');
+  const preview =
+    (start > 0 ? '...' : '') + text.slice(start, end) + (end < text.length ? '...' : '');
   return preview;
 }
 
@@ -53,7 +54,11 @@ export function useGlobalSearch(query: string): SearchResult[] {
     }
 
     for (const item of data.knowledge) {
-      if (item.title.toLowerCase().includes(q) || item.content.toLowerCase().includes(q) || item.tags.some(t => t.toLowerCase().includes(q))) {
+      if (
+        item.title.toLowerCase().includes(q) ||
+        item.content.toLowerCase().includes(q) ||
+        item.tags.some((t) => t.toLowerCase().includes(q))
+      ) {
         results.push({
           id: item.id,
           type: 'knowledge',
@@ -66,7 +71,10 @@ export function useGlobalSearch(query: string): SearchResult[] {
     }
 
     for (const thought of data.thoughts) {
-      if (thought.content.toLowerCase().includes(q) || thought.tags.some(t => t.toLowerCase().includes(q))) {
+      if (
+        thought.content.toLowerCase().includes(q) ||
+        thought.tags.some((t) => t.toLowerCase().includes(q))
+      ) {
         results.push({
           id: thought.id,
           type: 'thought',
@@ -92,12 +100,17 @@ export function useGlobalSearch(query: string): SearchResult[] {
     }
 
     for (const task of data.tasks) {
-      if (task.title.toLowerCase().includes(q) || (task.description && task.description.toLowerCase().includes(q))) {
+      if (
+        task.title.toLowerCase().includes(q) ||
+        (task.description && task.description.toLowerCase().includes(q))
+      ) {
         results.push({
           id: task.id,
           type: 'task',
           title: task.title,
-          preview: highlightMatches(task.description || '', q) || (task.isCompleted ? 'Completed' : 'Pending'),
+          preview:
+            highlightMatches(task.description || '', q) ||
+            (task.isCompleted ? 'Completed' : 'Pending'),
           module: 'hub',
           url: '/hub',
         });

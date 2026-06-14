@@ -28,15 +28,19 @@ export function saveData(data: AppData): void {
   } catch (err) {
     console.error('[Storage] Failed to save data:', err);
     if (typeof window !== 'undefined') {
-      const isQuota = err instanceof DOMException && (
-        err.name === 'QuotaExceededError' ||
-        err.name === 'NS_ERROR_DOM_QUOTA_REACHED' ||
-        err.code === 22 ||
-        err.code === 1014
-      );
-      const detail = isQuota 
-        ? new Error('Недостаточно места в LocalStorage. Пожалуйста, очистите историю или экспортируйте резервную копию.')
-        : (err instanceof Error ? err : new Error('Неизвестная ошибка хранилища'));
+      const isQuota =
+        err instanceof DOMException &&
+        (err.name === 'QuotaExceededError' ||
+          err.name === 'NS_ERROR_DOM_QUOTA_REACHED' ||
+          err.code === 22 ||
+          err.code === 1014);
+      const detail = isQuota
+        ? new Error(
+            'Недостаточно места в LocalStorage. Пожалуйста, очистите историю или экспортируйте резервную копию.'
+          )
+        : err instanceof Error
+          ? err
+          : new Error('Неизвестная ошибка хранилища');
       window.dispatchEvent(new CustomEvent('storage-error', { detail }));
     }
   }

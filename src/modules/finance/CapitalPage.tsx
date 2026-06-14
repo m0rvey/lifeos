@@ -27,13 +27,13 @@ export default function CapitalPage() {
     openDelete: setTxToDelete,
     handleSave: handleSaveTransaction,
     confirmDelete: handleConfirmDelete,
-    closeAll
+    closeAll,
   } = useCrudModal<Transaction>({
     entity: 'transactions',
     toastKeys: {
       created: 'toast.transaction.added',
       updated: 'toast.transaction.updated',
-      deleted: 'toast.transaction.deleted'
+      deleted: 'toast.transaction.deleted',
     },
     createDefaults: (txData) => ({
       id: `tx_${uid()}`,
@@ -43,8 +43,8 @@ export default function CapitalPage() {
       description: txData?.description || '',
       dateISO: txData?.dateISO || todayISO(),
       createdAt: nowISO(),
-      updatedAt: nowISO()
-    })
+      updatedAt: nowISO(),
+    }),
   });
 
   const categories = useMemo(() => {
@@ -70,20 +70,18 @@ export default function CapitalPage() {
 
   const filteredTransactions = useMemo(() => {
     return data.transactions.filter((t) => {
-      const matchesSearch = 
+      const matchesSearch =
         t.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
         t.description.toLowerCase().includes(searchQuery.toLowerCase());
-      
+
       const matchesCategory = selectedCategory === 'ALL' || t.category === selectedCategory;
-      
+
       return matchesSearch && matchesCategory;
     });
   }, [data.transactions, searchQuery, selectedCategory]);
 
   const sortedTransactions = useMemo(() => {
-    return [...filteredTransactions].sort(
-      (a, b) => b.dateISO.localeCompare(a.dateISO)
-    );
+    return [...filteredTransactions].sort((a, b) => b.dateISO.localeCompare(a.dateISO));
   }, [filteredTransactions]);
 
   return (
@@ -91,12 +89,8 @@ export default function CapitalPage() {
       {/* Page Header */}
       <div className="flex-row-between">
         <div>
-          <h1 className="text-xl-scale text-bold no-margin">
-            {t('finance.page.title')}
-          </h1>
-          <span className="text-sm-scale text-secondary">
-            {t('finance.page.subtitle')}
-          </span>
+          <h1 className="text-xl-scale text-bold no-margin">{t('finance.page.title')}</h1>
+          <span className="text-sm-scale text-secondary">{t('finance.page.subtitle')}</span>
         </div>
         <button className="btn btn--primary flex-row-center-gap6" onClick={handleAddNewClick}>
           <Plus size={16} />
@@ -106,23 +100,23 @@ export default function CapitalPage() {
 
       {/* Stat Cards Overview */}
       <div className="grid-cols-stats">
-        <StatCard 
-          label={t('finance.stat.totalBalance')} 
-          value={formatCurrency(balance)} 
-          icon={<Wallet size={20} />} 
-          accent 
+        <StatCard
+          label={t('finance.stat.totalBalance')}
+          value={formatCurrency(balance)}
+          icon={<Wallet size={20} />}
+          accent
         />
-        <StatCard 
-          label={t('finance.stat.totalIncome')} 
-          value={formatCurrency(totalIncome)} 
-          icon={<TrendingUp size={20} />} 
-          trend="up" 
+        <StatCard
+          label={t('finance.stat.totalIncome')}
+          value={formatCurrency(totalIncome)}
+          icon={<TrendingUp size={20} />}
+          trend="up"
         />
-        <StatCard 
-          label={t('finance.stat.totalExpenses')} 
-          value={formatCurrency(totalExpenses)} 
-          icon={<TrendingDown size={20} />} 
-          trend="down" 
+        <StatCard
+          label={t('finance.stat.totalExpenses')}
+          value={formatCurrency(totalExpenses)}
+          icon={<TrendingDown size={20} />}
+          trend="down"
         />
       </div>
 
@@ -135,12 +129,30 @@ export default function CapitalPage() {
 
           {/* Transactions DataTable */}
           <div className="glass-panel padding-16-flex-col-12">
-            <span className="section-title">
-              {t('finance.journal')}
-            </span>
+            <span className="section-title">{t('finance.journal')}</span>
 
-            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginBottom: '12px', alignItems: 'center' }}>
-              <div className="glass-panel" style={{ flex: 2, display: 'flex', alignItems: 'center', padding: '0 12px', height: '40px', minWidth: '200px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)' }}>
+            <div
+              style={{
+                display: 'flex',
+                gap: '16px',
+                flexWrap: 'wrap',
+                marginBottom: '12px',
+                alignItems: 'center',
+              }}
+            >
+              <div
+                className="glass-panel"
+                style={{
+                  flex: 2,
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '0 12px',
+                  height: '40px',
+                  minWidth: '200px',
+                  background: 'rgba(255,255,255,0.02)',
+                  border: '1px solid var(--border)',
+                }}
+              >
                 <Search size={16} style={{ color: 'var(--text-secondary)', marginRight: '8px' }} />
                 <input
                   type="text"
@@ -153,22 +165,37 @@ export default function CapitalPage() {
                     color: 'inherit',
                     outline: 'none',
                     width: '100%',
-                    fontSize: '0.85rem'
+                    fontSize: '0.85rem',
                   }}
                 />
               </div>
 
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{t('finance.category.label')}</span>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                  {t('finance.category.label')}
+                </span>
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  style={{ height: '40px', padding: '0 12px', fontSize: '0.85rem', background: 'var(--bg-secondary)', border: '1px solid var(--border)', color: 'var(--text-primary)', borderRadius: 'var(--radius-sm)', outline: 'none' }}
+                  style={{
+                    height: '40px',
+                    padding: '0 12px',
+                    fontSize: '0.85rem',
+                    background: 'var(--bg-secondary)',
+                    border: '1px solid var(--border)',
+                    color: 'var(--text-primary)',
+                    borderRadius: 'var(--radius-sm)',
+                    outline: 'none',
+                  }}
                 >
                   <option value="ALL">{t('filter.all')}</option>
-                  {categories.filter((cat) => cat !== 'ALL').map((cat) => (
-                    <option key={cat} value={cat}>{cat}</option>
-                  ))}
+                  {categories
+                    .filter((cat) => cat !== 'ALL')
+                    .map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
                 </select>
               </div>
             </div>
@@ -176,43 +203,62 @@ export default function CapitalPage() {
             {sortedTransactions.length > 0 ? (
               <DataTable
                 columns={[
-                  { key: 'dateISO', label: t('finance.column.date'), render: (v) => formatDate(v as string) },
+                  {
+                    key: 'dateISO',
+                    label: t('finance.column.date'),
+                    render: (v) => formatDate(v as string),
+                  },
                   { key: 'category', label: t('finance.column.category') },
-                  { key: 'amount', label: t('finance.column.amount'), render: (v, row) => (
-                    <span className="text-semibold" style={{ color: row.type === 'income' ? 'var(--success)' : 'var(--error)' }}>
-                      {row.type === 'income' ? '+' : '-'}{formatCurrency(v as number)}
-                    </span>
-                  )},
+                  {
+                    key: 'amount',
+                    label: t('finance.column.amount'),
+                    render: (v, row) => (
+                      <span
+                        className="text-semibold"
+                        style={{ color: row.type === 'income' ? 'var(--success)' : 'var(--error)' }}
+                      >
+                        {row.type === 'income' ? '+' : '-'}
+                        {formatCurrency(v as number)}
+                      </span>
+                    ),
+                  },
                   { key: 'description', label: t('finance.column.description') },
-                  { key: 'id', label: t('finance.column.actions'), render: (_, row) => (
-                    <div className="action-btn-row">
-                      <button 
-                        className="btn btn--secondary btn-padding-4-6" 
-                        onClick={() => handleEditClick(row as Transaction)}
-                        aria-label={t('finance.action.editOperation')}
-                      >
-                        <Edit2 size={12} />
-                      </button>
-                      <button 
-                        className="btn btn--secondary btn-padding-4-6-red" 
-                        onClick={() => setTxToDelete((row as Transaction).id)}
-                        aria-label={t('finance.action.deleteOperation')}
-                      >
-                        <Trash2 size={12} />
-                      </button>
-                    </div>
-                  )},
+                  {
+                    key: 'id',
+                    label: t('finance.column.actions'),
+                    render: (_, row) => (
+                      <div className="action-btn-row">
+                        <button
+                          className="btn btn--secondary btn-padding-4-6"
+                          onClick={() => handleEditClick(row as Transaction)}
+                          aria-label={t('finance.action.editOperation')}
+                        >
+                          <Edit2 size={12} />
+                        </button>
+                        <button
+                          className="btn btn--secondary btn-padding-4-6-red"
+                          onClick={() => setTxToDelete((row as Transaction).id)}
+                          aria-label={t('finance.action.deleteOperation')}
+                        >
+                          <Trash2 size={12} />
+                        </button>
+                      </div>
+                    ),
+                  },
                 ]}
                 data={sortedTransactions}
                 emptyMessage={t('finance.empty.transactions')}
               />
             ) : (
-              <EmptyState 
+              <EmptyState
                 icon={<Wallet size={48} />}
                 title={t('finance.empty.history')}
                 description={t('finance.empty.historyDescription')}
                 action={
-                  <button className="btn btn--primary flex-row-center-gap6" onClick={handleAddNewClick}>
+                  <button
+                    className="btn btn--primary flex-row-center-gap6"
+                    onClick={handleAddNewClick}
+                  >
                     <Plus size={16} />
                     <span>{t('finance.add.transaction')}</span>
                   </button>
@@ -228,25 +274,25 @@ export default function CapitalPage() {
         </div>
       </div>
 
-        {showForm && (
-          <TransactionModal
-            isOpen={showForm}
-            transaction={editingTx}
-            onClose={closeAll}
-            onSave={handleSaveTransaction}
-          />
-        )}
+      {showForm && (
+        <TransactionModal
+          isOpen={showForm}
+          transaction={editingTx}
+          onClose={closeAll}
+          onSave={handleSaveTransaction}
+        />
+      )}
 
-        {isDeleteOpen && (
-          <ConfirmDialog
-            isOpen={isDeleteOpen}
-            onConfirm={handleConfirmDelete}
-            onCancel={closeAll}
-            title={t('finance.confirm.deleteTitle')}
-            message={t('finance.confirm.deleteMessage')}
-            variant="danger"
-          />
-        )}
+      {isDeleteOpen && (
+        <ConfirmDialog
+          isOpen={isDeleteOpen}
+          onConfirm={handleConfirmDelete}
+          onCancel={closeAll}
+          title={t('finance.confirm.deleteTitle')}
+          message={t('finance.confirm.deleteMessage')}
+          variant="danger"
+        />
+      )}
     </div>
   );
 }

@@ -14,7 +14,10 @@ export function useKeyPress(
   useEffect(() => {
     const listener = (event: KeyboardEvent) => {
       // Check target key (case-insensitive)
-      if (event.key.toLowerCase() !== targetKey.toLowerCase() && event.code.toLowerCase() !== targetKey.toLowerCase()) {
+      if (
+        event.key.toLowerCase() !== targetKey.toLowerCase() &&
+        event.code.toLowerCase() !== targetKey.toLowerCase()
+      ) {
         return;
       }
 
@@ -22,7 +25,7 @@ export function useKeyPress(
       if (modifiers.ctrl && !event.ctrlKey) return;
       if (modifiers.alt && !event.altKey) return;
       if (modifiers.shift && !event.shiftKey) return;
-      
+
       // If we expect NO modifiers, make sure they aren't pressed
       if (modifiers.ctrl === false && event.ctrlKey) return;
       if (modifiers.alt === false && event.altKey) return;
@@ -31,7 +34,12 @@ export function useKeyPress(
       const target = event.target as HTMLElement | null;
       if (target) {
         const tagName = target.tagName;
-        if (tagName === 'INPUT' || tagName === 'TEXTAREA' || tagName === 'SELECT' || target.isContentEditable) {
+        if (
+          tagName === 'INPUT' ||
+          tagName === 'TEXTAREA' ||
+          tagName === 'SELECT' ||
+          target.isContentEditable
+        ) {
           // Allow Ctrl+S or Alt+Number to pass through even if typing
           const isAppShortcut = event.ctrlKey || event.altKey;
           if (!isAppShortcut) {

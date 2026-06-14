@@ -61,13 +61,26 @@ export default function ConfirmDialog({
   return (
     <Modal isOpen={isOpen} onClose={handleCancel} title={title} maxWidth="sm" footer={footer}>
       <div>
-        <p style={{ color: 'var(--text-secondary)', marginBottom: requireTyping ? '16px' : '0', lineHeight: 1.5 }}>
+        <p
+          style={{
+            color: 'var(--text-secondary)',
+            marginBottom: requireTyping ? '16px' : '0',
+            lineHeight: 1.5,
+          }}
+        >
           {message}
         </p>
-        
+
         {requireTyping && (
           <div style={{ marginTop: '16px' }}>
-            <label style={{ marginBottom: '8px', display: 'block', fontSize: '14px', color: 'var(--text-secondary)' }}>
+            <label
+              style={{
+                marginBottom: '8px',
+                display: 'block',
+                fontSize: '14px',
+                color: 'var(--text-secondary)',
+              }}
+            >
               {t('confirmDialog.confirm_typing_prompt', { text: requireTyping })}
             </label>
             <input

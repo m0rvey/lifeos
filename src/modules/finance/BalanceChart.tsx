@@ -67,25 +67,37 @@ export default function BalanceChart({ transactions }: BalanceChartProps) {
 
   if (transactions.length < 2) {
     return (
-      <div style={{ 
-        height: '250px', 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center', 
-        color: 'var(--text-secondary)',
-        fontSize: '0.8rem',
-        background: 'rgba(255,255,255,0.01)',
-        borderRadius: '8px',
-        border: '1px dashed var(--border)'
-      }}>
+      <div
+        style={{
+          height: '250px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'var(--text-secondary)',
+          fontSize: '0.8rem',
+          background: 'rgba(255,255,255,0.01)',
+          borderRadius: '8px',
+          border: '1px dashed var(--border)',
+        }}
+      >
         {t('finance.chart.insufficientData')}
       </div>
     );
   }
 
   return (
-    <div className="glass-panel" style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      <span style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-secondary)' }}>
+    <div
+      className="glass-panel"
+      style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}
+    >
+      <span
+        style={{
+          fontSize: '0.8rem',
+          fontWeight: 700,
+          textTransform: 'uppercase',
+          color: 'var(--text-secondary)',
+        }}
+      >
         {t('finance.chart.balanceDynamics')}
       </span>
       <div style={{ position: 'relative', width: '100%', height: `${height}px` }}>
@@ -96,7 +108,7 @@ export default function BalanceChart({ transactions }: BalanceChartProps) {
               <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.4" />
               <stop offset="100%" stopColor="var(--accent)" stopOpacity="1" />
             </linearGradient>
-            
+
             {/* Area fill gradient */}
             <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.25" />
@@ -105,13 +117,13 @@ export default function BalanceChart({ transactions }: BalanceChartProps) {
           </defs>
 
           {/* Grid lines (horizontal center) */}
-          <line 
-            x1={padding} 
-            y1={height / 2} 
-            x2={width - padding} 
-            y2={height / 2} 
-            stroke="rgba(255,255,255,0.03)" 
-            strokeWidth="1" 
+          <line
+            x1={padding}
+            y1={height / 2}
+            x2={width - padding}
+            y2={height / 2}
+            stroke="rgba(255,255,255,0.03)"
+            strokeWidth="1"
             strokeDasharray="4,4"
           />
 
@@ -119,11 +131,11 @@ export default function BalanceChart({ transactions }: BalanceChartProps) {
           <path d={areaD} fill="url(#areaGrad)" />
 
           {/* Line itself */}
-          <path 
-            d={pathD} 
-            fill="none" 
-            stroke="url(#lineGrad)" 
-            strokeWidth="3" 
+          <path
+            d={pathD}
+            fill="none"
+            stroke="url(#lineGrad)"
+            strokeWidth="3"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
@@ -136,13 +148,13 @@ export default function BalanceChart({ transactions }: BalanceChartProps) {
 
             return (
               <g key={i}>
-                <circle 
-                  cx={p.x} 
-                  cy={p.y} 
-                  r="6" 
-                  fill="var(--bg-secondary)" 
-                  stroke="var(--accent)" 
-                  strokeWidth="2.5" 
+                <circle
+                  cx={p.x}
+                  cy={p.y}
+                  r="6"
+                  fill="var(--bg-secondary)"
+                  stroke="var(--accent)"
+                  strokeWidth="2.5"
                 />
                 <text
                   x={p.x}

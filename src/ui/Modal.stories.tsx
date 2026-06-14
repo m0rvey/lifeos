@@ -20,7 +20,9 @@ export const Default: Story = {
     const [open, setOpen] = useState(true);
     return (
       <>
-        <button className="btn btn--primary" onClick={() => setOpen(true)}>Open Modal</button>
+        <button className="btn btn--primary" onClick={() => setOpen(true)}>
+          Open Modal
+        </button>
         <Modal {...args} isOpen={open} onClose={() => setOpen(false)}>
           <p>Modal content goes here.</p>
         </Modal>
@@ -38,7 +40,9 @@ export const Small: Story = {
     const [open, setOpen] = useState(true);
     return (
       <>
-        <button className="btn btn--primary" onClick={() => setOpen(true)}>Open Small Modal</button>
+        <button className="btn btn--primary" onClick={() => setOpen(true)}>
+          Open Small Modal
+        </button>
         <Modal {...args} isOpen={open} onClose={() => setOpen(false)}>
           <p>Small modal content.</p>
         </Modal>

@@ -4,10 +4,22 @@ import { useApp } from '../context/AppContext';
 import { useData } from '../context/DataContext';
 import { useI18n } from '../i18n';
 import {
-  Share2, Wallet, Calendar,
-  BarChart2, List, MapPin, Wrench, LayoutDashboard,
-  PenLine, Brain, Flame, BookOpen, Dumbbell,
-  PanelLeftClose, PanelLeftOpen, Keyboard
+  Share2,
+  Wallet,
+  Calendar,
+  BarChart2,
+  List,
+  MapPin,
+  Wrench,
+  LayoutDashboard,
+  PenLine,
+  Brain,
+  Flame,
+  BookOpen,
+  Dumbbell,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Keyboard,
 } from 'lucide-react';
 import ShortcutsHelp from '../ui/ShortcutsHelp';
 
@@ -22,37 +34,97 @@ const SIDEBAR_CONFIG: Record<string, { titleKey: string; items: SidebarItem[] }>
   social: {
     titleKey: 'sidebar.sidebar_group.social',
     items: [
-      { route: '/social', i18nKey: 'sidebar.social_graph', icon: Share2, countFn: d => d.people.length },
-    ]
+      {
+        route: '/social',
+        i18nKey: 'sidebar.social_graph',
+        icon: Share2,
+        countFn: (d) => d.people.length,
+      },
+    ],
   },
   finance: {
     titleKey: 'sidebar.sidebar_group.finance',
     items: [
-      { route: '/finance', i18nKey: 'sidebar.transactions', icon: Wallet, countFn: d => d.transactions.length },
-      { route: '/finance/reminders', i18nKey: 'sidebar.reminders', icon: Calendar, countFn: d => d.reminders.filter(r => !r.isPaid).length },
-    ]
+      {
+        route: '/finance',
+        i18nKey: 'sidebar.transactions',
+        icon: Wallet,
+        countFn: (d) => d.transactions.length,
+      },
+      {
+        route: '/finance/reminders',
+        i18nKey: 'sidebar.reminders',
+        icon: Calendar,
+        countFn: (d) => d.reminders.filter((r) => !r.isPaid).length,
+      },
+    ],
   },
   cycling: {
     titleKey: 'sidebar.sidebar_group.cycling',
     items: [
       { route: '/cycling', i18nKey: 'sidebar.analytics', icon: BarChart2 },
-      { route: '/cycling/rides', i18nKey: 'sidebar.rides', icon: List, countFn: d => d.rides.length },
-      { route: '/cycling/routes', i18nKey: 'sidebar.routes', icon: MapPin, countFn: d => d.routes.length },
-      { route: '/cycling/maintenance', i18nKey: 'sidebar.maintenance', icon: Wrench, countFn: d => d.maintenance.filter(m => !m.isDone).length },
-    ]
+      {
+        route: '/cycling/rides',
+        i18nKey: 'sidebar.rides',
+        icon: List,
+        countFn: (d) => d.rides.length,
+      },
+      {
+        route: '/cycling/routes',
+        i18nKey: 'sidebar.routes',
+        icon: MapPin,
+        countFn: (d) => d.routes.length,
+      },
+      {
+        route: '/cycling/maintenance',
+        i18nKey: 'sidebar.maintenance',
+        icon: Wrench,
+        countFn: (d) => d.maintenance.filter((m) => !m.isDone).length,
+      },
+    ],
   },
   reflect: {
     titleKey: 'sidebar.sidebar_group.reflect',
     items: [
       { route: '/reflect', i18nKey: 'sidebar.overview', icon: LayoutDashboard },
-      { route: '/reflect/journal', i18nKey: 'sidebar.journal', icon: PenLine, countFn: d => d.journal.length },
-      { route: '/reflect/knowledge', i18nKey: 'sidebar.knowledge', icon: Brain, countFn: d => d.knowledge.length },
-      { route: '/reflect/schedule', i18nKey: 'sidebar.schedule', icon: Calendar, countFn: d => d.schedule.length },
-      { route: '/reflect/habits', i18nKey: 'sidebar.habits', icon: Flame, countFn: d => d.habits.length },
-      { route: '/reflect/thoughts', i18nKey: 'sidebar.thoughts', icon: BookOpen, countFn: d => d.thoughts.length },
-      { route: '/reflect/workouts', i18nKey: 'sidebar.workouts', icon: Dumbbell, countFn: d => d.workouts.length },
-    ]
-  }
+      {
+        route: '/reflect/journal',
+        i18nKey: 'sidebar.journal',
+        icon: PenLine,
+        countFn: (d) => d.journal.length,
+      },
+      {
+        route: '/reflect/knowledge',
+        i18nKey: 'sidebar.knowledge',
+        icon: Brain,
+        countFn: (d) => d.knowledge.length,
+      },
+      {
+        route: '/reflect/schedule',
+        i18nKey: 'sidebar.schedule',
+        icon: Calendar,
+        countFn: (d) => d.schedule.length,
+      },
+      {
+        route: '/reflect/habits',
+        i18nKey: 'sidebar.habits',
+        icon: Flame,
+        countFn: (d) => d.habits.length,
+      },
+      {
+        route: '/reflect/thoughts',
+        i18nKey: 'sidebar.thoughts',
+        icon: BookOpen,
+        countFn: (d) => d.thoughts.length,
+      },
+      {
+        route: '/reflect/workouts',
+        i18nKey: 'sidebar.workouts',
+        icon: Dumbbell,
+        countFn: (d) => d.workouts.length,
+      },
+    ],
+  },
 };
 
 export default function AppSidebar() {
@@ -77,7 +149,9 @@ export default function AppSidebar() {
 
   return (
     <>
-      <aside className={`app-sidebar ${isSidebarOpen ? 'open' : ''} ${isCollapsed ? 'collapsed' : ''}`}>
+      <aside
+        className={`app-sidebar ${isSidebarOpen ? 'open' : ''} ${isCollapsed ? 'collapsed' : ''}`}
+      >
         <div className="sidebar-toggle-wrapper">
           <button
             className="sidebar-toggle-btn"
@@ -97,9 +171,10 @@ export default function AppSidebar() {
           )}
 
           <nav>
-            {moduleConfig.items.map(item => {
+            {moduleConfig.items.map((item) => {
               const count = item.countFn?.(data) ?? null;
-              const isExact = item.route === '/reflect' || item.route === '/cycling' || item.route === '/finance';
+              const isExact =
+                item.route === '/reflect' || item.route === '/cycling' || item.route === '/finance';
               const isActive = isExact
                 ? location.pathname === item.route
                 : location.pathname.startsWith(item.route);
@@ -114,13 +189,9 @@ export default function AppSidebar() {
                   title={t(item.i18nKey)}
                 >
                   <Icon size={15} />
-                  {!isCollapsed && (
-                    <span>{t(item.i18nKey)}</span>
-                  )}
+                  {!isCollapsed && <span>{t(item.i18nKey)}</span>}
                   {!isCollapsed && count !== null && count > 0 && (
-                    <span className="sidebar-nav-count">
-                      {count > 99 ? '99+' : count}
-                    </span>
+                    <span className="sidebar-nav-count">{count > 99 ? '99+' : count}</span>
                   )}
                 </button>
               );
@@ -140,7 +211,9 @@ export default function AppSidebar() {
         </div>
       </aside>
 
-      {showShortcuts && <ShortcutsHelp isOpen={showShortcuts} onClose={() => setShowShortcuts(false)} />}
+      {showShortcuts && (
+        <ShortcutsHelp isOpen={showShortcuts} onClose={() => setShowShortcuts(false)} />
+      )}
     </>
   );
 }

@@ -64,11 +64,7 @@ export default function RideModal({ isOpen, onClose, ride, routes, onSave }: Rid
       maxWidth="md"
     >
       <form onSubmit={handleSubmit} className="flex-col-16">
-        {error && (
-          <div className="text-error-bold">
-            {error}
-          </div>
-        )}
+        {error && <div className="text-error-bold">{error}</div>}
 
         <div className="form-row">
           <FormField label={t('cycling.rides.fieldTitle')} required>
@@ -168,13 +164,15 @@ export default function RideModal({ isOpen, onClose, ride, routes, onSave }: Rid
             >
               <option value="">{t('cycling.rides.noRoute')}</option>
               {routes.map((r) => (
-                <option key={r.id} value={r.id}>{r.name} ({r.distanceKm} {t('cycling.common.km')})</option>
+                <option key={r.id} value={r.id}>
+                  {r.name} ({r.distanceKm} {t('cycling.common.km')})
+                </option>
               ))}
             </select>
           </FormField>
         </div>
 
-          <FormField label={t('cycling.rides.fieldDescription')}>
+        <FormField label={t('cycling.rides.fieldDescription')}>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}

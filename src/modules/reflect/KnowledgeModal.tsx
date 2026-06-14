@@ -13,7 +13,9 @@ interface KnowledgeModalProps {
 export default function KnowledgeModal({ isOpen, onClose, item, onSave }: KnowledgeModalProps) {
   const { t } = useI18n();
   const [title, setTitle] = useState(item?.title || '');
-  const [category, setCategory] = useState(item?.category || t('reflect.knowledge.category_books_val'));
+  const [category, setCategory] = useState(
+    item?.category || t('reflect.knowledge.category_books_val')
+  );
   const [source, setSource] = useState(item?.source || '');
   const [url, setUrl] = useState(item?.url || '');
   const [content, setContent] = useState(item?.content || '');
@@ -39,7 +41,10 @@ export default function KnowledgeModal({ isOpen, onClose, item, onSave }: Knowle
       source: source.trim(),
       url: url.trim(),
       content: content.trim(),
-      tags: tagsText.split(',').map((t) => t.trim()).filter(Boolean),
+      tags: tagsText
+        .split(',')
+        .map((t) => t.trim())
+        .filter(Boolean),
     });
   };
 
@@ -47,15 +52,13 @@ export default function KnowledgeModal({ isOpen, onClose, item, onSave }: Knowle
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={item ? t('reflect.knowledge.modal_edit_title') : t('reflect.knowledge.modal_create_title')}
+      title={
+        item ? t('reflect.knowledge.modal_edit_title') : t('reflect.knowledge.modal_create_title')
+      }
       maxWidth="md"
     >
       <form onSubmit={handleSubmit} className="flex-col-16">
-        {error && (
-          <div className="text-error-bold">
-            {error}
-          </div>
-        )}
+        {error && <div className="text-error-bold">{error}</div>}
 
         <div className="form-row-2-1">
           <FormField label={t('reflect.knowledge.field_title')} required>
@@ -75,11 +78,21 @@ export default function KnowledgeModal({ isOpen, onClose, item, onSave }: Knowle
               onChange={(e) => setCategory(e.target.value)}
               style={{ width: '100%' }}
             >
-              <option value={t('reflect.knowledge.category_books_val')}>{t('reflect.knowledge.category_books')}</option>
-              <option value={t('reflect.knowledge.category_articles_val')}>{t('reflect.knowledge.category_articles')}</option>
-              <option value={t('reflect.knowledge.category_videos_val')}>{t('reflect.knowledge.category_videos')}</option>
-              <option value={t('reflect.knowledge.category_podcasts_val')}>{t('reflect.knowledge.category_podcasts')}</option>
-              <option value={t('reflect.knowledge.category_methodology_val')}>{t('reflect.knowledge.category_methodology')}</option>
+              <option value={t('reflect.knowledge.category_books_val')}>
+                {t('reflect.knowledge.category_books')}
+              </option>
+              <option value={t('reflect.knowledge.category_articles_val')}>
+                {t('reflect.knowledge.category_articles')}
+              </option>
+              <option value={t('reflect.knowledge.category_videos_val')}>
+                {t('reflect.knowledge.category_videos')}
+              </option>
+              <option value={t('reflect.knowledge.category_podcasts_val')}>
+                {t('reflect.knowledge.category_podcasts')}
+              </option>
+              <option value={t('reflect.knowledge.category_methodology_val')}>
+                {t('reflect.knowledge.category_methodology')}
+              </option>
             </select>
           </FormField>
         </div>
@@ -124,7 +137,14 @@ export default function KnowledgeModal({ isOpen, onClose, item, onSave }: Knowle
             placeholder={t('reflect.knowledge.placeholder_tags')}
             style={{ width: '100%' }}
           />
-          <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginTop: '4px', display: 'block' }}>
+          <span
+            style={{
+              fontSize: '0.7rem',
+              color: 'var(--text-secondary)',
+              marginTop: '4px',
+              display: 'block',
+            }}
+          >
             {t('reflect.knowledge.tags_hint')}
           </span>
         </FormField>

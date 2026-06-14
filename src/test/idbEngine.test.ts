@@ -10,7 +10,7 @@ const mockOpenDB = vi.mocked(openDB);
 
 function makeMockDb() {
   const dbStores = new Map<string, Map<string, unknown>>();
-  
+
   const getStoreMap = (storeName: string) => {
     if (!dbStores.has(storeName)) {
       dbStores.set(storeName, new Map());
@@ -35,10 +35,10 @@ function makeMockDb() {
           }),
           get: vi.fn(async (key: string) => {
             return getStoreMap(storeName).get(key);
-          })
+          }),
         };
       }),
-      done: Promise.resolve()
+      done: Promise.resolve(),
     };
   });
 
@@ -47,7 +47,7 @@ function makeMockDb() {
     put: putFn,
     transaction: transactionFn,
     objectStoreNames: {
-      contains: vi.fn((name: string) => name === 'appData' || name === 'metadata')
+      contains: vi.fn((name: string) => name === 'appData' || name === 'metadata'),
     },
     createObjectStore: vi.fn(),
   };
@@ -159,7 +159,10 @@ describe('idbEngine', () => {
     });
 
     it('migrates data from localStorage to IDB modular stores', async () => {
-      localStorage.setItem('lifeos_platform_v1', JSON.stringify({ version: 3, tasks: [{ id: '1' }] }));
+      localStorage.setItem(
+        'lifeos_platform_v1',
+        JSON.stringify({ version: 3, tasks: [{ id: '1' }] })
+      );
       const mockDb = makeMockDb();
       mockDb.objectStoreNames.contains = vi.fn(() => false); // simulate empty IDB
       mockOpenDB.mockResolvedValue(mockDb as never);

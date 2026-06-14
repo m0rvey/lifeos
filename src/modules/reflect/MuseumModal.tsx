@@ -13,7 +13,9 @@ interface MuseumModalProps {
 export default function MuseumModal({ isOpen, onClose, thought, onSave }: MuseumModalProps) {
   const { t } = useI18n();
   const [content, setContent] = useState(thought?.content || '');
-  const [category, setCategory] = useState(thought?.category || t('reflect.museum.default_category'));
+  const [category, setCategory] = useState(
+    thought?.category || t('reflect.museum.default_category')
+  );
   const [tagsText, setTagsText] = useState(thought?.tags ? thought.tags.join(', ') : '');
   const [error, setError] = useState('');
 
@@ -29,7 +31,10 @@ export default function MuseumModal({ isOpen, onClose, thought, onSave }: Museum
     onSave({
       content: content.trim(),
       category: category.trim(),
-      tags: tagsText.split(',').map((t) => t.trim()).filter(Boolean),
+      tags: tagsText
+        .split(',')
+        .map((t) => t.trim())
+        .filter(Boolean),
     });
   };
 
@@ -37,15 +42,13 @@ export default function MuseumModal({ isOpen, onClose, thought, onSave }: Museum
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={thought ? t('reflect.museum.modal_edit_title') : t('reflect.museum.modal_create_title')}
+      title={
+        thought ? t('reflect.museum.modal_edit_title') : t('reflect.museum.modal_create_title')
+      }
       maxWidth="sm"
     >
       <form onSubmit={handleSubmit} className="flex-col-16">
-        {error && (
-          <div className="text-error-bold">
-            {error}
-          </div>
-        )}
+        {error && <div className="text-error-bold">{error}</div>}
 
         <FormField label={t('reflect.museum.field_thought')} required>
           <textarea
@@ -75,7 +78,14 @@ export default function MuseumModal({ isOpen, onClose, thought, onSave }: Museum
             placeholder={t('reflect.museum.placeholder_tags')}
             style={{ width: '100%' }}
           />
-          <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginTop: '4px', display: 'block' }}>
+          <span
+            style={{
+              fontSize: '0.7rem',
+              color: 'var(--text-secondary)',
+              marginTop: '4px',
+              display: 'block',
+            }}
+          >
             {t('reflect.museum.tags_hint')}
           </span>
         </FormField>

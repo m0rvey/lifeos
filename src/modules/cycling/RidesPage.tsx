@@ -1,7 +1,18 @@
 import { useState, useMemo } from 'react';
 import { useData } from '../../context/DataContext';
 import { type RideRecord } from '../../types';
-import { Plus, Bike, Route, Gauge, TrendingUp, Mountain, Clock, Award, Edit2, Trash2 } from 'lucide-react';
+import {
+  Plus,
+  Bike,
+  Route,
+  Gauge,
+  TrendingUp,
+  Mountain,
+  Clock,
+  Award,
+  Edit2,
+  Trash2,
+} from 'lucide-react';
 import { EmptyState, ConfirmDialog } from '../../ui';
 import { formatDate, formatDistance, formatDuration, uid, nowISO } from '../../cognitive/helpers';
 import { useRideStats } from '../../hooks/useRideStats';
@@ -25,13 +36,13 @@ export default function RidesPage() {
     openDelete: setRideToDelete,
     handleSave: handleSaveRide,
     confirmDelete: handleConfirmDelete,
-    closeAll
+    closeAll,
   } = useCrudModal<RideRecord>({
     entity: 'rides',
     toastKeys: {
       created: 'cycling.rides.toastCreated',
       updated: 'cycling.rides.toastEdited',
-      deleted: 'cycling.rides.toastDeleted'
+      deleted: 'cycling.rides.toastDeleted',
     },
     createDefaults: (rideData) => ({
       id: `ride_${uid()}`,
@@ -47,11 +58,18 @@ export default function RidesPage() {
       description: rideData?.description || '',
       routeId: rideData?.routeId || null,
       createdAt: nowISO(),
-      updatedAt: nowISO()
-    })
+      updatedAt: nowISO(),
+    }),
   });
 
-  const { totalDistance, totalDuration, avgSpeed: averageSpeed, maxSpeed: recordSpeed, totalElevation, maxDistance } = useRideStats(data.rides);
+  const {
+    totalDistance,
+    totalDuration,
+    avgSpeed: averageSpeed,
+    maxSpeed: recordSpeed,
+    totalElevation,
+    maxDistance,
+  } = useRideStats(data.rides);
 
   const filteredRides = useMemo(() => {
     const sorted = [...data.rides].sort(
@@ -68,7 +86,9 @@ export default function RidesPage() {
           <Route size={24} style={{ color: 'var(--accent)' }} />
           <div>
             <span className="cycling-stat-label">{t('cycling.rides.distance')}</span>
-            <strong className="cycling-stat-val">{totalDistance.toFixed(1)} {t('cycling.common.km')}</strong>
+            <strong className="cycling-stat-val">
+              {totalDistance.toFixed(1)} {t('cycling.common.km')}
+            </strong>
           </div>
         </div>
 
@@ -76,7 +96,9 @@ export default function RidesPage() {
           <Gauge size={24} style={{ color: 'var(--accent)' }} />
           <div>
             <span className="cycling-stat-label">{t('cycling.rides.avg')}</span>
-            <strong className="cycling-stat-val">{averageSpeed.toFixed(1)} {t('cycling.common.kmh')}</strong>
+            <strong className="cycling-stat-val">
+              {averageSpeed.toFixed(1)} {t('cycling.common.kmh')}
+            </strong>
           </div>
         </div>
 
@@ -84,7 +106,9 @@ export default function RidesPage() {
           <TrendingUp size={24} style={{ color: 'var(--accent)' }} />
           <div>
             <span className="cycling-stat-label">{t('cycling.rides.speedRecord')}</span>
-            <strong className="cycling-stat-val">{recordSpeed.toFixed(1)} {t('cycling.common.kmh')}</strong>
+            <strong className="cycling-stat-val">
+              {recordSpeed.toFixed(1)} {t('cycling.common.kmh')}
+            </strong>
           </div>
         </div>
 
@@ -92,7 +116,9 @@ export default function RidesPage() {
           <Mountain size={24} style={{ color: 'var(--accent)' }} />
           <div>
             <span className="cycling-stat-label">{t('cycling.dashboard.elevationGain')}</span>
-            <strong className="cycling-stat-val">{totalElevation.toFixed(1)} {t('cycling.common.m')}</strong>
+            <strong className="cycling-stat-val">
+              {totalElevation.toFixed(1)} {t('cycling.common.m')}
+            </strong>
           </div>
         </div>
 
@@ -100,7 +126,9 @@ export default function RidesPage() {
           <Award size={24} style={{ color: 'var(--accent)' }} />
           <div>
             <span className="cycling-stat-label">{t('cycling.rides.maxDistance')}</span>
-            <strong className="cycling-stat-val">{maxDistance.toFixed(1)} {t('cycling.common.km')}</strong>
+            <strong className="cycling-stat-val">
+              {maxDistance.toFixed(1)} {t('cycling.common.km')}
+            </strong>
           </div>
         </div>
 
@@ -123,8 +151,18 @@ export default function RidesPage() {
 
           <div className="cycling-actions">
             <div className="filter-tabs" style={{ marginBottom: 0 }}>
-              <button className={`tab-btn ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')}>{t('cycling.rides.filterAll')} ({data.rides.length})</button>
-              <button className={`tab-btn ${filter === 'recent' ? 'active' : ''}`} onClick={() => setFilter('recent')}>{t('cycling.rides.filterRecent')}</button>
+              <button
+                className={`tab-btn ${filter === 'all' ? 'active' : ''}`}
+                onClick={() => setFilter('all')}
+              >
+                {t('cycling.rides.filterAll')} ({data.rides.length})
+              </button>
+              <button
+                className={`tab-btn ${filter === 'recent' ? 'active' : ''}`}
+                onClick={() => setFilter('recent')}
+              >
+                {t('cycling.rides.filterRecent')}
+              </button>
             </div>
             <button className="btn btn--primary cycling-actions-btn" onClick={handleAddNew}>
               <Plus size={14} />
@@ -136,27 +174,22 @@ export default function RidesPage() {
         {filteredRides.length > 0 ? (
           <div className="ride-cards-grid cycling-cards-grid">
             {filteredRides.map((ride) => (
-              <div 
-                key={ride.id} 
-                className="glass-panel cycling-ride-card"
-              >
+              <div key={ride.id} className="glass-panel cycling-ride-card">
                 <div className="cycling-ride-card-header">
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <Bike size={14} style={{ color: 'var(--accent)' }} />
-                    <span className="cycling-ride-card-date">
-                      {formatDate(ride.dateISO)}
-                    </span>
+                    <span className="cycling-ride-card-date">{formatDate(ride.dateISO)}</span>
                   </div>
                   <div className="cycling-ride-card-actions">
-                    <button 
-                      className="btn btn--secondary cycling-btn-sm-edit" 
+                    <button
+                      className="btn btn--secondary cycling-btn-sm-edit"
                       onClick={() => handleEdit(ride)}
                       title={t('action.edit')}
                     >
                       <Edit2 size={12} />
                     </button>
-                    <button 
-                      className="btn btn--secondary cycling-btn-sm-delete" 
+                    <button
+                      className="btn btn--secondary cycling-btn-sm-delete"
                       onClick={() => setRideToDelete(ride.id)}
                       title={t('action.delete')}
                     >
@@ -167,23 +200,27 @@ export default function RidesPage() {
 
                 <div style={{ margin: '4px 0' }}>
                   <strong className="cycling-ride-card-title">{ride.title}</strong>
-                  <div className="cycling-ride-card-dist">
-                    {formatDistance(ride.distanceKm)}
-                  </div>
+                  <div className="cycling-ride-card-dist">{formatDistance(ride.distanceKm)}</div>
                 </div>
 
                 <div className="cycling-ride-card-details">
                   <div>
                     <span>{t('cycling.rides.avg')}</span>
-                    <strong>{ride.avgSpeedKmh.toFixed(1)} {t('cycling.common.kmh')}</strong>
+                    <strong>
+                      {ride.avgSpeedKmh.toFixed(1)} {t('cycling.common.kmh')}
+                    </strong>
                   </div>
                   <div>
                     <span>{t('cycling.rides.maximum')}</span>
-                    <strong>{ride.maxSpeedKmh.toFixed(1)} {t('cycling.common.kmh')}</strong>
+                    <strong>
+                      {ride.maxSpeedKmh.toFixed(1)} {t('cycling.common.kmh')}
+                    </strong>
                   </div>
                   <div>
                     <span>{t('cycling.dashboard.elevationGain')}</span>
-                    <strong>{ride.elevationGainM.toFixed(1)} {t('cycling.common.m')}</strong>
+                    <strong>
+                      {ride.elevationGainM.toFixed(1)} {t('cycling.common.m')}
+                    </strong>
                   </div>
                   <div>
                     <span>{t('cycling.rides.time')}</span>
@@ -209,25 +246,25 @@ export default function RidesPage() {
       </div>
 
       {isOpen && (
-          <RideModal
-            isOpen={isOpen}
-            ride={editingRide}
-            routes={data.routes}
-            onClose={closeAll}
-            onSave={handleSaveRide}
-          />
-        )}
+        <RideModal
+          isOpen={isOpen}
+          ride={editingRide}
+          routes={data.routes}
+          onClose={closeAll}
+          onSave={handleSaveRide}
+        />
+      )}
 
-        {isDeleteOpen && (
-          <ConfirmDialog
-            isOpen={isDeleteOpen}
-            onConfirm={handleConfirmDelete}
-            onCancel={closeAll}
-            title={t('cycling.rides.deleteConfirmTitle')}
-            message={t('cycling.rides.deleteConfirmMessage')}
-            variant="danger"
-          />
-        )}
+      {isDeleteOpen && (
+        <ConfirmDialog
+          isOpen={isDeleteOpen}
+          onConfirm={handleConfirmDelete}
+          onCancel={closeAll}
+          title={t('cycling.rides.deleteConfirmTitle')}
+          message={t('cycling.rides.deleteConfirmMessage')}
+          variant="danger"
+        />
+      )}
     </div>
   );
 }

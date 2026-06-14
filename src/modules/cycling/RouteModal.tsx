@@ -15,8 +15,12 @@ export default function RouteModal({ isOpen, onClose, route, onSave }: RouteModa
   const [name, setName] = useState(route?.name || '');
   const [distanceKm, setDistanceKm] = useState(route?.distanceKm || 0);
   const [elevationGainM, setElevationGainM] = useState(route?.elevationGainM || 0);
-  const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard' | 'extreme'>(route?.difficulty || 'medium');
-  const [waypointsText, setWaypointsText] = useState(route?.waypoints ? route.waypoints.join(', ') : '');
+  const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard' | 'extreme'>(
+    route?.difficulty || 'medium'
+  );
+  const [waypointsText, setWaypointsText] = useState(
+    route?.waypoints ? route.waypoints.join(', ') : ''
+  );
   const [isCompleted, setIsCompleted] = useState(route?.isCompleted || false);
   const [error, setError] = useState('');
 
@@ -38,7 +42,10 @@ export default function RouteModal({ isOpen, onClose, route, onSave }: RouteModa
       distanceKm,
       elevationGainM,
       difficulty,
-      waypoints: waypointsText.split(',').map((w) => w.trim()).filter(Boolean),
+      waypoints: waypointsText
+        .split(',')
+        .map((w) => w.trim())
+        .filter(Boolean),
       isCompleted,
     });
   };
@@ -51,11 +58,7 @@ export default function RouteModal({ isOpen, onClose, route, onSave }: RouteModa
       maxWidth="sm"
     >
       <form onSubmit={handleSubmit} className="flex-col-16">
-        {error && (
-          <div className="text-error-bold">
-            {error}
-          </div>
-        )}
+        {error && <div className="text-error-bold">{error}</div>}
 
         <FormField label={t('cycling.routes.fieldName')} required>
           <input
@@ -99,10 +102,20 @@ export default function RouteModal({ isOpen, onClose, route, onSave }: RouteModa
               onChange={(e) => setDifficulty(e.target.value as CycleRoute['difficulty'])}
               style={{ width: '100%' }}
             >
-              <option value="easy">{t('cycling.routes.difficulty.easy')} ({t('cycling.routes.difficulty.easyDesc')})</option>
-              <option value="medium">{t('cycling.routes.difficulty.medium')} ({t('cycling.routes.difficulty.mediumDesc')})</option>
-              <option value="hard">{t('cycling.routes.difficulty.hard')} ({t('cycling.routes.difficulty.hardDesc')})</option>
-              <option value="extreme">{t('cycling.routes.difficulty.extreme')} ({t('cycling.routes.difficulty.extremeDesc')})</option>
+              <option value="easy">
+                {t('cycling.routes.difficulty.easy')} ({t('cycling.routes.difficulty.easyDesc')})
+              </option>
+              <option value="medium">
+                {t('cycling.routes.difficulty.medium')} ({t('cycling.routes.difficulty.mediumDesc')}
+                )
+              </option>
+              <option value="hard">
+                {t('cycling.routes.difficulty.hard')} ({t('cycling.routes.difficulty.hardDesc')})
+              </option>
+              <option value="extreme">
+                {t('cycling.routes.difficulty.extreme')} (
+                {t('cycling.routes.difficulty.extremeDesc')})
+              </option>
             </select>
           </FormField>
 
@@ -114,7 +127,9 @@ export default function RouteModal({ isOpen, onClose, route, onSave }: RouteModa
                 checked={isCompleted}
                 onChange={(e) => setIsCompleted(e.target.checked)}
               />
-              <label htmlFor="route-completed" style={{ fontSize: '0.8rem', cursor: 'pointer' }}>{t('cycling.routes.completed')}</label>
+              <label htmlFor="route-completed" style={{ fontSize: '0.8rem', cursor: 'pointer' }}>
+                {t('cycling.routes.completed')}
+              </label>
             </div>
           </FormField>
         </div>
@@ -127,7 +142,14 @@ export default function RouteModal({ isOpen, onClose, route, onSave }: RouteModa
             placeholder={t('cycling.routes.waypointsPlaceholder')}
             style={{ width: '100%' }}
           />
-          <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginTop: '4px', display: 'block' }}>
+          <span
+            style={{
+              fontSize: '0.7rem',
+              color: 'var(--text-secondary)',
+              marginTop: '4px',
+              display: 'block',
+            }}
+          >
             {t('cycling.routes.waypointsHint')}
           </span>
         </FormField>

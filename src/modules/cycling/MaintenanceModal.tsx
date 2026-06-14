@@ -11,13 +11,20 @@ interface MaintenanceModalProps {
   onSave: (recordData: Partial<MaintenanceRecord>) => void;
 }
 
-export default function MaintenanceModal({ isOpen, onClose, record, onSave }: MaintenanceModalProps) {
+export default function MaintenanceModal({
+  isOpen,
+  onClose,
+  record,
+  onSave,
+}: MaintenanceModalProps) {
   const { t } = useI18n();
   const [bikePart, setBikePart] = useState(record?.bikePart || '');
   const [type, setType] = useState<MaintenanceRecord['type']>(record?.type || 'service');
   const [description, setDescription] = useState(record?.description || '');
   const [cost, setCost] = useState(record?.cost || 0);
-  const [dateISO, setDateISO] = useState(record?.dateISO ? record.dateISO.slice(0, 10) : todayISO());
+  const [dateISO, setDateISO] = useState(
+    record?.dateISO ? record.dateISO.slice(0, 10) : todayISO()
+  );
   const [isDone, setIsDone] = useState(record?.isDone || false);
   const [error, setError] = useState('');
 
@@ -48,15 +55,13 @@ export default function MaintenanceModal({ isOpen, onClose, record, onSave }: Ma
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={record ? t('cycling.maintenance.modalEditTitle') : t('cycling.maintenance.modalCreateTitle')}
+      title={
+        record ? t('cycling.maintenance.modalEditTitle') : t('cycling.maintenance.modalCreateTitle')
+      }
       maxWidth="sm"
     >
       <form onSubmit={handleSubmit} className="flex-col-16">
-        {error && (
-          <div className="text-error-bold">
-            {error}
-          </div>
-        )}
+        {error && <div className="text-error-bold">{error}</div>}
 
         <FormField label={t('cycling.maintenance.fieldPart')} required>
           <input
@@ -116,7 +121,9 @@ export default function MaintenanceModal({ isOpen, onClose, record, onSave }: Ma
                 checked={isDone}
                 onChange={(e) => setIsDone(e.target.checked)}
               />
-              <label htmlFor="maint-done" style={{ fontSize: '0.8rem', cursor: 'pointer' }}>{t('cycling.maintenance.completed')}</label>
+              <label htmlFor="maint-done" style={{ fontSize: '0.8rem', cursor: 'pointer' }}>
+                {t('cycling.maintenance.completed')}
+              </label>
             </div>
           </FormField>
         </div>

@@ -33,27 +33,66 @@ function downloadCsv(content: string, filename: string): void {
 
 export function exportTransactionsCsv(data: AppData): void {
   const headers = ['ID', 'Тип', 'Сумма', 'Категория', 'Описание', 'Дата'];
-  const rows = data.transactions.map(tx => [
-    tx.id, tx.type === 'income' ? 'Доход' : 'Расход',
-    tx.amount, tx.category, tx.description, tx.dateISO
+  const rows = data.transactions.map((tx) => [
+    tx.id,
+    tx.type === 'income' ? 'Доход' : 'Расход',
+    tx.amount,
+    tx.category,
+    tx.description,
+    tx.dateISO,
   ]);
-  downloadCsv(arrayToCsv(headers, rows), `transactions_${new Date().toISOString().slice(0, 10)}.csv`);
+  downloadCsv(
+    arrayToCsv(headers, rows),
+    `transactions_${new Date().toISOString().slice(0, 10)}.csv`
+  );
 }
 
 export function exportRidesCsv(data: AppData): void {
-  const headers = ['ID', 'Название', 'Дата', 'Дистанция (км)', 'Время (мин)', 'Ср. скорость', 'Макс. скорость', 'Набор высоты (м)'];
-  const rows = data.rides.map(r => [
-    r.id, r.title, r.dateISO, r.distanceKm, r.durationMin,
-    r.avgSpeedKmh, r.maxSpeedKmh, r.elevationGainM
+  const headers = [
+    'ID',
+    'Название',
+    'Дата',
+    'Дистанция (км)',
+    'Время (мин)',
+    'Ср. скорость',
+    'Макс. скорость',
+    'Набор высоты (м)',
+  ];
+  const rows = data.rides.map((r) => [
+    r.id,
+    r.title,
+    r.dateISO,
+    r.distanceKm,
+    r.durationMin,
+    r.avgSpeedKmh,
+    r.maxSpeedKmh,
+    r.elevationGainM,
   ]);
   downloadCsv(arrayToCsv(headers, rows), `rides_${new Date().toISOString().slice(0, 10)}.csv`);
 }
 
 export function exportPeopleCsv(data: AppData): void {
-  const headers = ['ID', 'Имя', 'Круг', 'Архетип', 'Статус', 'Энергия', 'Резонанс', 'Взаимность', 'Последний контакт'];
-  const rows = data.people.map(p => [
-    p.id, p.name, p.depth, p.archetype, p.status,
-    p.energy, p.resonance, p.reciprocity, p.lastContactISO
+  const headers = [
+    'ID',
+    'Имя',
+    'Круг',
+    'Архетип',
+    'Статус',
+    'Энергия',
+    'Резонанс',
+    'Взаимность',
+    'Последний контакт',
+  ];
+  const rows = data.people.map((p) => [
+    p.id,
+    p.name,
+    p.depth,
+    p.archetype,
+    p.status,
+    p.energy,
+    p.resonance,
+    p.reciprocity,
+    p.lastContactISO,
   ]);
   downloadCsv(arrayToCsv(headers, rows), `people_${new Date().toISOString().slice(0, 10)}.csv`);
 }
@@ -92,11 +131,11 @@ export function importBackup(file: File): Promise<AppData> {
           throw new Error('Файл пуст');
         }
         const parsed = JSON.parse(result);
-        
+
         if (!parsed || typeof parsed !== 'object') {
           throw new Error('Некорректный формат файла резервной копии');
         }
-        
+
         // Pass through migrateData without default fallback to catch and report validation errors
         const validated = migrateData(parsed, false);
         resolve(validated);
@@ -122,9 +161,9 @@ export function wipeAllData(): void {
     'cyclist_performance_v2',
     'finance_data',
     'social-architecture-people-v1',
-    'museum_thoughts'
+    'museum_thoughts',
   ];
-  keys.forEach(k => {
+  keys.forEach((k) => {
     try {
       localStorage.removeItem(k);
     } catch {

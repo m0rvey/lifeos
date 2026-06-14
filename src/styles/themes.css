@@ -187,9 +187,9 @@
   --radius-lg: 4px;
   --radius-xl: 6px;
 
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
-  --shadow-md: 0 2px 8px rgba(0,0,0,0.08);
-  --shadow-lg: 0 4px 16px rgba(0,0,0,0.1);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.1);
   --shadow-glow: none;
 
   --font-heading: -apple-system, 'SF Pro Text', system-ui, sans-serif;
@@ -279,7 +279,19 @@
 }
 
 /* ── Smooth theme transitions ── */
-button, input, select, textarea, .card, .glass-panel, .stat-card, .sidebar-nav-item, .app-header, .app-sidebar, body, .app-shell, .app-shell::before {
+button,
+input,
+select,
+textarea,
+.card,
+.glass-panel,
+.stat-card,
+.sidebar-nav-item,
+.app-header,
+.app-sidebar,
+body,
+.app-shell,
+.app-shell::before {
   transition:
     background-color 0.3s ease,
     border-color 0.3s ease,
@@ -312,20 +324,26 @@ button, input, select, textarea, .card, .glass-panel, .stat-card, .sidebar-nav-i
   will-change: transform;
 }
 .bg-blob-1 {
-  width: 500px; height: 500px;
-  top: -150px; right: -100px;
+  width: 500px;
+  height: 500px;
+  top: -150px;
+  right: -100px;
   background: radial-gradient(circle, var(--blob-1-color) 0%, transparent 70%);
   animation: blob-drift 25s ease-in-out infinite;
 }
 .bg-blob-2 {
-  width: 350px; height: 350px;
-  bottom: -50px; left: -80px;
+  width: 350px;
+  height: 350px;
+  bottom: -50px;
+  left: -80px;
   background: radial-gradient(circle, var(--blob-2-color) 0%, transparent 70%);
   animation: blob-drift-2 30s ease-in-out infinite;
 }
 .bg-blob-3 {
-  width: 250px; height: 250px;
-  top: 50%; left: 60%;
+  width: 250px;
+  height: 250px;
+  top: 50%;
+  left: 60%;
   background: radial-gradient(circle, var(--blob-3-color) 0%, transparent 70%);
   animation: blob-drift 20s ease-in-out infinite reverse;
 }
@@ -388,4 +406,3 @@ button, input, select, textarea, .card, .glass-panel, .stat-card, .sidebar-nav-i
   --primary-dim: rgba(194, 24, 91, 0.1);
   --accent: #c2185b;
 }
-

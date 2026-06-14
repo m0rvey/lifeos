@@ -23,25 +23,28 @@ export default function JournalDetail() {
     return data.journal.find((j) => j.id === id);
   }, [data.journal, id]);
 
-  const handleSaveEntry = useCallback((entryData: Partial<JournalEntry>) => {
-    if (entry) {
-      dispatch({
-        type: 'UPDATE_ENTITY',
-        entity: 'journal',
-        id: entry.id,
-        payload: { ...entryData, updatedAt: nowISO() }
-      });
-      addToast(t('journal.saved'), 'success');
-    }
-    setIsEditOpen(false);
-  }, [entry, dispatch, addToast, t]);
+  const handleSaveEntry = useCallback(
+    (entryData: Partial<JournalEntry>) => {
+      if (entry) {
+        dispatch({
+          type: 'UPDATE_ENTITY',
+          entity: 'journal',
+          id: entry.id,
+          payload: { ...entryData, updatedAt: nowISO() },
+        });
+        addToast(t('journal.saved'), 'success');
+      }
+      setIsEditOpen(false);
+    },
+    [entry, dispatch, addToast, t]
+  );
 
   const confirmDelete = useCallback(() => {
     if (entry) {
       dispatch({
         type: 'DELETE_ENTITY',
         entity: 'journal',
-        id: entry.id
+        id: entry.id,
       });
       addToast(t('reflect.journal.toast_deleted'), 'warning');
       navigate('/reflect/journal');
@@ -54,7 +57,16 @@ export default function JournalDetail() {
       <div className="flex-col-24 fade-in-entry" style={{ padding: '24px', textAlign: 'center' }}>
         <h3 style={{ color: 'var(--text-primary)' }}>{t('reflect.journal.empty_title')}</h3>
         <p style={{ color: 'var(--text-secondary)' }}>Entry not found.</p>
-        <button className="btn btn--secondary" onClick={() => navigate('/reflect/journal')} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', margin: '16px auto 0 auto' }}>
+        <button
+          className="btn btn--secondary"
+          onClick={() => navigate('/reflect/journal')}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            margin: '16px auto 0 auto',
+          }}
+        >
           <ArrowLeft size={16} />
           <span>{t('common.cancel')}</span>
         </button>
@@ -67,43 +79,70 @@ export default function JournalDetail() {
   return (
     <div className="flex-col-24 fade-in-entry">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <button className="btn btn--secondary" onClick={() => navigate('/reflect/journal')} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <button
+          className="btn btn--secondary"
+          onClick={() => navigate('/reflect/journal')}
+          style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+        >
           <ArrowLeft size={16} />
           <span>{t('common.cancel')}</span>
         </button>
 
         <div style={{ display: 'flex', gap: '10px' }}>
-          <button className="btn btn--secondary" onClick={() => setIsEditOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <button
+            className="btn btn--secondary"
+            onClick={() => setIsEditOpen(true)}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+          >
             <Edit2 size={14} />
             <span>Edit</span>
           </button>
-          <button className="btn btn--secondary btn-padding-4-6-red" onClick={() => setIsDeleteOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 12px' }}>
+          <button
+            className="btn btn--secondary btn-padding-4-6-red"
+            onClick={() => setIsDeleteOpen(true)}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 12px' }}
+          >
             <Trash2 size={14} />
             <span>{t('common.delete')}</span>
           </button>
         </div>
       </div>
 
-      <div 
-        className="glass-panel" 
-        style={{ 
-          padding: '32px', 
-          border: '1px solid var(--border)', 
+      <div
+        className="glass-panel"
+        style={{
+          padding: '32px',
+          border: '1px solid var(--border)',
           borderLeft: `6px solid ${moodInfo.color}`,
           display: 'flex',
           flexDirection: 'column',
-          gap: '24px'
+          gap: '24px',
         }}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <span style={{ fontSize: '2rem' }}>{moodInfo.emoji}</span>
-            <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+            <h1
+              style={{
+                fontSize: '1.8rem',
+                fontWeight: 800,
+                color: 'var(--text-primary)',
+                margin: 0,
+              }}
+            >
               {entry.title}
             </h1>
           </div>
-          
-          <div style={{ display: 'flex', gap: '16px', alignItems: 'center', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+
+          <div
+            style={{
+              display: 'flex',
+              gap: '16px',
+              alignItems: 'center',
+              color: 'var(--text-secondary)',
+              fontSize: '0.85rem',
+            }}
+          >
             <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
               <Calendar size={14} />
               {formatDate(entry.dateISO)}
@@ -115,16 +154,16 @@ export default function JournalDetail() {
           </div>
         </div>
 
-        <div 
-          style={{ 
-            fontSize: '1rem', 
-            color: 'var(--text-primary)', 
-            lineHeight: 1.7, 
+        <div
+          style={{
+            fontSize: '1rem',
+            color: 'var(--text-primary)',
+            lineHeight: 1.7,
             whiteSpace: 'pre-wrap',
             background: 'rgba(255,255,255,0.01)',
             padding: '20px',
             borderRadius: '8px',
-            border: '1px solid var(--border)'
+            border: '1px solid var(--border)',
           }}
         >
           {entry.content}

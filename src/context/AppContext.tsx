@@ -1,5 +1,13 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useState, useEffect, useCallback, useRef, type ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  type ReactNode,
+} from 'react';
 import { useLocation } from 'react-router-dom';
 import { useData } from './DataContext';
 import type { ModuleKey, ThemeType, ThemeMode, ToastMessage } from '../types';
@@ -20,7 +28,11 @@ interface AppContextValue {
   fontSizeScale: number;
   setFontSizeScale: (scale: number) => void;
   toasts: ToastMessage[];
-  addToast: (message: string, type: 'success' | 'error' | 'warning' | 'info', duration?: number) => void;
+  addToast: (
+    message: string,
+    type: 'success' | 'error' | 'warning' | 'info',
+    duration?: number
+  ) => void;
   removeToast: (id: string) => void;
   isSidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
@@ -51,8 +63,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   // 1. Derive active module from location path
   const pathParts = location.pathname.split('/').filter(Boolean);
-  const validModules: ModuleKey[] = ['hub', 'social', 'finance', 'cycling', 'reflect', 'analytics', 'settings'];
-  const activeModule: ModuleKey = validModules.includes(pathParts[0] as ModuleKey) ? (pathParts[0] as ModuleKey) : 'hub';
+  const validModules: ModuleKey[] = [
+    'hub',
+    'social',
+    'finance',
+    'cycling',
+    'reflect',
+    'analytics',
+    'settings',
+  ];
+  const activeModule: ModuleKey = validModules.includes(pathParts[0] as ModuleKey)
+    ? (pathParts[0] as ModuleKey)
+    : 'hub';
 
   const settings = data.settings;
   const settingsRef = useRef(settings);
@@ -61,94 +83,115 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [settings]);
 
   // 2. Settings setters that dispatch to DataContext
-  const setTheme = useCallback((t: ThemeType) => {
-    dispatch({
-      type: 'SET_DATA',
-      payload: {
-        settings: {
-          ...settingsRef.current,
-          theme: t,
-          themeMode: 'manual',
+  const setTheme = useCallback(
+    (t: ThemeType) => {
+      dispatch({
+        type: 'SET_DATA',
+        payload: {
+          settings: {
+            ...settingsRef.current,
+            theme: t,
+            themeMode: 'manual',
+          },
         },
-      },
-    });
-  }, [dispatch]);
+      });
+    },
+    [dispatch]
+  );
 
-  const setThemeMode = useCallback((mode: ThemeMode) => {
-    dispatch({
-      type: 'SET_DATA',
-      payload: {
-        settings: {
-          ...settingsRef.current,
-          themeMode: mode,
-          isAdaptive: mode === 'adaptive',
+  const setThemeMode = useCallback(
+    (mode: ThemeMode) => {
+      dispatch({
+        type: 'SET_DATA',
+        payload: {
+          settings: {
+            ...settingsRef.current,
+            themeMode: mode,
+            isAdaptive: mode === 'adaptive',
+          },
         },
-      },
-    });
-  }, [dispatch]);
+      });
+    },
+    [dispatch]
+  );
 
-  const setIsAdaptive = useCallback((v: boolean) => {
-    dispatch({
-      type: 'SET_DATA',
-      payload: {
-        settings: {
-          ...settingsRef.current,
-          isAdaptive: v,
-          theme: v ? getModuleTheme(activeModule) : settingsRef.current.theme,
+  const setIsAdaptive = useCallback(
+    (v: boolean) => {
+      dispatch({
+        type: 'SET_DATA',
+        payload: {
+          settings: {
+            ...settingsRef.current,
+            isAdaptive: v,
+            theme: v ? getModuleTheme(activeModule) : settingsRef.current.theme,
+          },
         },
-      },
-    });
-  }, [dispatch, activeModule]);
+      });
+    },
+    [dispatch, activeModule]
+  );
 
-  const setAccentColor = useCallback((accent: 'purple' | 'orange' | 'green' | 'blue' | 'rose') => {
-    dispatch({
-      type: 'SET_DATA',
-      payload: {
-        settings: {
-          ...settingsRef.current,
-          accentColor: accent,
+  const setAccentColor = useCallback(
+    (accent: 'purple' | 'orange' | 'green' | 'blue' | 'rose') => {
+      dispatch({
+        type: 'SET_DATA',
+        payload: {
+          settings: {
+            ...settingsRef.current,
+            accentColor: accent,
+          },
         },
-      },
-    });
-  }, [dispatch]);
+      });
+    },
+    [dispatch]
+  );
 
-  const setUserName = useCallback((name: string) => {
-    dispatch({
-      type: 'SET_DATA',
-      payload: {
-        settings: {
-          ...settingsRef.current,
-          userName: name,
+  const setUserName = useCallback(
+    (name: string) => {
+      dispatch({
+        type: 'SET_DATA',
+        payload: {
+          settings: {
+            ...settingsRef.current,
+            userName: name,
+          },
         },
-      },
-    });
-  }, [dispatch]);
+      });
+    },
+    [dispatch]
+  );
 
-  const setFontSizeScale = useCallback((scale: number) => {
-    // clamp between 0.8 and 1.2
-    const clamped = Math.min(Math.max(scale, 0.8), 1.2);
-    dispatch({
-      type: 'SET_DATA',
-      payload: {
-        settings: {
-          ...settingsRef.current,
-          fontSizeScale: clamped,
+  const setFontSizeScale = useCallback(
+    (scale: number) => {
+      // clamp between 0.8 and 1.2
+      const clamped = Math.min(Math.max(scale, 0.8), 1.2);
+      dispatch({
+        type: 'SET_DATA',
+        payload: {
+          settings: {
+            ...settingsRef.current,
+            fontSizeScale: clamped,
+          },
         },
-      },
-    });
-  }, [dispatch]);
+      });
+    },
+    [dispatch]
+  );
 
   // 3. Toasts manager
-  const addToast = useCallback((message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info', duration = 3000) => {
-    const id = crypto.randomUUID();
-    setToasts(prev => [...prev, { id, message, type, duration }]);
-    
-    const timer = setTimeout(() => {
-      setToasts(prev => prev.filter(t => t.id !== id));
-      timersRef.current.delete(id);
-    }, duration);
-    timersRef.current.set(id, timer);
-  }, []);
+  const addToast = useCallback(
+    (message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info', duration = 3000) => {
+      const id = crypto.randomUUID();
+      setToasts((prev) => [...prev, { id, message, type, duration }]);
+
+      const timer = setTimeout(() => {
+        setToasts((prev) => prev.filter((t) => t.id !== id));
+        timersRef.current.delete(id);
+      }, duration);
+      timersRef.current.set(id, timer);
+    },
+    []
+  );
 
   const removeToast = useCallback((id: string) => {
     const timer = timersRef.current.get(id);
@@ -156,20 +199,23 @@ export function AppProvider({ children }: { children: ReactNode }) {
       clearTimeout(timer);
       timersRef.current.delete(id);
     }
-    setToasts(prev => prev.filter(t => t.id !== id));
+    setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
   // Cleanup all toast timers on unmount
   useEffect(() => {
     const timers = timersRef.current;
     return () => {
-      timers.forEach(timer => clearTimeout(timer));
+      timers.forEach((timer) => clearTimeout(timer));
     };
   }, []);
 
   // 4. Adaptive theme update on module change
   useEffect(() => {
-    if (settings.themeMode === 'adaptive' || (settings.isAdaptive && settings.themeMode !== 'system')) {
+    if (
+      settings.themeMode === 'adaptive' ||
+      (settings.isAdaptive && settings.themeMode !== 'system')
+    ) {
       const targetTheme = getModuleTheme(activeModule);
       if (targetTheme !== settings.theme) {
         dispatch({
@@ -211,17 +257,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return () => mq.removeEventListener('change', handler);
   }, [settings.themeMode, settings.theme, dispatch]);
 
-
   // 5. Sync theme, accent and font scale to document element
   useEffect(() => {
     const themes: ThemeType[] = ['mindveyz', 'cyclist', 'reflect', 'slate'];
-    themes.forEach(theme => document.body.classList.remove(`theme-${theme}`));
+    themes.forEach((theme) => document.body.classList.remove(`theme-${theme}`));
     document.body.classList.add(`theme-${settings.theme}`);
   }, [settings.theme]);
 
   useEffect(() => {
     const accents = ['purple', 'orange', 'green', 'blue', 'rose'];
-    accents.forEach(a => document.body.classList.remove(`accent-${a}`));
+    accents.forEach((a) => document.body.classList.remove(`accent-${a}`));
     document.body.classList.add(`accent-${settings.accentColor}`);
   }, [settings.accentColor]);
 

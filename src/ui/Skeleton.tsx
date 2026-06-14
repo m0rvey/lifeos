@@ -33,10 +33,5 @@ export default function Skeleton({
     );
   }
 
-  return (
-    <div
-      className={`skeleton skeleton--${variant} ${className}`}
-      style={style}
-    />
-  );
+  return <div className={`skeleton skeleton--${variant} ${className}`} style={style} />;
 }

@@ -237,7 +237,12 @@ describe('DataContext', () => {
     });
 
     act(() => {
-      result.current.dispatch({ type: 'UPDATE_ENTITY', entity: 'people', id: '1', payload: { energy: 90 } });
+      result.current.dispatch({
+        type: 'UPDATE_ENTITY',
+        entity: 'people',
+        id: '1',
+        payload: { energy: 90 },
+      });
     });
 
     expect(result.current.data.people[0].energy).toBe(90);
@@ -277,12 +282,15 @@ describe('DataContext', () => {
   });
 
   it('handles undo and redo with action log integrity', () => {
-    const { result } = renderHook(() => ({
-      data: useData(),
-      history: useUndoRedo()
-    }), {
-      wrapper: DataProvider,
-    });
+    const { result } = renderHook(
+      () => ({
+        data: useData(),
+        history: useUndoRedo(),
+      }),
+      {
+        wrapper: DataProvider,
+      }
+    );
 
     const newPerson = {
       id: '1',
@@ -329,7 +337,12 @@ describe('DataContext', () => {
     expect(result.current.history.canRedo).toBe(false);
 
     act(() => {
-      result.current.data.dispatch({ type: 'UPDATE_ENTITY', entity: 'people', id: '1', payload: { name: 'Jane Doe' } });
+      result.current.data.dispatch({
+        type: 'UPDATE_ENTITY',
+        entity: 'people',
+        id: '1',
+        payload: { name: 'Jane Doe' },
+      });
     });
 
     expect(result.current.data.data.people[0].name).toBe('Jane Doe');

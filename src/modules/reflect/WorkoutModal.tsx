@@ -14,10 +14,14 @@ interface WorkoutModalProps {
 export default function WorkoutModal({ isOpen, onClose, workout, onSave }: WorkoutModalProps) {
   const { t } = useI18n();
   const [type, setType] = useState<WorkoutRecord['type']>(workout?.type || 'gym');
-  const [dateISO, setDateISO] = useState(workout?.dateISO ? workout.dateISO.slice(0, 10) : todayISO());
+  const [dateISO, setDateISO] = useState(
+    workout?.dateISO ? workout.dateISO.slice(0, 10) : todayISO()
+  );
   const [durationMin, setDurationMin] = useState<number>(workout?.durationMin || 45);
   const [intensity, setIntensity] = useState<WorkoutRecord['intensity']>(workout?.intensity || 3);
-  const [calories, setCalories] = useState<string>(workout?.calories !== undefined && workout.calories !== null ? String(workout.calories) : '');
+  const [calories, setCalories] = useState<string>(
+    workout?.calories !== undefined && workout.calories !== null ? String(workout.calories) : ''
+  );
   const [description, setDescription] = useState(workout?.description || '');
   const [error, setError] = useState('');
 
@@ -42,18 +46,24 @@ export default function WorkoutModal({ isOpen, onClose, workout, onSave }: Worko
       durationMin: Number(durationMin),
       intensity,
       calories: calsNum,
-      description: description.trim()
+      description: description.trim(),
     });
   };
 
   const getIntensityLabel = (val: number) => {
     switch (val) {
-      case 1: return t('reflect.workout.intensity_1');
-      case 2: return t('reflect.workout.intensity_2');
-      case 3: return t('reflect.workout.intensity_3');
-      case 4: return t('reflect.workout.intensity_4');
-      case 5: return t('reflect.workout.intensity_5');
-      default: return String(val);
+      case 1:
+        return t('reflect.workout.intensity_1');
+      case 2:
+        return t('reflect.workout.intensity_2');
+      case 3:
+        return t('reflect.workout.intensity_3');
+      case 4:
+        return t('reflect.workout.intensity_4');
+      case 5:
+        return t('reflect.workout.intensity_5');
+      default:
+        return String(val);
     }
   };
 
@@ -61,15 +71,13 @@ export default function WorkoutModal({ isOpen, onClose, workout, onSave }: Worko
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={workout ? t('reflect.workout.modal_edit_title') : t('reflect.workout.modal_create_title')}
+      title={
+        workout ? t('reflect.workout.modal_edit_title') : t('reflect.workout.modal_create_title')
+      }
       maxWidth="sm"
     >
       <form onSubmit={handleSubmit} className="flex-col-16">
-        {error && (
-          <div className="text-error-bold">
-            {error}
-          </div>
-        )}
+        {error && <div className="text-error-bold">{error}</div>}
 
         <div className="form-row">
           <FormField label={t('reflect.workout.field_type')} required>
@@ -135,9 +143,18 @@ export default function WorkoutModal({ isOpen, onClose, workout, onSave }: Worko
               onChange={(e) => setIntensity(Number(e.target.value) as WorkoutRecord['intensity'])}
               style={{ width: '100%' }}
             />
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                fontSize: '0.8rem',
+                color: 'var(--text-secondary)',
+              }}
+            >
               <span>{t('reflect.workout.intensity_easy')}</span>
-              <strong style={{ color: 'var(--text-primary)' }}>{getIntensityLabel(intensity)}</strong>
+              <strong style={{ color: 'var(--text-primary)' }}>
+                {getIntensityLabel(intensity)}
+              </strong>
               <span>{t('reflect.workout.intensity_max')}</span>
             </div>
           </div>

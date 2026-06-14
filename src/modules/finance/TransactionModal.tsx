@@ -11,13 +11,20 @@ interface TransactionModalProps {
   onSave: (txData: Partial<Transaction>) => void;
 }
 
-export default function TransactionModal({ isOpen, onClose, transaction, onSave }: TransactionModalProps) {
+export default function TransactionModal({
+  isOpen,
+  onClose,
+  transaction,
+  onSave,
+}: TransactionModalProps) {
   const { t } = useI18n();
   const [type, setType] = useState<'income' | 'expense'>(transaction?.type || 'expense');
   const [amount, setAmount] = useState(transaction?.amount ?? 0);
   const [category, setCategory] = useState(transaction?.category || '');
   const [description, setDescription] = useState(transaction?.description || '');
-  const [dateISO, setDateISO] = useState(transaction?.dateISO ? transaction.dateISO.slice(0, 10) : todayISO());
+  const [dateISO, setDateISO] = useState(
+    transaction?.dateISO ? transaction.dateISO.slice(0, 10) : todayISO()
+  );
   const [error, setError] = useState('');
 
   const handleSubmit = (e: FormEvent) => {
@@ -39,7 +46,7 @@ export default function TransactionModal({ isOpen, onClose, transaction, onSave 
       amount,
       category: category.trim(),
       description: description.trim(),
-      dateISO
+      dateISO,
     });
   };
 
@@ -51,11 +58,7 @@ export default function TransactionModal({ isOpen, onClose, transaction, onSave 
       maxWidth="sm"
     >
       <form onSubmit={handleSubmit} className="flex-col-16">
-        {error && (
-          <div className="text-error-bold">
-            {error}
-          </div>
-        )}
+        {error && <div className="text-error-bold">{error}</div>}
 
         <FormField label={t('finance.field.type')}>
           <select

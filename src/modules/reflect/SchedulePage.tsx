@@ -15,7 +15,7 @@ const typeColors: Record<ScheduleBlock['type'], string> = {
   health: 'var(--color-red, #ef4444)',
   social: 'var(--color-purple, #8b5cf6)',
   learning: 'var(--color-yellow, #f59e0b)',
-  rest: 'var(--color-grey, #64748b)'
+  rest: 'var(--color-grey, #64748b)',
 };
 
 function parseTime(time: string): number {
@@ -48,13 +48,13 @@ export default function SchedulePage() {
     openDelete: handleDeleteTrigger,
     handleSave: handleSaveBlock,
     confirmDelete,
-    closeAll
+    closeAll,
   } = useCrudModal<ScheduleBlock>({
     entity: 'schedule',
     toastKeys: {
       created: 'reflect.schedule.toast_created',
       updated: 'reflect.schedule.toast_updated',
-      deleted: 'reflect.schedule.toast_deleted'
+      deleted: 'reflect.schedule.toast_deleted',
     },
     createDefaults: (blockData) => ({
       id: `sched_${uid()}`,
@@ -66,8 +66,8 @@ export default function SchedulePage() {
       isCompleted: blockData?.isCompleted || false,
       tags: [],
       createdAt: nowISO(),
-      updatedAt: nowISO()
-    })
+      updatedAt: nowISO(),
+    }),
   });
 
   const dayBlocks = useMemo(() => {
@@ -86,15 +86,23 @@ export default function SchedulePage() {
     openAdd();
   };
 
-  const handleToggleComplete = useCallback((block: ScheduleBlock) => {
-    dispatch({
-      type: 'UPDATE_ENTITY',
-      entity: 'schedule',
-      id: block.id,
-      payload: { isCompleted: !block.isCompleted }
-    });
-    addToast(block.isCompleted ? t('reflect.schedule.toast_uncompleted') : t('reflect.schedule.toast_completed'), 'success');
-  }, [dispatch, addToast, t]);
+  const handleToggleComplete = useCallback(
+    (block: ScheduleBlock) => {
+      dispatch({
+        type: 'UPDATE_ENTITY',
+        entity: 'schedule',
+        id: block.id,
+        payload: { isCompleted: !block.isCompleted },
+      });
+      addToast(
+        block.isCompleted
+          ? t('reflect.schedule.toast_uncompleted')
+          : t('reflect.schedule.toast_completed'),
+        'success'
+      );
+    },
+    [dispatch, addToast, t]
+  );
 
   const handleGapClick = (startTime: string, duration: number) => {
     setDefaultStart(startTime);
@@ -104,13 +112,20 @@ export default function SchedulePage() {
 
   const translateType = (type: ScheduleBlock['type']): string => {
     switch (type) {
-      case 'work': return t('reflect.schedule.type_work');
-      case 'personal': return t('reflect.schedule.type_personal');
-      case 'health': return t('reflect.schedule.type_health');
-      case 'social': return t('reflect.schedule.type_social');
-      case 'learning': return t('reflect.schedule.type_learning');
-      case 'rest': return t('reflect.schedule.type_rest');
-      default: return type;
+      case 'work':
+        return t('reflect.schedule.type_work');
+      case 'personal':
+        return t('reflect.schedule.type_personal');
+      case 'health':
+        return t('reflect.schedule.type_health');
+      case 'social':
+        return t('reflect.schedule.type_social');
+      case 'learning':
+        return t('reflect.schedule.type_learning');
+      case 'rest':
+        return t('reflect.schedule.type_rest');
+      default:
+        return type;
     }
   };
 
@@ -118,19 +133,17 @@ export default function SchedulePage() {
     <div className="fade-in-entry flex-col-24">
       <div className="flex-row-between-wrap">
         <div>
-          <h2 className="text-lg-scale text-bold no-margin">
-            {t('reflect.schedule.title')}
-          </h2>
+          <h2 className="text-lg-scale text-bold no-margin">{t('reflect.schedule.title')}</h2>
           <p className="text-sm-scale text-secondary margin-top4">
             {t('reflect.schedule.subtitle')}
           </p>
         </div>
 
         <div className="flex-row-center-gap12">
-          <input 
-            type="date" 
-            value={activeDate} 
-            onChange={(e) => setActiveDate(e.target.value)} 
+          <input
+            type="date"
+            value={activeDate}
+            onChange={(e) => setActiveDate(e.target.value)}
             className="input"
           />
           <button className="btn btn--primary flex-row-center-gap6" onClick={handleAddNew}>
@@ -152,7 +165,9 @@ export default function SchedulePage() {
         <StatCard
           label={t('reflect.schedule.stat_blocks')}
           value={dayBlocks.length}
-          subtitle={t('reflect.schedule.date_prefix', { date: formatDate(new Date(activeDate).toISOString()) })}
+          subtitle={t('reflect.schedule.date_prefix', {
+            date: formatDate(new Date(activeDate).toISOString()),
+          })}
           icon={<Calendar size={20} />}
           trend="neutral"
         />
@@ -166,7 +181,10 @@ export default function SchedulePage() {
             <div className="schedule-vertical-line" />
 
             {dayBlocks.map((block, idx) => {
-              const prevEnd = idx > 0 ? parseTime(dayBlocks[idx - 1].startTime) + dayBlocks[idx - 1].durationMin : -1;
+              const prevEnd =
+                idx > 0
+                  ? parseTime(dayBlocks[idx - 1].startTime) + dayBlocks[idx - 1].durationMin
+                  : -1;
               const blockStart = parseTime(block.startTime);
               const gap = idx > 0 ? blockStart - prevEnd : 0;
               const gapHour = idx > 0 ? Math.floor(prevEnd / 60) : 0;
@@ -177,23 +195,27 @@ export default function SchedulePage() {
                 <div key={block.id}>
                   {/* Gap Indicator */}
                   {gap > 0 && (
-                    <div 
+                    <div
                       onClick={() => handleGapClick(gapStartString, gap)}
                       className="schedule-gap-btn"
                       title={t('reflect.schedule.gap_title')}
                     >
-                      {t('reflect.schedule.gap_text', { duration: formatDuration(gap), start: gapStartString })}
+                      {t('reflect.schedule.gap_text', {
+                        duration: formatDuration(gap),
+                        start: gapStartString,
+                      })}
                     </div>
                   )}
 
                   {/* Schedule Block Card */}
-                  <div
-                    className={`schedule-block-card ${block.isCompleted ? 'completed' : ''}`}
-                  >
+                  <div className={`schedule-block-card ${block.isCompleted ? 'completed' : ''}`}>
                     {/* Visual left type stripe */}
-                    <div className="schedule-block-stripe" style={{
-                      background: typeColors[block.type] || '#999',
-                    }} />
+                    <div
+                      className="schedule-block-stripe"
+                      style={{
+                        background: typeColors[block.type] || '#999',
+                      }}
+                    />
 
                     {/* Clock Times Block */}
                     <div className="schedule-block-time-col">
@@ -212,8 +234,8 @@ export default function SchedulePage() {
                         {block.isCompleted ? <CheckSquare size={16} /> : <Square size={16} />}
                       </button>
 
-                      <span 
-                        className="badge" 
+                      <span
+                        className="badge"
                         style={{
                           background: `${typeColors[block.type]}15`,
                           color: typeColors[block.type],
@@ -223,10 +245,12 @@ export default function SchedulePage() {
                         {translateType(block.type)}
                       </span>
 
-                      <span className={`schedule-block-title ${block.isCompleted ? 'completed' : ''}`}>
+                      <span
+                        className={`schedule-block-title ${block.isCompleted ? 'completed' : ''}`}
+                      >
                         {block.title}
                       </span>
-                      
+
                       <span className="schedule-block-duration">
                         {formatDuration(block.durationMin)}
                       </span>
@@ -247,7 +271,6 @@ export default function SchedulePage() {
                         <Trash2 size={12} />
                       </button>
                     </div>
-
                   </div>
                 </div>
               );
@@ -257,7 +280,9 @@ export default function SchedulePage() {
           <EmptyState
             icon={<Clock size={48} />}
             title={t('reflect.schedule.empty_title')}
-            description={t('reflect.schedule.empty_desc', { date: formatDate(new Date(activeDate).toISOString()) })}
+            description={t('reflect.schedule.empty_desc', {
+              date: formatDate(new Date(activeDate).toISOString()),
+            })}
             action={
               <button className="btn btn--primary" onClick={handleAddNew}>
                 <Plus size={14} />
@@ -268,30 +293,30 @@ export default function SchedulePage() {
         )}
       </div>
 
-        {isOpen && (
-          <ScheduleModal
-            isOpen={isOpen}
-            block={editingBlock}
-            onClose={closeAll}
-            onSave={handleSaveBlock}
-            defaultStartTime={defaultStart}
-            defaultDuration={defaultDur}
-            defaultDate={activeDate}
-          />
-        )}
+      {isOpen && (
+        <ScheduleModal
+          isOpen={isOpen}
+          block={editingBlock}
+          onClose={closeAll}
+          onSave={handleSaveBlock}
+          defaultStartTime={defaultStart}
+          defaultDuration={defaultDur}
+          defaultDate={activeDate}
+        />
+      )}
 
-        {isDeleteOpen && (
-          <ConfirmDialog
-            isOpen={isDeleteOpen}
-            onConfirm={confirmDelete}
-            onCancel={closeAll}
-            title={t('reflect.schedule.confirm_delete_title')}
-            message={t('reflect.schedule.confirm_delete_message')}
-            confirmLabel={t('common.delete')}
-            cancelLabel={t('common.cancel')}
-            variant="danger"
-          />
-        )}
+      {isDeleteOpen && (
+        <ConfirmDialog
+          isOpen={isDeleteOpen}
+          onConfirm={confirmDelete}
+          onCancel={closeAll}
+          title={t('reflect.schedule.confirm_delete_title')}
+          message={t('reflect.schedule.confirm_delete_message')}
+          confirmLabel={t('common.delete')}
+          cancelLabel={t('common.cancel')}
+          variant="danger"
+        />
+      )}
     </div>
   );
 }

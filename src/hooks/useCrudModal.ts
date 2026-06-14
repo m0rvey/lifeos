@@ -6,10 +6,20 @@ import { type AppData } from '../types';
 
 type ArrayEntities = Extract<
   keyof AppData,
-  | 'people' | 'tasks' | 'transactions' | 'reminders'
-  | 'rides' | 'routes' | 'maintenance' | 'galleryNotes'
-  | 'journal' | 'knowledge' | 'schedule' | 'habits'
-  | 'workouts' | 'thoughts'
+  | 'people'
+  | 'tasks'
+  | 'transactions'
+  | 'reminders'
+  | 'rides'
+  | 'routes'
+  | 'maintenance'
+  | 'galleryNotes'
+  | 'journal'
+  | 'knowledge'
+  | 'schedule'
+  | 'habits'
+  | 'workouts'
+  | 'thoughts'
 >;
 
 interface UseCrudModalOptions<T> {
@@ -50,33 +60,36 @@ export function useCrudModal<T extends { id: string }>(options: UseCrudModalOpti
     setItemToDelete(null);
   }, []);
 
-  const handleSave = useCallback((itemData: Partial<T>) => {
-    if (editingItem) {
-      dispatch({
-        type: 'UPDATE_ENTITY',
-        entity: options.entity,
-        id: editingItem.id,
-        payload: itemData
-      });
-      addToast(t(options.toastKeys.updated), 'success');
-    } else {
-      const newItem = options.createDefaults(itemData);
-      dispatch({
-        type: 'ADD_ENTITY',
-        entity: options.entity,
-        payload: newItem
-      });
-      addToast(t(options.toastKeys.created), 'success');
-    }
-    setIsOpen(false);
-  }, [editingItem, dispatch, addToast, t, options]);
+  const handleSave = useCallback(
+    (itemData: Partial<T>) => {
+      if (editingItem) {
+        dispatch({
+          type: 'UPDATE_ENTITY',
+          entity: options.entity,
+          id: editingItem.id,
+          payload: itemData,
+        });
+        addToast(t(options.toastKeys.updated), 'success');
+      } else {
+        const newItem = options.createDefaults(itemData);
+        dispatch({
+          type: 'ADD_ENTITY',
+          entity: options.entity,
+          payload: newItem,
+        });
+        addToast(t(options.toastKeys.created), 'success');
+      }
+      setIsOpen(false);
+    },
+    [editingItem, dispatch, addToast, t, options]
+  );
 
   const confirmDelete = useCallback(() => {
     if (itemToDelete) {
       dispatch({
         type: 'DELETE_ENTITY',
         entity: options.entity,
-        id: itemToDelete
+        id: itemToDelete,
       });
       addToast(t(options.toastKeys.deleted), 'warning');
       setItemToDelete(null);
@@ -96,6 +109,6 @@ export function useCrudModal<T extends { id: string }>(options: UseCrudModalOpti
     confirmDelete,
     closeAll,
     setIsOpen,
-    setIsDeleteOpen
+    setIsDeleteOpen,
   };
 }

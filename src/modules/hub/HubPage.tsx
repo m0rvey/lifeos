@@ -2,19 +2,25 @@ import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useData } from '../../context/DataContext';
 import { useI18n } from '../../i18n';
-import { 
-  Brain, 
-  Bike, 
-  Wallet, 
-  Calendar, 
-  Users, 
-  ArrowRight, 
+import {
+  Brain,
+  Bike,
+  Wallet,
+  Calendar,
+  Users,
+  ArrowRight,
   AlertTriangle,
-  Flame
+  Flame,
 } from 'lucide-react';
 import { CircularProgressRing } from '../../ui';
 import { isDecaying } from '../../cognitive/social';
-import { formatDate, formatCurrency, formatDuration, formatDistance, getDaysSince } from '../../cognitive/helpers';
+import {
+  formatDate,
+  formatCurrency,
+  formatDuration,
+  formatDistance,
+  getDaysSince,
+} from '../../cognitive/helpers';
 
 export default function HubPage() {
   const { data } = useData();
@@ -27,13 +33,13 @@ export default function HubPage() {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
-      year: 'numeric'
+      year: 'numeric',
     });
   }, []);
 
   // 1. Tasks Data
   const activeTasks = useMemo(() => {
-    return data.tasks.filter(t => !t.isCompleted);
+    return data.tasks.filter((t) => !t.isCompleted);
   }, [data.tasks]);
 
   // 2. Finance Data
@@ -45,7 +51,7 @@ export default function HubPage() {
 
   const unpaidReminders = useMemo(() => {
     return data.reminders
-      .filter(r => !r.isPaid)
+      .filter((r) => !r.isPaid)
       .sort((a, b) => new Date(a.dueDateISO).getTime() - new Date(b.dueDateISO).getTime())
       .slice(0, 3);
   }, [data.reminders]);
@@ -64,17 +70,17 @@ export default function HubPage() {
   // 4. Social Graph Data
   const decayingPeople = useMemo(() => {
     return data.people
-      .filter(p => isDecaying(p))
+      .filter((p) => isDecaying(p))
       .slice(0, 3)
-      .map(p => ({
+      .map((p) => ({
         ...p,
-        daysElapsed: getDaysSince(p.lastContactISO)
+        daysElapsed: getDaysSince(p.lastContactISO),
       }));
   }, [data.people]);
 
   // 5. Habits & Reflection Data
   const activeHabits = useMemo(() => {
-    return data.habits.filter(h => h.isActive);
+    return data.habits.filter((h) => h.isActive);
   }, [data.habits]);
 
   const fatigueValue = typeof data.fatigue === 'number' ? data.fatigue : 10;
@@ -83,12 +89,8 @@ export default function HubPage() {
     <div className="fade-in-entry hub-container">
       {/* Banner */}
       <section className="hub-banner">
-        <h2 className="hub-banner-title">
-          {t('hub.welcome')}
-        </h2>
-        <p className="hub-banner-desc">
-          {t('hub.description')}
-        </p>
+        <h2 className="hub-banner-title">{t('hub.welcome')}</h2>
+        <p className="hub-banner-desc">{t('hub.description')}</p>
         <div className="hub-date-badge">
           <Calendar size={13} />
           <span>{formattedDate}</span>
@@ -97,7 +99,6 @@ export default function HubPage() {
 
       {/* Grid of Modules */}
       <div className="hub-grid">
-        
         {/* Когнитивный баланс */}
         <div className="glass-panel hub-card hub-card--cognitive">
           <div className="hub-card-header">
@@ -112,12 +113,16 @@ export default function HubPage() {
               value={fatigueValue}
               size={72}
               strokeWidth={7}
-              color={fatigueValue > 75 ? 'var(--error)' : fatigueValue > 45 ? 'var(--warning)' : '#a78bfa'}
+              color={
+                fatigueValue > 75
+                  ? 'var(--error)'
+                  : fatigueValue > 45
+                    ? 'var(--warning)'
+                    : '#a78bfa'
+              }
             />
             <div>
-              <p className="hub-text-sm-margin">
-                {t('hub.fatigue')}
-              </p>
+              <p className="hub-text-sm-margin">{t('hub.fatigue')}</p>
               <p className="hub-text-sm">
                 {t('hub.active_tasks')}: <strong>{activeTasks.length}</strong>
               </p>
@@ -151,25 +156,23 @@ export default function HubPage() {
                   <span>{t('hub.need_attention')}</span>
                 </div>
                 <ul className="hub-list-vertical">
-                  {decayingPeople.map(p => (
+                  {decayingPeople.map((p) => (
                     <li key={p.id} className="hub-list-item">
                       <span className="hub-list-item-name">{p.name}</span>
                       <span className="hub-list-item-desc">
-                      {p.daysElapsed} {t('days_abbrev')}
+                        {p.daysElapsed} {t('days_abbrev')}
                       </span>
                     </li>
                   ))}
                 </ul>
               </div>
             ) : (
-              <p className="hub-text-sm hub-empty-hint">
-                {t('hub.all_connections_ok')}
-              </p>
+              <p className="hub-text-sm hub-empty-hint">{t('hub.all_connections_ok')}</p>
             )}
           </div>
 
-          <button 
-            className="hub-card-action-btn" 
+          <button
+            className="hub-card-action-btn"
             onClick={() => navigate('/social')}
             aria-label={t('hub.aria.openSocial')}
           >
@@ -199,25 +202,21 @@ export default function HubPage() {
               <div className="hub-reminder-container">
                 <div className="hub-reminder-title">{t('hub.upcoming_payments')}</div>
                 <ul className="hub-list-vertical">
-                  {unpaidReminders.map(r => (
+                  {unpaidReminders.map((r) => (
                     <li key={r.id} className="hub-list-item">
                       <span className="hub-list-item-name">{r.title}</span>
-                      <span className="hub-list-item-desc">
-                        {formatCurrency(r.amount)}
-                      </span>
+                      <span className="hub-list-item-desc">{formatCurrency(r.amount)}</span>
                     </li>
                   ))}
                 </ul>
               </div>
             ) : (
-              <p className="hub-text-sm hub-empty-hint">
-                {t('hub.no_unpaid_bills')}
-              </p>
+              <p className="hub-text-sm hub-empty-hint">{t('hub.no_unpaid_bills')}</p>
             )}
           </div>
 
-          <button 
-            className="hub-card-action-btn" 
+          <button
+            className="hub-card-action-btn"
             onClick={() => navigate('/finance')}
             aria-label={t('hub.aria.openFinance')}
           >
@@ -253,18 +252,17 @@ export default function HubPage() {
                   <span>{formatDate(latestRides[0].dateISO)}</span>
                 </div>
                 <div className="hub-latest-ride-meta">
-                  {formatDistance(latestRides[0].distanceKm)} · {formatDuration(latestRides[0].durationMin)}
+                  {formatDistance(latestRides[0].distanceKm)} ·{' '}
+                  {formatDuration(latestRides[0].durationMin)}
                 </div>
               </div>
             ) : (
-              <p className="hub-text-sm hub-empty-hint">
-                {t('hub.no_rides')}
-              </p>
+              <p className="hub-text-sm hub-empty-hint">{t('hub.no_rides')}</p>
             )}
           </div>
 
-          <button 
-            className="hub-card-action-btn" 
+          <button
+            className="hub-card-action-btn"
             onClick={() => navigate('/cycling')}
             aria-label={t('hub.aria.openCycling')}
           >
@@ -297,8 +295,8 @@ export default function HubPage() {
             </div>
           </div>
 
-          <button 
-            className="hub-card-action-btn" 
+          <button
+            className="hub-card-action-btn"
             onClick={() => navigate('/reflect')}
             aria-label={t('hub.aria.openReflection')}
           >
@@ -306,7 +304,6 @@ export default function HubPage() {
             <ArrowRight size={14} />
           </button>
         </div>
-
       </div>
 
       {/* Tip of the day */}

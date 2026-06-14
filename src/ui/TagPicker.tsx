@@ -26,7 +26,7 @@ export default function TagPicker({ value, onChange, placeholder = 'Add tag...' 
   }, []);
 
   const suggestions = allTags.filter(
-    t => !value.includes(t) && t.toLowerCase().includes(input.toLowerCase())
+    (t) => !value.includes(t) && t.toLowerCase().includes(input.toLowerCase())
   );
 
   const addTag = (tag: string) => {
@@ -39,7 +39,7 @@ export default function TagPicker({ value, onChange, placeholder = 'Add tag...' 
   };
 
   const removeTag = (tag: string) => {
-    onChange(value.filter(t => t !== tag));
+    onChange(value.filter((t) => t !== tag));
   };
 
   const handleInputKey = (e: React.KeyboardEvent) => {
@@ -56,7 +56,7 @@ export default function TagPicker({ value, onChange, placeholder = 'Add tag...' 
   return (
     <div className="tag-picker" ref={wrapperRef}>
       <div className="tag-picker-chips">
-        {value.map(tag => (
+        {value.map((tag) => (
           <span key={tag} className="tag-chip">
             {tag}
             <button
@@ -74,7 +74,7 @@ export default function TagPicker({ value, onChange, placeholder = 'Add tag...' 
           className="tag-picker-input"
           type="text"
           value={input}
-          onChange={e => {
+          onChange={(e) => {
             setInput(e.target.value);
             setShowSuggestions(true);
           }}
@@ -86,13 +86,13 @@ export default function TagPicker({ value, onChange, placeholder = 'Add tag...' 
 
       {showSuggestions && input && suggestions.length > 0 && (
         <div className="tag-picker-suggestions">
-          {suggestions.slice(0, 8).map(tag => (
+          {suggestions.slice(0, 8).map((tag) => (
             <button
               key={tag}
               type="button"
               className="tag-picker-suggestion"
               onClick={() => addTag(tag)}
-              onMouseDown={e => e.preventDefault()}
+              onMouseDown={(e) => e.preventDefault()}
             >
               {tag}
             </button>

@@ -36,7 +36,7 @@ export default function JournalModal({ isOpen, onClose, entry, onSave }: Journal
       title: title.trim(),
       content: content.trim(),
       mood,
-      dateISO
+      dateISO,
     });
   };
 
@@ -44,15 +44,13 @@ export default function JournalModal({ isOpen, onClose, entry, onSave }: Journal
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={entry ? t('reflect.journal.modal_edit_title') : t('reflect.journal.modal_create_title')}
+      title={
+        entry ? t('reflect.journal.modal_edit_title') : t('reflect.journal.modal_create_title')
+      }
       maxWidth="sm"
     >
       <form onSubmit={handleSubmit} className="flex-col-16">
-        {error && (
-          <div className="text-error-bold">
-            {error}
-          </div>
-        )}
+        {error && <div className="text-error-bold">{error}</div>}
 
         <div className="form-row">
           <FormField label={t('reflect.journal.field_title')} required>
@@ -79,9 +77,7 @@ export default function JournalModal({ isOpen, onClose, entry, onSave }: Journal
 
         <FormField label={t('reflect.journal.field_mood')}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ fontSize: '1.2rem' }}>
-              {getMoodEmoji(mood).emoji}
-            </span>
+            <span style={{ fontSize: '1.2rem' }}>{getMoodEmoji(mood).emoji}</span>
             <input
               type="range"
               min="0"

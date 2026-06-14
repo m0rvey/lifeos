@@ -16,9 +16,22 @@ function getDB(): Promise<IDBPDatabase> {
       upgrade(db) {
         // Keep old store 'appData' if it existed, but create the new modular stores
         const stores = [
-          'settings', 'people', 'tasks', 'transactions', 'reminders',
-          'rides', 'routes', 'maintenance', 'galleryNotes', 'journal',
-          'knowledge', 'schedule', 'habits', 'workouts', 'thoughts', 'metadata'
+          'settings',
+          'people',
+          'tasks',
+          'transactions',
+          'reminders',
+          'rides',
+          'routes',
+          'maintenance',
+          'galleryNotes',
+          'journal',
+          'knowledge',
+          'schedule',
+          'habits',
+          'workouts',
+          'thoughts',
+          'metadata',
         ];
         for (const storeName of stores) {
           if (!db.objectStoreNames.contains(storeName)) {
@@ -37,9 +50,22 @@ export function clearCacheIDB(): void {
 
 async function saveAllToNewStores(db: IDBPDatabase, data: AppData): Promise<void> {
   const stores = [
-    'settings', 'people', 'tasks', 'transactions', 'reminders',
-    'rides', 'routes', 'maintenance', 'galleryNotes', 'journal',
-    'knowledge', 'schedule', 'habits', 'workouts', 'thoughts', 'metadata'
+    'settings',
+    'people',
+    'tasks',
+    'transactions',
+    'reminders',
+    'rides',
+    'routes',
+    'maintenance',
+    'galleryNotes',
+    'journal',
+    'knowledge',
+    'schedule',
+    'habits',
+    'workouts',
+    'thoughts',
+    'metadata',
   ];
   const tx = db.transaction(stores, 'readwrite');
 
@@ -68,7 +94,7 @@ async function saveAllToNewStores(db: IDBPDatabase, data: AppData): Promise<void
 export async function loadDataIDB(): Promise<AppData> {
   try {
     const db = await getDB();
-    
+
     // Check if migrated/initialized with version in metadata
     let hasNewStoresData = false;
     if (db.objectStoreNames.contains('metadata')) {
@@ -80,9 +106,23 @@ export async function loadDataIDB(): Promise<AppData> {
 
     if (hasNewStoresData) {
       const [
-        settings, people, tasks, transactions, reminders,
-        rides, routes, maintenance, galleryNotes, journal,
-        knowledge, schedule, habits, workouts, thoughts, fatigue, version
+        settings,
+        people,
+        tasks,
+        transactions,
+        reminders,
+        rides,
+        routes,
+        maintenance,
+        galleryNotes,
+        journal,
+        knowledge,
+        schedule,
+        habits,
+        workouts,
+        thoughts,
+        fatigue,
+        version,
       ] = await Promise.all([
         db.get('settings', 'value'),
         db.get('people', 'value'),
@@ -200,9 +240,11 @@ export async function saveDataIDB(data: AppData): Promise<void> {
   } catch (err) {
     console.error('[IDB] Failed to save data:', err);
     if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('storage-error', {
-        detail: err instanceof Error ? err : new Error('Unknown IndexedDB error'),
-      }));
+      window.dispatchEvent(
+        new CustomEvent('storage-error', {
+          detail: err instanceof Error ? err : new Error('Unknown IndexedDB error'),
+        })
+      );
     }
   }
 }

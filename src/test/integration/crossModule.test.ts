@@ -14,7 +14,13 @@ vi.mock('../../storage/engine', () => ({
       fontSizeScale: 1,
       isAdaptive: false,
       graphSensitivity: 50,
-      graphWeights: { energy: 0.3, resonance: 0.3, reciprocity: 0.2, volatility: 0.1, recency: 0.1 },
+      graphWeights: {
+        energy: 0.3,
+        resonance: 0.3,
+        reciprocity: 0.2,
+        volatility: 0.1,
+        recency: 0.1,
+      },
       weekStartDay: 0,
     },
     people: [],
@@ -54,9 +60,13 @@ describe('Task → Fatigue integration', () => {
         type: 'ADD_ENTITY',
         entity: 'tasks',
         payload: {
-          id: 't1', title: 'New Task', isCompleted: false,
-          dateISO: daysAgoISO(1), priority: 'medium' as const,
-          createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+          id: 't1',
+          title: 'New Task',
+          isCompleted: false,
+          dateISO: daysAgoISO(1),
+          priority: 'medium' as const,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         },
       });
     });
@@ -73,9 +83,13 @@ describe('Task → Fatigue integration', () => {
         type: 'ADD_ENTITY',
         entity: 'tasks',
         payload: {
-          id: 't1', title: 'Task', isCompleted: false,
-          dateISO: daysAgoISO(1), priority: 'medium' as const,
-          createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+          id: 't1',
+          title: 'Task',
+          isCompleted: false,
+          dateISO: daysAgoISO(1),
+          priority: 'medium' as const,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         },
       });
     });
@@ -84,7 +98,9 @@ describe('Task → Fatigue integration', () => {
 
     act(() => {
       result.current.dispatch({
-        type: 'DELETE_ENTITY', entity: 'tasks', id: 't1',
+        type: 'DELETE_ENTITY',
+        entity: 'tasks',
+        id: 't1',
       });
     });
 
@@ -101,9 +117,14 @@ describe('Workout → Fatigue integration', () => {
         type: 'ADD_ENTITY',
         entity: 'workouts',
         payload: {
-          id: 'w1', title: 'Morning Run', dateISO: daysAgoISO(1),
-          type: 'running' as const, durationMin: 30, intensity: 3,
-          createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+          id: 'w1',
+          title: 'Morning Run',
+          dateISO: daysAgoISO(1),
+          type: 'running' as const,
+          durationMin: 30,
+          intensity: 3,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         },
       });
     });
@@ -112,9 +133,14 @@ describe('Workout → Fatigue integration', () => {
         type: 'ADD_ENTITY',
         entity: 'workouts',
         payload: {
-          id: 'w2', title: 'Evening Yoga', dateISO: daysAgoISO(1),
-          type: 'yoga' as const, durationMin: 45, intensity: 2,
-          createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+          id: 'w2',
+          title: 'Evening Yoga',
+          dateISO: daysAgoISO(1),
+          type: 'yoga' as const,
+          durationMin: 45,
+          intensity: 2,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         },
       });
     });
@@ -133,9 +159,13 @@ describe('Schedule → Fatigue integration', () => {
         type: 'ADD_ENTITY',
         entity: 'schedule',
         payload: {
-          id: 's1', title: 'Rest', dateISO: daysAgoISO(1),
-          type: 'rest' as const, isCompleted: true,
-          createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+          id: 's1',
+          title: 'Rest',
+          dateISO: daysAgoISO(1),
+          type: 'rest' as const,
+          isCompleted: true,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         },
       });
     });
@@ -151,9 +181,13 @@ describe('Schedule → Fatigue integration', () => {
         type: 'ADD_ENTITY',
         entity: 'schedule',
         payload: {
-          id: 's1', title: 'Work', dateISO: daysAgoISO(1),
-          type: 'work' as const, isCompleted: true,
-          createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+          id: 's1',
+          title: 'Work',
+          dateISO: daysAgoISO(1),
+          type: 'work' as const,
+          isCompleted: true,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         },
       });
     });
@@ -171,9 +205,13 @@ describe('Multi-entity cross-module integration', () => {
         type: 'ADD_ENTITY',
         entity: 'tasks',
         payload: {
-          id: 't1', title: 'Work', isCompleted: false,
-          dateISO: daysAgoISO(1), priority: 'medium' as const,
-          createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+          id: 't1',
+          title: 'Work',
+          isCompleted: false,
+          dateISO: daysAgoISO(1),
+          priority: 'medium' as const,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         },
       });
     });
@@ -183,9 +221,14 @@ describe('Multi-entity cross-module integration', () => {
         type: 'ADD_ENTITY',
         entity: 'workouts',
         payload: {
-          id: 'w1', title: 'Gym', dateISO: daysAgoISO(1),
-          type: 'gym' as const, durationMin: 60, intensity: 4,
-          createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+          id: 'w1',
+          title: 'Gym',
+          dateISO: daysAgoISO(1),
+          type: 'gym' as const,
+          durationMin: 60,
+          intensity: 4,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         },
       });
     });
@@ -195,9 +238,13 @@ describe('Multi-entity cross-module integration', () => {
         type: 'ADD_ENTITY',
         entity: 'schedule',
         payload: {
-          id: 's1', title: 'Rest', dateISO: daysAgoISO(1),
-          type: 'rest' as const, isCompleted: true,
-          createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+          id: 's1',
+          title: 'Rest',
+          dateISO: daysAgoISO(1),
+          type: 'rest' as const,
+          isCompleted: true,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         },
       });
     });
@@ -215,11 +262,20 @@ describe('Person → social cognitive integration', () => {
         type: 'ADD_ENTITY',
         entity: 'people',
         payload: {
-          id: 'p1', name: 'Alice', depth: 'core' as const,
-          archetype: 'emotional' as const, status: 'active' as const,
-          energy: 90, resonance: 80, reciprocity: 85, volatility: 10,
-          lastContactISO: daysAgoISO(1), reflection: '', notes: '',
-          createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+          id: 'p1',
+          name: 'Alice',
+          depth: 'core' as const,
+          archetype: 'emotional' as const,
+          status: 'active' as const,
+          energy: 90,
+          resonance: 80,
+          reciprocity: 85,
+          volatility: 10,
+          lastContactISO: daysAgoISO(1),
+          reflection: '',
+          notes: '',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         },
       });
     });
@@ -233,30 +289,47 @@ describe('Person → social cognitive integration', () => {
 
     act(() => {
       result.current.dispatch({
-        type: 'ADD_ENTITY', entity: 'people',
+        type: 'ADD_ENTITY',
+        entity: 'people',
         payload: {
-          id: 'p1', name: 'Alice', depth: 'core' as const,
-          archetype: 'emotional' as const, status: 'active' as const,
-          energy: 90, resonance: 80, reciprocity: 85, volatility: 10,
-          lastContactISO: daysAgoISO(1), reflection: '', notes: '',
-          createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+          id: 'p1',
+          name: 'Alice',
+          depth: 'core' as const,
+          archetype: 'emotional' as const,
+          status: 'active' as const,
+          energy: 90,
+          resonance: 80,
+          reciprocity: 85,
+          volatility: 10,
+          lastContactISO: daysAgoISO(1),
+          reflection: '',
+          notes: '',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         },
       });
     });
     act(() => {
       result.current.dispatch({
-        type: 'ADD_ENTITY', entity: 'tasks',
+        type: 'ADD_ENTITY',
+        entity: 'tasks',
         payload: {
-          id: 't1', title: 'Task', isCompleted: false,
-          dateISO: daysAgoISO(1), priority: 'medium' as const,
-          createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+          id: 't1',
+          title: 'Task',
+          isCompleted: false,
+          dateISO: daysAgoISO(1),
+          priority: 'medium' as const,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         },
       });
     });
 
     act(() => {
       result.current.dispatch({
-        type: 'UPDATE_ENTITY', entity: 'people', id: 'p1',
+        type: 'UPDATE_ENTITY',
+        entity: 'people',
+        id: 'p1',
         payload: { energy: 50 },
       });
     });
@@ -269,8 +342,11 @@ describe('Person → social cognitive integration', () => {
 describe('Data persistence integration', () => {
   it('calls saveDataAsync when data changes', () => {
     renderHook(() => useData(), { wrapper: DataProvider });
-    vi.waitFor(() => {
-      expect(saveDataAsync).toHaveBeenCalled();
-    }, { timeout: 3000 });
+    vi.waitFor(
+      () => {
+        expect(saveDataAsync).toHaveBeenCalled();
+      },
+      { timeout: 3000 }
+    );
   });
 });

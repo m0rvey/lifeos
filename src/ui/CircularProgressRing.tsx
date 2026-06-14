@@ -19,7 +19,17 @@ export default function CircularProgressRing({
   const strokeDashoffset = circumference - (clampedValue / 100) * circumference;
 
   return (
-    <div className="progress-ring-wrapper" style={{ width: size, height: size, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div
+      className="progress-ring-wrapper"
+      style={{
+        width: size,
+        height: size,
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
       <svg width={size} height={size} style={{ position: 'absolute', top: 0, left: 0 }}>
         {/* Background circle */}
         <circle
@@ -50,12 +60,39 @@ export default function CircularProgressRing({
           }}
         />
       </svg>
-      <div className="progress-ring-inner" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 1 }}>
-        <span className="progress-ring-value" style={{ fontFamily: 'var(--font-heading)', fontWeight: 'bold', fontSize: `${size * 0.18}px`, color: 'var(--text-primary)' }}>
+      <div
+        className="progress-ring-inner"
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1,
+        }}
+      >
+        <span
+          className="progress-ring-value"
+          style={{
+            fontFamily: 'var(--font-heading)',
+            fontWeight: 'bold',
+            fontSize: `${size * 0.18}px`,
+            color: 'var(--text-primary)',
+          }}
+        >
           {Math.round(clampedValue)}%
         </span>
         {label && (
-          <span className="progress-ring-label" style={{ fontSize: `${size * 0.08}px`, color: 'var(--text-secondary)', marginTop: '2px', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          <span
+            className="progress-ring-label"
+            style={{
+              fontSize: `${size * 0.08}px`,
+              color: 'var(--text-secondary)',
+              marginTop: '2px',
+              textAlign: 'center',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+            }}
+          >
             {label}
           </span>
         )}

@@ -5,13 +5,15 @@ export function safeSaveItem(key: string, value: string): void {
   try {
     // Write to temp key first
     localStorage.setItem(tempKey, value);
-    
+
     // Verify it was correctly written
     const written = localStorage.getItem(tempKey);
     if (written !== value) {
-      throw new Error(`Atomic write verification failed: written length ${written?.length ?? 0} vs target ${value.length}`);
+      throw new Error(
+        `Atomic write verification failed: written length ${written?.length ?? 0} vs target ${value.length}`
+      );
     }
-    
+
     // Overwrite original key directly
     localStorage.setItem(key, value);
   } catch (err) {

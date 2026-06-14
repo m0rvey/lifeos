@@ -2,23 +2,29 @@ import { createContext, useContext, useMemo, type ReactNode } from 'react';
 import { useData } from './DataContext';
 import type { AppData } from '../types';
 
-interface HasTags { tags?: string[] }
+interface HasTags {
+  tags?: string[];
+}
 type EntityArray = HasTags[];
 
 function extractAllTags(data: AppData): string[] {
   const set = new Set<string>();
   const collections: EntityArray[] = [
-    data.people, data.tasks, data.galleryNotes,
-    data.journal, data.knowledge, data.schedule, data.thoughts,
+    data.people,
+    data.tasks,
+    data.galleryNotes,
+    data.journal,
+    data.knowledge,
+    data.schedule,
+    data.thoughts,
   ];
   for (const items of collections) {
     for (const item of items) {
-      item.tags?.forEach(t => set.add(t));
+      item.tags?.forEach((t) => set.add(t));
     }
   }
   return [...set].sort((a, b) => a.localeCompare(b));
 }
-
 
 interface TagRegistryValue {
   allTags: string[];
@@ -49,12 +55,12 @@ export function TagRegistryProvider({ children }: { children: ReactNode }) {
     for (const col of collections) {
       for (const item of col.items) {
         if (item.tags?.includes(oldName)) {
-          const newTags = item.tags.map(t => t === oldName ? newName : t);
+          const newTags = item.tags.map((t) => (t === oldName ? newName : t));
           dispatch({
             type: 'UPDATE_ENTITY',
             entity: col.name,
             id: item.id,
-            payload: { tags: newTags }
+            payload: { tags: newTags },
           });
         }
       }
@@ -77,12 +83,12 @@ export function TagRegistryProvider({ children }: { children: ReactNode }) {
     for (const col of collections) {
       for (const item of col.items) {
         if (item.tags?.includes(tag)) {
-          const newTags = item.tags.filter(t => t !== tag);
+          const newTags = item.tags.filter((t) => t !== tag);
           dispatch({
             type: 'UPDATE_ENTITY',
             entity: col.name,
             id: item.id,
-            payload: { tags: newTags }
+            payload: { tags: newTags },
           });
         }
       }

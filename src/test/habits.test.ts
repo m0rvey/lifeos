@@ -47,7 +47,10 @@ describe('calcStreak', () => {
     threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
     const threeDaysAgoStr = threeDaysAgo.toISOString().slice(0, 10);
 
-    expect(calcStreak([today, yesterdayStr, twoDaysAgoStr, threeDaysAgoStr])).toEqual({ current: 4, max: 4 });
+    expect(calcStreak([today, yesterdayStr, twoDaysAgoStr, threeDaysAgoStr])).toEqual({
+      current: 4,
+      max: 4,
+    });
   });
 
   it('handles duplicate dates', () => {

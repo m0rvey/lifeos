@@ -17,7 +17,7 @@ export function useRideStats(rides: RideRecord[]) {
 
   const maxSpeed = useMemo(() => {
     if (rides.length === 0) return 0;
-    return Math.max(...rides.map(r => r.maxSpeedKmh));
+    return Math.max(...rides.map((r) => r.maxSpeedKmh));
   }, [rides]);
 
   const totalElevation = useMemo(() => {
@@ -26,7 +26,7 @@ export function useRideStats(rides: RideRecord[]) {
 
   const maxDistance = useMemo(() => {
     if (rides.length === 0) return 0;
-    return Math.max(...rides.map(r => r.distanceKm));
+    return Math.max(...rides.map((r) => r.distanceKm));
   }, [rides]);
 
   return {

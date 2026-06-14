@@ -22,14 +22,7 @@ export default function CyclingModule() {
   return (
     <Suspense fallback={<div className="loading-fallback">{t('common.loading')}</div>}>
       <Routes>
-        <Route 
-          index 
-          element={
-            <Dashboard 
-              onNavigateTab={handleNavigateTab} 
-            />
-          } 
-        />
+        <Route index element={<Dashboard onNavigateTab={handleNavigateTab} />} />
         <Route path="rides" element={<RidesPage />} />
         <Route path="routes" element={<RoutePlanner />} />
         <Route path="maintenance" element={<MaintenancePage />} />

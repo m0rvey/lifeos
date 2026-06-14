@@ -104,8 +104,8 @@ function tick() {
 
   // Spring tension for links
   for (const link of links) {
-    const source = nodes.find(n => n.id === link.source);
-    const target = nodes.find(n => n.id === link.target);
+    const source = nodes.find((n) => n.id === link.source);
+    const target = nodes.find((n) => n.id === link.target);
     if (!source || !target) continue;
     const dx = target.x - source.x;
     const dy = target.y - source.y;
@@ -133,7 +133,7 @@ function tick() {
 
   ctx.postMessage({
     type: 'TICK',
-    nodes: nodes.map(n => ({ id: n.id, x: n.x, y: n.y, vx: n.vx, vy: n.vy })),
+    nodes: nodes.map((n) => ({ id: n.id, x: n.x, y: n.y, vx: n.vx, vy: n.vy })),
   });
 }
 
@@ -143,10 +143,16 @@ ctx.onmessage = (e: MessageEvent<WorkerIncomingMessage>) => {
 
   switch (msg.type) {
     case 'INIT': {
-      if (typeof msg.centerX !== 'number' || typeof msg.centerY !== 'number' || !Array.isArray(msg.nodes) || !Array.isArray(msg.links)) return;
+      if (
+        typeof msg.centerX !== 'number' ||
+        typeof msg.centerY !== 'number' ||
+        !Array.isArray(msg.nodes) ||
+        !Array.isArray(msg.links)
+      )
+        return;
       centerX = msg.centerX;
       centerY = msg.centerY;
-      
+
       // Reconcile nodes to keep pre-existing physics positions
       const reconciledNodes = msg.nodes.map((n) => {
         const existing = nodes.find((oldNode) => oldNode.id === n.id);
@@ -168,7 +174,7 @@ ctx.onmessage = (e: MessageEvent<WorkerIncomingMessage>) => {
           };
         }
       });
-      
+
       nodes = reconciledNodes;
       links = msg.links;
       tickCount = 0;
@@ -189,8 +195,9 @@ ctx.onmessage = (e: MessageEvent<WorkerIncomingMessage>) => {
       }
       break;
     case 'DRAG_MOVE': {
-      if (typeof msg.id !== 'string' || typeof msg.x !== 'number' || typeof msg.y !== 'number') return;
-      const node = nodes.find(n => n.id === msg.id);
+      if (typeof msg.id !== 'string' || typeof msg.x !== 'number' || typeof msg.y !== 'number')
+        return;
+      const node = nodes.find((n) => n.id === msg.id);
       if (node) {
         node.x = msg.x;
         node.y = msg.y;

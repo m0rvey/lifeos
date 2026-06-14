@@ -15,9 +15,13 @@ export default function PersonModal({ isOpen, onClose, person, onSave }: PersonM
   const { t } = useI18n();
   const [name, setName] = useState(person?.name || '');
   const [depth, setDepth] = useState<Depth>(person?.depth || Depth.INNER);
-  const [archetype, setArchetype] = useState<Archetype>(person?.archetype || Archetype.INTELLECTUAL);
+  const [archetype, setArchetype] = useState<Archetype>(
+    person?.archetype || Archetype.INTELLECTUAL
+  );
   const [status, setStatus] = useState<PersonStatus>(person?.status || PersonStatus.ACTIVE);
-  const [lastContactISO, setLastContactISO] = useState(person?.lastContactISO ? person.lastContactISO.slice(0, 10) : todayISO());
+  const [lastContactISO, setLastContactISO] = useState(
+    person?.lastContactISO ? person.lastContactISO.slice(0, 10) : todayISO()
+  );
   const [energy, setEnergy] = useState(person?.energy ?? 60);
   const [resonance, setResonance] = useState(person?.resonance ?? 60);
   const [reciprocity, setReciprocity] = useState(person?.reciprocity ?? 60);
@@ -58,11 +62,7 @@ export default function PersonModal({ isOpen, onClose, person, onSave }: PersonM
       maxWidth="md"
     >
       <form onSubmit={handleSubmit} className="flex-col-16">
-        {error && (
-          <div className="text-error-bold">
-            {error}
-          </div>
-        )}
+        {error && <div className="text-error-bold">{error}</div>}
 
         <FormField label={t('social.modal.name_label')} required>
           <input
@@ -110,7 +110,9 @@ export default function PersonModal({ isOpen, onClose, person, onSave }: PersonM
               style={{ width: '100%' }}
             >
               <option value={PersonStatus.ACTIVE}>{t('social.status.active')}</option>
-              <option value={PersonStatus.OCCASIONAL}>{t('social.status.occasional')} / {t('social.status.episodic')}</option>
+              <option value={PersonStatus.OCCASIONAL}>
+                {t('social.status.occasional')} / {t('social.status.episodic')}
+              </option>
               <option value={PersonStatus.DISTANT}>{t('social.status.distant')}</option>
               <option value={PersonStatus.CONFLICT}>{t('social.status.conflict')}</option>
               <option value={PersonStatus.LOST}>{t('social.status.lost')}</option>
@@ -129,13 +131,28 @@ export default function PersonModal({ isOpen, onClose, person, onSave }: PersonM
         </div>
 
         <div style={{ borderTop: '1px solid var(--border)', paddingTop: '16px', marginTop: '8px' }}>
-          <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '12px' }}>
+          <span
+            style={{
+              fontSize: '0.85rem',
+              fontWeight: 600,
+              color: 'var(--text-secondary)',
+              display: 'block',
+              marginBottom: '12px',
+            }}
+          >
             {t('social.modal.metrics_title')}
           </span>
-          
+
           <div className="form-row">
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '6px' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  fontSize: '0.8rem',
+                  marginBottom: '6px',
+                }}
+              >
                 <span>{t('social.metric.energy')}</span>
                 <strong>{energy}%</strong>
               </div>
@@ -151,7 +168,14 @@ export default function PersonModal({ isOpen, onClose, person, onSave }: PersonM
             </div>
 
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '6px' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  fontSize: '0.8rem',
+                  marginBottom: '6px',
+                }}
+              >
                 <span>{t('social.metric.resonance')}</span>
                 <strong>{resonance}%</strong>
               </div>
@@ -167,7 +191,14 @@ export default function PersonModal({ isOpen, onClose, person, onSave }: PersonM
             </div>
 
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '6px' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  fontSize: '0.8rem',
+                  marginBottom: '6px',
+                }}
+              >
                 <span>{t('social.metric.reciprocity')}</span>
                 <strong>{reciprocity}%</strong>
               </div>
@@ -183,7 +214,14 @@ export default function PersonModal({ isOpen, onClose, person, onSave }: PersonM
             </div>
 
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '6px' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  fontSize: '0.8rem',
+                  marginBottom: '6px',
+                }}
+              >
                 <span>{t('social.metric.volatility')}</span>
                 <strong>{volatility}%</strong>
               </div>

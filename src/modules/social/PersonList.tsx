@@ -13,7 +13,13 @@ interface PersonListProps {
   graphWeights: GraphWeights;
 }
 
-export default function PersonList({ people, activeId, onSelect, onAddNew, graphWeights }: PersonListProps) {
+export default function PersonList({
+  people,
+  activeId,
+  onSelect,
+  onAddNew,
+  graphWeights,
+}: PersonListProps) {
   const { t } = useI18n();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDepth, setSelectedDepth] = useState<Depth | 'ALL'>('ALL');
@@ -59,7 +65,8 @@ export default function PersonList({ people, activeId, onSelect, onAddNew, graph
       } else if (sortBy === 'recency') {
         comparison = new Date(b.lastContactISO).getTime() - new Date(a.lastContactISO).getTime();
       } else {
-        comparison = computeConnectionScore(a, graphWeights) - computeConnectionScore(b, graphWeights);
+        comparison =
+          computeConnectionScore(a, graphWeights) - computeConnectionScore(b, graphWeights);
       }
       return sortOrder === 'asc' ? comparison : -comparison;
     });
@@ -175,17 +182,11 @@ export default function PersonList({ people, activeId, onSelect, onAddNew, graph
                 </div>
                 <div className="social-contact-info">
                   <div className="social-contact-name-row">
-                    <span className="social-contact-name">
-                      {p.name}
-                    </span>
-                    <span className="social-contact-score">
-                      {Math.round(score)}%
-                    </span>
+                    <span className="social-contact-name">{p.name}</span>
+                    <span className="social-contact-score">{Math.round(score)}%</span>
                   </div>
                   <div className="social-contact-tags">
-                    <span className="social-contact-tag-depth">
-                      {depthLabelMap[p.depth]}
-                    </span>
+                    <span className="social-contact-tag-depth">{depthLabelMap[p.depth]}</span>
                     <span
                       className="social-contact-tag-status"
                       style={{
@@ -202,9 +203,7 @@ export default function PersonList({ people, activeId, onSelect, onAddNew, graph
           })}
 
           {filteredSortedPeople.length === 0 && (
-            <div className="social-contacts-empty">
-              {t('social.empty_list')}
-            </div>
+            <div className="social-contacts-empty">{t('social.empty_list')}</div>
           )}
         </div>
         <div className="social-contacts-footer">

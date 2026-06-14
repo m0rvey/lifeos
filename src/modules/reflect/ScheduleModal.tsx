@@ -14,18 +14,20 @@ interface ScheduleModalProps {
   defaultDate?: string;
 }
 
-export default function ScheduleModal({ 
-  isOpen, 
-  onClose, 
-  block, 
-  onSave, 
+export default function ScheduleModal({
+  isOpen,
+  onClose,
+  block,
+  onSave,
   defaultStartTime = '09:00',
   defaultDuration = 60,
-  defaultDate
+  defaultDate,
 }: ScheduleModalProps) {
   const { t } = useI18n();
   const [title, setTitle] = useState(block?.title || '');
-  const [dateISO, setDateISO] = useState(block?.dateISO ? block.dateISO.slice(0, 10) : (defaultDate || todayISO()));
+  const [dateISO, setDateISO] = useState(
+    block?.dateISO ? block.dateISO.slice(0, 10) : defaultDate || todayISO()
+  );
   const [startTime, setStartTime] = useState(block?.startTime || defaultStartTime);
   const [durationMin, setDurationMin] = useState(block?.durationMin || defaultDuration);
   const [type, setType] = useState<ScheduleBlock['type']>(block?.type || 'work');
@@ -63,15 +65,13 @@ export default function ScheduleModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={block ? t('reflect.schedule.modal_edit_title') : t('reflect.schedule.modal_create_title')}
+      title={
+        block ? t('reflect.schedule.modal_edit_title') : t('reflect.schedule.modal_create_title')
+      }
       maxWidth="sm"
     >
       <form onSubmit={handleSubmit} className="flex-col-16">
-        {error && (
-          <div className="text-error-bold">
-            {error}
-          </div>
-        )}
+        {error && <div className="text-error-bold">{error}</div>}
 
         <FormField label={t('reflect.schedule.field_title')} required>
           <input
@@ -135,8 +135,20 @@ export default function ScheduleModal({
           </FormField>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '8px', border: '1px solid var(--border)' }}>
-          <span style={{ fontSize: '0.8rem' }}>{t('reflect.schedule.total_time')} <strong>{formatDuration(durationMin)}</strong></span>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            background: 'rgba(255,255,255,0.02)',
+            padding: '12px',
+            borderRadius: '8px',
+            border: '1px solid var(--border)',
+          }}
+        >
+          <span style={{ fontSize: '0.8rem' }}>
+            {t('reflect.schedule.total_time')} <strong>{formatDuration(durationMin)}</strong>
+          </span>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <input
               type="checkbox"
@@ -144,7 +156,12 @@ export default function ScheduleModal({
               checked={isCompleted}
               onChange={(e) => setIsCompleted(e.target.checked)}
             />
-            <label htmlFor="schedule-completed" style={{ fontSize: '0.8rem', cursor: 'pointer', fontWeight: 600 }}>{t('reflect.schedule.completed')}</label>
+            <label
+              htmlFor="schedule-completed"
+              style={{ fontSize: '0.8rem', cursor: 'pointer', fontWeight: 600 }}
+            >
+              {t('reflect.schedule.completed')}
+            </label>
           </div>
         </div>
 

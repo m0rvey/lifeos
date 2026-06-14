@@ -3,17 +3,17 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useData } from '../../context/DataContext';
 import { useApp } from '../../context/AppContext';
 import { useI18n } from '../../i18n';
-import { 
-  ArrowLeft, 
-  Calendar, 
-  Check, 
-  Edit, 
-  Trash2, 
+import {
+  ArrowLeft,
+  Calendar,
+  Check,
+  Edit,
+  Trash2,
   AlertTriangle,
-  Smile, 
-  Award, 
-  Zap, 
-  Flame 
+  Smile,
+  Award,
+  Zap,
+  Flame,
 } from 'lucide-react';
 import { computeConnectionScore, isDecaying, getContactThreshold } from '../../cognitive/social';
 import { formatDate, todayISO, getDaysSince } from '../../cognitive/helpers';
@@ -89,17 +89,20 @@ export default function PersonDetail() {
     addToast(t('social.toast.contact_today'), 'success');
   }, [person, dispatch, addToast, t]);
 
-  const handleSavePerson = useCallback((updatedFields: Partial<Person>) => {
-    if (!person) return;
-    dispatch({
-      type: 'UPDATE_ENTITY',
-      entity: 'people',
-      id: person.id,
-      payload: updatedFields,
-    });
-    setIsEditOpen(false);
-    addToast(t('social.toast.contact_saved'), 'success');
-  }, [person, dispatch, addToast, t, setIsEditOpen]);
+  const handleSavePerson = useCallback(
+    (updatedFields: Partial<Person>) => {
+      if (!person) return;
+      dispatch({
+        type: 'UPDATE_ENTITY',
+        entity: 'people',
+        id: person.id,
+        payload: updatedFields,
+      });
+      setIsEditOpen(false);
+      addToast(t('social.toast.contact_saved'), 'success');
+    },
+    [person, dispatch, addToast, t, setIsEditOpen]
+  );
 
   const handleDelete = useCallback(() => {
     if (!person) return;
@@ -124,7 +127,9 @@ export default function PersonDetail() {
     );
   }
 
-  const initials = ((person.name.split(' ')[0]?.[0] || '') + (person.name.split(' ')[1]?.[0] || '')).toUpperCase();
+  const initials = (
+    (person.name.split(' ')[0]?.[0] || '') + (person.name.split(' ')[1]?.[0] || '')
+  ).toUpperCase();
   const statusPill = statusPills[person.status] || { bg: 'rgba(0,0,0,0.1)', color: '#fff' };
 
   return (
@@ -139,19 +144,17 @@ export default function PersonDetail() {
 
       {/* Profile Header */}
       <div className="glass-panel detail-profile-header">
-        <div className={`detail-avatar ${isDecayed ? 'detail-avatar--decayed' : 'detail-avatar--normal'}`}>
+        <div
+          className={`detail-avatar ${isDecayed ? 'detail-avatar--decayed' : 'detail-avatar--normal'}`}
+        >
           {initials}
         </div>
         <div className="detail-name-group">
           <h1 className="detail-name">{person.name}</h1>
           <div className="detail-tags">
-            <span className="detail-tag-depth">
-              {depthLabelMap[person.depth]}
-            </span>
-            <span className="detail-tag-archetype">
-              {archetypeLabelMap[person.archetype]}
-            </span>
-            <span 
+            <span className="detail-tag-depth">{depthLabelMap[person.depth]}</span>
+            <span className="detail-tag-archetype">{archetypeLabelMap[person.archetype]}</span>
+            <span
               className="detail-tag-status"
               style={{
                 background: statusPill.bg,
@@ -163,10 +166,18 @@ export default function PersonDetail() {
           </div>
         </div>
         <div className="detail-actions">
-          <button className="btn btn--secondary detail-btn-edit" onClick={() => setIsEditOpen(true)} aria-label={t('social.detail.edit_aria')}>
+          <button
+            className="btn btn--secondary detail-btn-edit"
+            onClick={() => setIsEditOpen(true)}
+            aria-label={t('social.detail.edit_aria')}
+          >
             <Edit size={16} />
           </button>
-          <button className="btn btn--secondary detail-btn-delete" onClick={() => setIsDeleteOpen(true)} aria-label={t('social.detail.delete_aria')}>
+          <button
+            className="btn btn--secondary detail-btn-delete"
+            onClick={() => setIsDeleteOpen(true)}
+            aria-label={t('social.detail.delete_aria')}
+          >
             <Trash2 size={16} />
           </button>
         </div>
@@ -174,7 +185,6 @@ export default function PersonDetail() {
 
       {/* Main Info Blocks */}
       <div className="detail-metrics-grid">
-        
         {/* Metric sliders display */}
         <div className="glass-panel detail-metrics-panel">
           <h3 className="detail-metrics-title">
@@ -190,7 +200,10 @@ export default function PersonDetail() {
                 <strong className="detail-metric-val">{person.energy}%</strong>
               </div>
               <div className="detail-metric-bar-bg">
-                <div className="detail-metric-bar-fill detail-metric-bar-fill--energy" style={{ width: `${person.energy}%` }} />
+                <div
+                  className="detail-metric-bar-fill detail-metric-bar-fill--energy"
+                  style={{ width: `${person.energy}%` }}
+                />
               </div>
             </div>
 
@@ -201,7 +214,10 @@ export default function PersonDetail() {
                 <strong className="detail-metric-val">{person.resonance}%</strong>
               </div>
               <div className="detail-metric-bar-bg">
-                <div className="detail-metric-bar-fill detail-metric-bar-fill--resonance" style={{ width: `${person.resonance}%` }} />
+                <div
+                  className="detail-metric-bar-fill detail-metric-bar-fill--resonance"
+                  style={{ width: `${person.resonance}%` }}
+                />
               </div>
             </div>
 
@@ -212,7 +228,10 @@ export default function PersonDetail() {
                 <strong className="detail-metric-val">{person.reciprocity}%</strong>
               </div>
               <div className="detail-metric-bar-bg">
-                <div className="detail-metric-bar-fill detail-metric-bar-fill--reciprocity" style={{ width: `${person.reciprocity}%` }} />
+                <div
+                  className="detail-metric-bar-fill detail-metric-bar-fill--reciprocity"
+                  style={{ width: `${person.reciprocity}%` }}
+                />
               </div>
             </div>
 
@@ -223,7 +242,10 @@ export default function PersonDetail() {
                 <strong className="detail-metric-val">{person.volatility}%</strong>
               </div>
               <div className="detail-metric-bar-bg">
-                <div className="detail-metric-bar-fill detail-metric-bar-fill--volatility" style={{ width: `${person.volatility}%` }} />
+                <div
+                  className="detail-metric-bar-fill detail-metric-bar-fill--volatility"
+                  style={{ width: `${person.volatility}%` }}
+                />
               </div>
             </div>
           </div>
@@ -239,13 +261,25 @@ export default function PersonDetail() {
 
             <div className="detail-diagnostics-box">
               <div>
-                <span className="detail-diagnostics-score-label">{t('social.stat.resource_index')}</span>
+                <span className="detail-diagnostics-score-label">
+                  {t('social.stat.resource_index')}
+                </span>
                 <strong className="detail-diagnostics-score-val">{Math.round(score)}%</strong>
               </div>
               <div className="detail-diagnostics-desc-group">
-                <span className="detail-diagnostics-desc-label">{t('social.detail.quality_label')}</span>
+                <span className="detail-diagnostics-desc-label">
+                  {t('social.detail.quality_label')}
+                </span>
                 <strong className="detail-diagnostics-desc-val">
-                  {score >= 85 ? t('social.quality.resonant') : score >= 65 ? t('social.quality.strong') : score >= 45 ? t('social.quality.stable') : score >= 25 ? t('social.quality.weak') : t('social.quality.critical')}
+                  {score >= 85
+                    ? t('social.quality.resonant')
+                    : score >= 65
+                      ? t('social.quality.strong')
+                      : score >= 45
+                        ? t('social.quality.stable')
+                        : score >= 25
+                          ? t('social.quality.weak')
+                          : t('social.quality.critical')}
                 </strong>
               </div>
             </div>
@@ -261,7 +295,9 @@ export default function PersonDetail() {
             </div>
             <div className="detail-elapsed-group">
               <span className="detail-elapsed-label">{t('social.detail.elapsed')}</span>
-              <strong className={`detail-elapsed-val ${isDecayed ? 'detail-elapsed-val--decayed' : 'detail-elapsed-val--normal'}`}>
+              <strong
+                className={`detail-elapsed-val ${isDecayed ? 'detail-elapsed-val--decayed' : 'detail-elapsed-val--normal'}`}
+              >
                 {daysSince} {t('days_abbrev')}
               </strong>
             </div>
@@ -285,7 +321,6 @@ export default function PersonDetail() {
 
       {/* Reflection and Notes */}
       <div className="detail-content-section">
-        
         {/* Reflection */}
         <div className="glass-panel detail-content-panel">
           <h3 className="detail-content-title">
@@ -309,37 +344,35 @@ export default function PersonDetail() {
           </h3>
           <div className="detail-content-text-box detail-content-text-box--notes">
             {person.notes || (
-              <span className="detail-content-text-empty">
-                {t('social.detail.notes_empty')}
-              </span>
+              <span className="detail-content-text-empty">{t('social.detail.notes_empty')}</span>
             )}
           </div>
         </div>
       </div>
 
       {/* Edit modal */}
-        {isEditOpen && (
-          <PersonModal
-            isOpen={isEditOpen}
-            person={person}
-            onClose={() => setIsEditOpen(false)}
-            onSave={handleSavePerson}
-          />
-        )}
+      {isEditOpen && (
+        <PersonModal
+          isOpen={isEditOpen}
+          person={person}
+          onClose={() => setIsEditOpen(false)}
+          onSave={handleSavePerson}
+        />
+      )}
 
       {/* Deletion confirmation dialog */}
-        {isDeleteOpen && (
-          <ConfirmDialog
-            isOpen={isDeleteOpen}
-            onConfirm={handleDelete}
-            onCancel={() => setIsDeleteOpen(false)}
-            title={t('social.detail.delete_title')}
-            message={t('social.detail.delete_message', { name: person.name })}
-            confirmLabel={t('action.delete')}
-            cancelLabel={t('action.cancel')}
-            variant="danger"
-          />
-        )}
+      {isDeleteOpen && (
+        <ConfirmDialog
+          isOpen={isDeleteOpen}
+          onConfirm={handleDelete}
+          onCancel={() => setIsDeleteOpen(false)}
+          title={t('social.detail.delete_title')}
+          message={t('social.detail.delete_message', { name: person.name })}
+          confirmLabel={t('action.delete')}
+          cancelLabel={t('action.cancel')}
+          variant="danger"
+        />
+      )}
     </div>
   );
 }

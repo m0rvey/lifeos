@@ -31,7 +31,13 @@ function defaultData() {
       fontSizeScale: 1,
       isAdaptive: false,
       graphSensitivity: 50,
-      graphWeights: { energy: 0.3, resonance: 0.3, reciprocity: 0.2, volatility: 0.1, recency: 0.1 },
+      graphWeights: {
+        energy: 0.3,
+        resonance: 0.3,
+        reciprocity: 0.2,
+        volatility: 0.1,
+        recency: 0.1,
+      },
       weekStartDay: 0 as const,
     },
     people: [],
@@ -97,7 +103,18 @@ describe('Domain Context Isolation', () => {
       dispatchFn({
         type: 'ADD_ENTITY',
         entity: 'tasks',
-        payload: { id: 't1', title: 'New Task', tags: [], isCompleted: false, emotion: 50, urgency: 50, deadlineISO: null, description: '', createdAt: '', updatedAt: '' }
+        payload: {
+          id: 't1',
+          title: 'New Task',
+          tags: [],
+          isCompleted: false,
+          emotion: 50,
+          urgency: 50,
+          deadlineISO: null,
+          description: '',
+          createdAt: '',
+          updatedAt: '',
+        },
       });
     });
 

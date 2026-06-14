@@ -1,11 +1,19 @@
-import { createContext, useContext, useState, useCallback, useMemo, useEffect, type ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+  type ReactNode,
+} from 'react';
 
 export type Language = 'ru' | 'en';
 
 function detectLanguage(): Language {
   const saved = localStorage.getItem('lifeos-lang') as Language | null;
   if (saved && (saved === 'ru' || saved === 'en')) return saved;
-  const nav = typeof navigator !== 'undefined' ? (navigator.language || 'ru') : 'ru';
+  const nav = typeof navigator !== 'undefined' ? navigator.language || 'ru' : 'ru';
   return nav.startsWith('en') ? 'en' : 'ru';
 }
 
@@ -56,38 +64,45 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     };
   }, [lang]);
 
-  const t = useCallback((key: string, vars?: Record<string, string | number>): string => {
-    let text = translations[key] || key;
-    if (vars) {
-      for (const [k, v] of Object.entries(vars)) {
-        text = text.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v));
+  const t = useCallback(
+    (key: string, vars?: Record<string, string | number>): string => {
+      let text = translations[key] || key;
+      if (vars) {
+        for (const [k, v] of Object.entries(vars)) {
+          text = text.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v));
+        }
       }
-    }
-    return text;
-  }, [translations]);
+      return text;
+    },
+    [translations]
+  );
 
   const value = useMemo(() => ({ lang, setLang, t }), [lang, setLang, t]);
 
   if (isLoading) {
     return (
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '100vh',
-        background: 'var(--bg-primary)',
-        color: 'var(--text-secondary)',
-        gap: '16px'
-      }}>
-        <div style={{
-          width: '40px',
-          height: '40px',
-          border: '3px solid var(--border)',
-          borderTopColor: 'var(--accent)',
-          borderRadius: '50%',
-          animation: 'spin 1s linear infinite'
-        }} />
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100vh',
+          background: 'var(--bg-primary)',
+          color: 'var(--text-secondary)',
+          gap: '16px',
+        }}
+      >
+        <div
+          style={{
+            width: '40px',
+            height: '40px',
+            border: '3px solid var(--border)',
+            borderTopColor: 'var(--accent)',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+          }}
+        />
       </div>
     );
   }

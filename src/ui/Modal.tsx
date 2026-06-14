@@ -38,7 +38,7 @@ export default function Modal({
         const focusableElements = containerRef.current.querySelectorAll(
           'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex="0"], [contenteditable]'
         );
-        
+
         if (focusableElements.length === 0) {
           e.preventDefault();
           return;
@@ -66,13 +66,17 @@ export default function Modal({
 
     if (containerRef.current) {
       const bodyEl = containerRef.current.querySelector('.modal-body');
-      const focusSelector = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex="0"], [contenteditable]';
+      const focusSelector =
+        'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex="0"], [contenteditable]';
       const bodyFocusable = bodyEl?.querySelectorAll<HTMLElement>(focusSelector);
       if (bodyFocusable && bodyFocusable.length > 0) {
         bodyFocusable[0].focus();
       } else {
-        const containerFocusable = containerRef.current.querySelectorAll<HTMLElement>(focusSelector);
-        const nonCloseButton = Array.from(containerFocusable).find(el => !el.classList.contains('modal-close-btn'));
+        const containerFocusable =
+          containerRef.current.querySelectorAll<HTMLElement>(focusSelector);
+        const nonCloseButton = Array.from(containerFocusable).find(
+          (el) => !el.classList.contains('modal-close-btn')
+        );
         if (nonCloseButton) {
           nonCloseButton.focus();
         } else if (containerFocusable.length > 0) {

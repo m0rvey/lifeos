@@ -1,4 +1,14 @@
-import { createContext, useContext, useReducer, useEffect, useRef, useMemo, useState, type ReactNode, type Dispatch } from 'react';
+import {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  useRef,
+  useMemo,
+  useState,
+  type ReactNode,
+  type Dispatch,
+} from 'react';
 import type { AppData } from '../types';
 import { loadData, loadDataAsync, saveData, saveDataAsync } from '../storage/engine';
 import { getDefaultData } from '../storage/defaults';
@@ -8,10 +18,20 @@ const MAX_HISTORY = 50;
 
 type ArrayEntities = Extract<
   keyof AppData,
-  | 'people' | 'tasks' | 'transactions' | 'reminders'
-  | 'rides' | 'routes' | 'maintenance' | 'galleryNotes'
-  | 'journal' | 'knowledge' | 'schedule' | 'habits'
-  | 'workouts' | 'thoughts'
+  | 'people'
+  | 'tasks'
+  | 'transactions'
+  | 'reminders'
+  | 'rides'
+  | 'routes'
+  | 'maintenance'
+  | 'galleryNotes'
+  | 'journal'
+  | 'knowledge'
+  | 'schedule'
+  | 'habits'
+  | 'workouts'
+  | 'thoughts'
 >;
 
 export type DataAction =
@@ -29,7 +49,13 @@ export type HistoryAction =
   | { type: 'REPLACE_STATE'; previousState: AppData; newState: AppData }
   | { type: 'UPDATE_FIELDS'; previousFields: Partial<AppData>; newFields: Partial<AppData> }
   | { type: 'ADD_ENTITY'; entity: ArrayEntities; payload: unknown }
-  | { type: 'UPDATE_ENTITY'; entity: ArrayEntities; id: string; previousState: unknown; newState: unknown }
+  | {
+      type: 'UPDATE_ENTITY';
+      entity: ArrayEntities;
+      id: string;
+      previousState: unknown;
+      newState: unknown;
+    }
   | { type: 'DELETE_ENTITY'; entity: ArrayEntities; id: string; previousState: unknown };
 
 interface HistoryState {
@@ -94,7 +120,7 @@ export function applyHistoryAction(state: AppData, action: HistoryAction): AppDa
       if (Array.isArray(arr)) {
         return {
           ...state,
-          [action.entity]: arr.map(item => {
+          [action.entity]: arr.map((item) => {
             if (item && typeof item === 'object' && 'id' in item && item.id === action.id) {
               return action.newState;
             }
@@ -109,7 +135,7 @@ export function applyHistoryAction(state: AppData, action: HistoryAction): AppDa
       if (Array.isArray(arr)) {
         return {
           ...state,
-          [action.entity]: arr.filter(item => {
+          [action.entity]: arr.filter((item) => {
             if (item && typeof item === 'object' && 'id' in item) {
               return item.id !== action.id;
             }
@@ -181,7 +207,11 @@ function dataReducer(state: HistoryState, action: DataAction): HistoryState {
         }
         case 'IMPORT': {
           newPresent = action.payload;
-          historyAction = { type: 'REPLACE_STATE', previousState: present, newState: action.payload };
+          historyAction = {
+            type: 'REPLACE_STATE',
+            previousState: present,
+            newState: action.payload,
+          };
           break;
         }
         case 'ADD_ENTITY': {
@@ -195,28 +225,30 @@ function dataReducer(state: HistoryState, action: DataAction): HistoryState {
         case 'UPDATE_ENTITY': {
           const arr = present[action.entity];
           if (Array.isArray(arr)) {
-            const oldItem = arr.find(item => item && typeof item === 'object' && 'id' in item && item.id === action.id);
+            const oldItem = arr.find(
+              (item) => item && typeof item === 'object' && 'id' in item && item.id === action.id
+            );
             if (oldItem) {
-              const updatedItem = { 
-                ...oldItem, 
-                ...(action.payload as Record<string, unknown>), 
-                updatedAt: new Date().toISOString() 
+              const updatedItem = {
+                ...oldItem,
+                ...(action.payload as Record<string, unknown>),
+                updatedAt: new Date().toISOString(),
               };
               newPresent = {
                 ...present,
-                [action.entity]: arr.map(item => {
+                [action.entity]: arr.map((item) => {
                   if (item && typeof item === 'object' && 'id' in item && item.id === action.id) {
                     return updatedItem;
                   }
                   return item;
                 }),
               };
-              historyAction = { 
-                type: 'UPDATE_ENTITY', 
-                entity: action.entity, 
-                id: action.id, 
-                previousState: oldItem, 
-                newState: updatedItem 
+              historyAction = {
+                type: 'UPDATE_ENTITY',
+                entity: action.entity,
+                id: action.id,
+                previousState: oldItem,
+                newState: updatedItem,
               };
             }
           }
@@ -225,11 +257,13 @@ function dataReducer(state: HistoryState, action: DataAction): HistoryState {
         case 'DELETE_ENTITY': {
           const arr = present[action.entity];
           if (Array.isArray(arr)) {
-            const oldItem = arr.find(item => item && typeof item === 'object' && 'id' in item && item.id === action.id);
+            const oldItem = arr.find(
+              (item) => item && typeof item === 'object' && 'id' in item && item.id === action.id
+            );
             if (oldItem) {
               newPresent = {
                 ...present,
-                [action.entity]: arr.filter(item => {
+                [action.entity]: arr.filter((item) => {
                   if (item && typeof item === 'object' && 'id' in item) {
                     return item.id !== action.id;
                   }
@@ -251,9 +285,7 @@ function dataReducer(state: HistoryState, action: DataAction): HistoryState {
       newPresent = { ...newPresent, fatigue: calculateFatigue(newPresent) };
 
       return {
-        past: historyAction 
-          ? [...past.slice(-MAX_HISTORY + 1), historyAction] 
-          : past,
+        past: historyAction ? [...past.slice(-MAX_HISTORY + 1), historyAction] : past,
         present: newPresent,
         future: [],
       };
@@ -273,7 +305,8 @@ export const DataDispatchContext = createContext<Dispatch<DataAction> | null>(nu
 const UndoContext = createContext<{ canUndo: boolean; canRedo: boolean } | null>(null);
 
 export function DataProvider({ children }: { children: ReactNode }) {
-  const isTesting = typeof process !== 'undefined' && (process.env.NODE_ENV === 'test' || !!process.env.VITEST);
+  const isTesting =
+    typeof process !== 'undefined' && (process.env.NODE_ENV === 'test' || !!process.env.VITEST);
 
   const [history, dispatch] = useReducer(dataReducer, null, () => {
     const loaded = isTesting ? loadData() : getDefaultData();
@@ -325,8 +358,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
         return currentDataRef.current;
       },
       update() {
-        listenersRef.current.forEach(l => l());
-      }
+        listenersRef.current.forEach((l) => l());
+      },
     };
   }, []);
 
@@ -363,24 +396,28 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
   if (!isInitialized) {
     return (
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '100vh',
-        background: 'var(--bg-primary)',
-        color: 'var(--text-secondary)',
-        gap: '16px'
-      }}>
-        <div style={{
-          width: '40px',
-          height: '40px',
-          border: '3px solid var(--border)',
-          borderTopColor: 'var(--accent)',
-          borderRadius: '50%',
-          animation: 'spin 1s linear infinite'
-        }} />
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100vh',
+          background: 'var(--bg-primary)',
+          color: 'var(--text-secondary)',
+          gap: '16px',
+        }}
+      >
+        <div
+          style={{
+            width: '40px',
+            height: '40px',
+            border: '3px solid var(--border)',
+            borderTopColor: 'var(--accent)',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+          }}
+        />
       </div>
     );
   }
@@ -389,7 +426,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
     <StoreContext.Provider value={store}>
       <DataStateContext.Provider value={history.present}>
         <DataDispatchContext.Provider value={dispatch}>
-          <UndoContext.Provider value={{ canUndo: history.past.length > 0, canRedo: history.future.length > 0 }}>
+          <UndoContext.Provider
+            value={{ canUndo: history.past.length > 0, canRedo: history.future.length > 0 }}
+          >
             {children}
           </UndoContext.Provider>
         </DataDispatchContext.Provider>

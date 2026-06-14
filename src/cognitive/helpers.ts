@@ -23,7 +23,7 @@ export function calculateFatigue(data: AppData): number {
   let fatigue = 35; // base fatigue
 
   // 1. Uncompleted tasks penalty (+5 per pending task, max +25)
-  const pendingTasks = data.tasks ? data.tasks.filter(t => !t.isCompleted) : [];
+  const pendingTasks = data.tasks ? data.tasks.filter((t) => !t.isCompleted) : [];
   fatigue += Math.min(25, pendingTasks.length * 5);
 
   // 2. Schedule blocks in the last 3 days
@@ -32,9 +32,9 @@ export function calculateFatigue(data: AppData): number {
   const threeDaysAgoISO = threeDaysAgo.toISOString().slice(0, 10);
 
   const scheduleBlocks = data.schedule ? data.schedule : [];
-  const recentBlocks = scheduleBlocks.filter(s => s.dateISO >= threeDaysAgoISO);
-  
-  recentBlocks.forEach(block => {
+  const recentBlocks = scheduleBlocks.filter((s) => s.dateISO >= threeDaysAgoISO);
+
+  recentBlocks.forEach((block) => {
     if (block.isCompleted) {
       if (block.type === 'rest') {
         fatigue -= 10;
@@ -46,16 +46,15 @@ export function calculateFatigue(data: AppData): number {
 
   // 3. Workouts/rides in the last 3 days
   const workouts = data.workouts ? data.workouts : [];
-  const recentWorkouts = workouts.filter(w => w.dateISO >= threeDaysAgoISO);
+  const recentWorkouts = workouts.filter((w) => w.dateISO >= threeDaysAgoISO);
   fatigue += recentWorkouts.length * 8;
 
   const rides = data.rides ? data.rides : [];
-  const recentRides = rides.filter(r => r.dateISO >= threeDaysAgoISO);
+  const recentRides = rides.filter((r) => r.dateISO >= threeDaysAgoISO);
   fatigue += recentRides.length * 8;
 
   return Math.max(5, Math.min(95, Math.round(fatigue)));
 }
-
 
 export function getDaysSince(isoDate: string): number {
   if (!isoDate) return 0;

@@ -21,13 +21,13 @@ export default function JournalPage() {
     openDelete: handleDeleteTrigger,
     handleSave: handleSaveEntry,
     confirmDelete,
-    closeAll
+    closeAll,
   } = useCrudModal<JournalEntry>({
     entity: 'journal',
     toastKeys: {
       created: 'reflect.journal.toast_created',
       updated: 'journal.saved',
-      deleted: 'reflect.journal.toast_deleted'
+      deleted: 'reflect.journal.toast_deleted',
     },
     createDefaults: (entryData) => ({
       id: `journ_${uid()}`,
@@ -37,8 +37,8 @@ export default function JournalPage() {
       dateISO: entryData?.dateISO || new Date().toISOString(),
       tags: [],
       createdAt: nowISO(),
-      updatedAt: nowISO()
-    })
+      updatedAt: nowISO(),
+    }),
   });
 
   const sortedEntries = useMemo(() => {
@@ -57,21 +57,33 @@ export default function JournalPage() {
     <div className="flex-col-24 fade-in-entry">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+          <h2
+            style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}
+          >
             {t('reflect.journal.title')}
           </h2>
           <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>
             {t('reflect.journal.subtitle')}
           </p>
         </div>
-        <button className="btn btn--primary" onClick={handleAddNew} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <button
+          className="btn btn--primary"
+          onClick={handleAddNew}
+          style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+        >
           <Plus size={16} />
           <span>{t('reflect.journal.action_new')}</span>
         </button>
       </div>
 
       {/* Summary stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: '16px',
+        }}
+      >
         <StatCard
           label={t('reflect.journal.stat_entries')}
           value={data.journal.length}
@@ -94,7 +106,7 @@ export default function JournalPage() {
           sortedEntries.map((entry) => {
             const moodInfo = getMoodEmoji(entry.mood);
             return (
-              <div 
+              <div
                 key={entry.id}
                 className="glass-panel"
                 style={{
@@ -103,33 +115,75 @@ export default function JournalPage() {
                   borderLeft: `4px solid ${moodInfo.color}`,
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '12px'
+                  gap: '12px',
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    flexWrap: 'wrap',
+                    gap: '8px',
+                  }}
+                >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <span style={{ fontSize: '1.4rem' }}>{moodInfo.emoji}</span>
                     <div>
-                      <h3 style={{ fontSize: '1rem', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>{entry.title}</h3>
-                      <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{formatDate(entry.dateISO)}</span>
+                      <h3
+                        style={{
+                          fontSize: '1rem',
+                          fontWeight: 700,
+                          margin: 0,
+                          color: 'var(--text-primary)',
+                        }}
+                      >
+                        {entry.title}
+                      </h3>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                        {formatDate(entry.dateISO)}
+                      </span>
                     </div>
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <span style={{ fontSize: '0.8rem', background: 'rgba(255,255,255,0.02)', padding: '4px 10px', borderRadius: '24px', border: '1px solid var(--border)', fontWeight: 600 }}>
+                    <span
+                      style={{
+                        fontSize: '0.8rem',
+                        background: 'rgba(255,255,255,0.02)',
+                        padding: '4px 10px',
+                        borderRadius: '24px',
+                        border: '1px solid var(--border)',
+                        fontWeight: 600,
+                      }}
+                    >
                       {t('reflect.journal.mood_prefix')} {entry.mood}%
                     </span>
-                    <button className="btn btn--secondary" style={{ padding: '6px' }} onClick={() => handleEdit(entry)}>
+                    <button
+                      className="btn btn--secondary"
+                      style={{ padding: '6px' }}
+                      onClick={() => handleEdit(entry)}
+                    >
                       <Edit2 size={12} />
                     </button>
-                    <button className="btn btn--secondary btn-padding-4-6-red" onClick={() => handleDeleteTrigger(entry.id)}>
+                    <button
+                      className="btn btn--secondary btn-padding-4-6-red"
+                      onClick={() => handleDeleteTrigger(entry.id)}
+                    >
                       <Trash2 size={12} />
                     </button>
-
                   </div>
                 </div>
 
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0, whiteSpace: 'pre-wrap' }}>
+                <p
+                  style={{
+                    fontSize: '0.85rem',
+                    color: 'var(--text-secondary)',
+                    lineHeight: 1.5,
+                    margin: 0,
+                    whiteSpace: 'pre-wrap',
+                  }}
+                >
                   {entry.content}
                 </p>
               </div>

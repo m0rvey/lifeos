@@ -26,13 +26,14 @@ const ru: Record<string, string> = {
   'common.delete': 'Удалить',
   'common.delete_record': 'Удалить запись',
 
-
   // CONFIRM
   'confirm.import_confirm': 'Импортировать',
-  'confirm.import_message': 'Вы уверены, что хотите импортировать этот файл? Все текущие данные будут заменены данными из резервной копии.',
+  'confirm.import_message':
+    'Вы уверены, что хотите импортировать этот файл? Все текущие данные будут заменены данными из резервной копии.',
   'confirm.import_title': 'Импортировать резервную копию?',
   'confirm.wipe_confirm': 'Сбросить всё',
-  'confirm.wipe_message': 'ВНИМАНИЕ: Это полностью очистит ваше локальное хранилище и удалит все велотренировки, контакты, задачи и записи капитала. Восстановление будет невозможно без файла резервной копии.',
+  'confirm.wipe_message':
+    'ВНИМАНИЕ: Это полностью очистит ваше локальное хранилище и удалит все велотренировки, контакты, задачи и записи капитала. Восстановление будет невозможно без файла резервной копии.',
   'confirm.wipe_title': 'Удаление всей базы данных',
   'confirm.wipe_require_typing': 'СБРОС',
 
@@ -44,7 +45,8 @@ const ru: Record<string, string> = {
   'cycling.common.service': 'Обслуживание',
   'cycling.dashboard.allRides': 'Все заезды',
   'cycling.dashboard.avgSpeed': 'Средняя скорость',
-  'cycling.dashboard.bikeFullyServiced': 'Велосипед полностью обслужен. Активных предупреждений нет.',
+  'cycling.dashboard.bikeFullyServiced':
+    'Велосипед полностью обслужен. Активных предупреждений нет.',
   'cycling.dashboard.elevationGain': 'Набор высоты',
   'cycling.dashboard.for': 'за',
   'cycling.dashboard.maintenance': 'Сервисное обслуживание',
@@ -73,11 +75,14 @@ const ru: Record<string, string> = {
   'cycling.maintenance.colType': 'Вид работ',
   'cycling.maintenance.completed': 'Завершено',
   'cycling.maintenance.createRecord': 'Создать запись',
-  'cycling.maintenance.deleteConfirmMessage': 'Вы действительно хотите удалить эту запись о техническом обслуживании? Это действие необратимо.',
+  'cycling.maintenance.deleteConfirmMessage':
+    'Вы действительно хотите удалить эту запись о техническом обслуживании? Это действие необратимо.',
   'cycling.maintenance.deleteConfirmTitle': 'Удалить запись ТО?',
-  'cycling.maintenance.descriptionPlaceholder': 'Опишите проведенные работы, бренд новой детали или состояние...',
+  'cycling.maintenance.descriptionPlaceholder':
+    'Опишите проведенные работы, бренд новой детали или состояние...',
   'cycling.maintenance.done': 'Выполнено',
-  'cycling.maintenance.emptyDescription': 'Запишите информацию о замене цепи, обслуживании вилки или чистке трансмиссии велосипеда.',
+  'cycling.maintenance.emptyDescription':
+    'Запишите информацию о замене цепи, обслуживании вилки или чистке трансмиссии велосипеда.',
   'cycling.maintenance.emptyMessage': 'Записей о ТО велосипеда не найдено.',
   'cycling.maintenance.emptyTitle': 'История обслуживания пуста',
   'cycling.maintenance.errorCost': 'Стоимость должна быть числом не меньше нуля',
@@ -92,7 +97,8 @@ const ru: Record<string, string> = {
   'cycling.maintenance.modalCreateTitle': 'Зафиксировать техническое обслуживание',
   'cycling.maintenance.modalEditTitle': 'Редактировать запись ТО',
   'cycling.maintenance.partPlaceholder': 'Например: Цепь, Амортизатор, Покрышки',
-  'cycling.maintenance.subtitle': 'Контроль износа деталей, учет расходов на ремонт и планирование сервисных регламентов велосипеда',
+  'cycling.maintenance.subtitle':
+    'Контроль износа деталей, учет расходов на ремонт и планирование сервисных регламентов велосипеда',
   'cycling.maintenance.title': 'Техническое обслуживание (ТО)',
   'cycling.maintenance.toastCreated': 'Добавлена новая запись обслуживания велосипеда',
   'cycling.maintenance.toastDeleted': 'Запись о ТО удалена',
@@ -110,11 +116,14 @@ const ru: Record<string, string> = {
   'cycling.rides.addRide': 'Добавить заезд',
   'cycling.rides.avg': 'Средняя',
   'cycling.rides.defaultTitle': 'Велотренировка',
-  'cycling.rides.deleteConfirmMessage': 'Вы действительно хотите удалить эту запись о велотренировке? Это действие необратимо.',
+  'cycling.rides.deleteConfirmMessage':
+    'Вы действительно хотите удалить эту запись о велотренировке? Это действие необратимо.',
   'cycling.rides.deleteConfirmTitle': 'Удалить заезд?',
-  'cycling.rides.descriptionPlaceholder': 'Опишите погоду, самочувствие или техническое состояние...',
+  'cycling.rides.descriptionPlaceholder':
+    'Опишите погоду, самочувствие или техническое состояние...',
   'cycling.rides.distance': 'Дистанция',
-  'cycling.rides.emptyDescription': 'Запишите вашу первую велотренировку или привяжите ее к готовому маршруту.',
+  'cycling.rides.emptyDescription':
+    'Запишите вашу первую велотренировку или привяжите ее к готовому маршруту.',
   'cycling.rides.emptyTitle': 'Журнал заездов пуст',
   'cycling.rides.errorDistance': 'Дистанция должна быть больше нуля',
   'cycling.rides.errorDuration': 'Продолжительность должна быть больше нуля',
@@ -154,7 +163,8 @@ const ru: Record<string, string> = {
   'cycling.routes.completed': 'Пройден',
   'cycling.routes.createRoute': 'Создать маршрут',
   'cycling.routes.defaultName': 'Новый маршрут',
-  'cycling.routes.deleteConfirmMessage': 'Вы действительно хотите удалить этот велосипедный маршрут? Это действие необратимо.',
+  'cycling.routes.deleteConfirmMessage':
+    'Вы действительно хотите удалить этот велосипедный маршрут? Это действие необратимо.',
   'cycling.routes.deleteConfirmTitle': 'Удалить маршрут?',
   'cycling.routes.difficulty.easy': 'Легкий',
   'cycling.routes.difficulty.easyDesc': 'Пологий рельеф, без сложных участков',
@@ -165,7 +175,8 @@ const ru: Record<string, string> = {
   'cycling.routes.difficulty.medium': 'Средний',
   'cycling.routes.difficulty.mediumDesc': 'Небольшие холмы, умеренная нагрузка',
   'cycling.routes.directRide': 'Прямой заезд',
-  'cycling.routes.emptyDescription': 'Спланируйте контрольные точки и набор высоты для вашей следующей велопоездки.',
+  'cycling.routes.emptyDescription':
+    'Спланируйте контрольные точки и набор высоты для вашей следующей велопоездки.',
   'cycling.routes.emptyMessage': 'У вас пока нет сохраненных маршрутов.',
   'cycling.routes.emptyTitle': 'Список маршрутов пуст',
   'cycling.routes.errorDistance': 'Дистанция маршрута должна быть больше нуля',
@@ -179,7 +190,8 @@ const ru: Record<string, string> = {
   'cycling.routes.modalEditTitle': 'Редактировать маршрут',
   'cycling.routes.namePlaceholder': 'Например: Крылатское кольцо',
   'cycling.routes.planRoute': 'Запланировать маршрут',
-  'cycling.routes.subtitle': 'Проектирование новых велотрасс, составление контрольных точек и ведение статистики прохождений',
+  'cycling.routes.subtitle':
+    'Проектирование новых велотрасс, составление контрольных точек и ведение статистики прохождений',
   'cycling.routes.title': 'Планировщик маршрутов',
   'cycling.routes.toastCreated': 'Запланирован новый маршрут',
   'cycling.routes.toastDeleted': 'Маршрут удален из плана',
@@ -192,7 +204,8 @@ const ru: Record<string, string> = {
   'dashboard.categories': 'категорий заметок',
   'dashboard.completed': 'Выполнено',
   'dashboard.daySchedule': 'Расписание дня',
-  'dashboard.description': 'Интегральный обзор ментального здоровья, привычек, физической активности и базы знаний',
+  'dashboard.description':
+    'Интегральный обзор ментального здоровья, привычек, физической активности и базы знаний',
   'dashboard.events': 'событий',
   'dashboard.general': 'Общее',
   'dashboard.habitTracker': 'Трекер привычек',
@@ -221,7 +234,7 @@ const ru: Record<string, string> = {
   'dashboard.workouts': 'Занятия спортом',
 
   // DAYS_ABBREV
-  'days_abbrev': 'дн.',
+  days_abbrev: 'дн.',
 
   // ERROR
   'error.amount.positive': 'Сумма транзакции должна быть больше нуля',
@@ -245,12 +258,14 @@ const ru: Record<string, string> = {
   'finance.column.category': 'Категория',
   'finance.column.date': 'Дата',
   'finance.column.description': 'Описание',
-  'finance.confirm.deleteMessage': 'Вы действительно хотите удалить эту финансовую транзакцию? Это действие необратимо.',
+  'finance.confirm.deleteMessage':
+    'Вы действительно хотите удалить эту финансовую транзакцию? Это действие необратимо.',
   'finance.confirm.deleteTitle': 'Удалить операцию?',
   'finance.confirm.record': 'Зафиксировать',
   'finance.description.placeholder': 'Дополнительные примечания к транзакции...',
   'finance.empty.history': 'История операций пуста',
-  'finance.empty.historyDescription': 'Начните добавлять доходы и расходы, чтобы увидеть аналитику капитала.',
+  'finance.empty.historyDescription':
+    'Начните добавлять доходы и расходы, чтобы увидеть аналитику капитала.',
   'finance.empty.transactions': 'Транзакций пока нет.',
   'finance.field.amount': 'Сумма (₽)',
   'finance.field.category': 'Категория',
@@ -269,7 +284,8 @@ const ru: Record<string, string> = {
   'finance.stat.totalIncome': 'Всего доходов',
   'finance.type.expense': 'Расход (Списание средств)',
   'finance.type.income': 'Доход (Пополнение баланса)',
-  'finance.chart.insufficientData': 'Недостаточно транзакций для построения графика баланса (требуется как минимум 2).',
+  'finance.chart.insufficientData':
+    'Недостаточно транзакций для построения графика баланса (требуется как минимум 2).',
   'finance.chart.balanceDynamics': 'Динамика баланса',
   'finance.reminder.paidDescription': 'Оплата счета: {title}',
   'finance.reminder.paidToast': 'Оплата по счету "{title}" зафиксирована в расходах',
@@ -295,7 +311,8 @@ const ru: Record<string, string> = {
   'finance.reminder.category.loansDebts': 'Кредиты / Долги',
   'finance.reminder.category.other': 'Другое',
   'finance.reminder.confirm.deleteTitle': 'Удалить счет?',
-  'finance.reminder.confirm.deleteMessage': 'Вы действительно хотите удалить это напоминание о платеже? Это действие необратимо.',
+  'finance.reminder.confirm.deleteMessage':
+    'Вы действительно хотите удалить это напоминание о платеже? Это действие необратимо.',
   'shortcuts.title': 'Горячие клавиши',
   'shortcuts.module_nav': 'Навигация по модулям',
   'shortcuts.export_backup': 'Экспорт резервной копии',
@@ -303,8 +320,6 @@ const ru: Record<string, string> = {
   'shortcuts.element_nav': 'Навигация по элементам',
   'shortcuts.activate_element': 'Активировать элемент',
   'shortcuts.show_shortcuts': 'Горячие клавиши',
-
-
 
   // HEADER
   'header.active_tasks': 'Активные задачи:',
@@ -323,7 +338,8 @@ const ru: Record<string, string> = {
   'hub.cognitive_balance': 'Когнитивный баланс',
   'hub.contacts': 'Контактов',
   'hub.cycling': 'Велоспорт',
-  'hub.description': 'Когнитивный баланс, социальные связи, финансы, велотренировки и привычки — всё в одном месте.',
+  'hub.description':
+    'Когнитивный баланс, социальные связи, финансы, велотренировки и привычки — всё в одном месте.',
   'hub.distance': 'Дистанция',
   'hub.fatigue': 'Усталость',
   'hub.finance': 'Капитал',
@@ -364,7 +380,8 @@ const ru: Record<string, string> = {
   'reflect.journal.toast_created': 'Новая страница рефлексии добавлена в дневник',
   'reflect.journal.toast_deleted': 'Запись дневника удалена',
   'reflect.journal.title': 'Дневник настроения и рефлексии',
-  'reflect.journal.subtitle': 'Фиксация ментальных состояний, отслеживание колебаний настроения и анализ мыслей',
+  'reflect.journal.subtitle':
+    'Фиксация ментальных состояний, отслеживание колебаний настроения и анализ мыслей',
   'reflect.journal.action_new': 'Новая запись',
   'reflect.journal.stat_entries': 'Всего записей',
   'reflect.journal.stat_entries_desc': 'Зафиксированных дней рефлексии',
@@ -372,10 +389,12 @@ const ru: Record<string, string> = {
   'reflect.journal.stat_mood_desc': 'Общий показатель благополучия',
   'reflect.journal.mood_prefix': 'Настроение:',
   'reflect.journal.empty_title': 'Дневник пуст',
-  'reflect.journal.empty_desc': 'Запишите ваши мысли за сегодня. Рефлексия помогает лучше справляться со стрессом и усталостью.',
+  'reflect.journal.empty_desc':
+    'Запишите ваши мысли за сегодня. Рефлексия помогает лучше справляться со стрессом и усталостью.',
   'reflect.journal.action_start': 'Начать дневник',
   'reflect.journal.confirm_delete_title': 'Удалить страницу из дневника?',
-  'reflect.journal.confirm_delete_message': 'Вы уверены, что хотите удалить эту запись? Данные рефлексии настроения за этот день будут утеряны.',
+  'reflect.journal.confirm_delete_message':
+    'Вы уверены, что хотите удалить эту запись? Данные рефлексии настроения за этот день будут утеряны.',
 
   'reflect.schedule.error_title': 'Укажите название события',
   'reflect.schedule.error_time': 'Укажите время начала',
@@ -404,7 +423,8 @@ const ru: Record<string, string> = {
   'reflect.schedule.toast_uncompleted': 'Событие возвращено в планы',
   'reflect.schedule.toast_completed': 'Событие выполнено',
   'reflect.schedule.title': 'Gap-Планировщик расписания',
-  'reflect.schedule.subtitle': 'Ведение дневного таймлайна, автопоиск свободных окон (Gap) и организация распорядка',
+  'reflect.schedule.subtitle':
+    'Ведение дневного таймлайна, автопоиск свободных окон (Gap) и организация распорядка',
   'reflect.schedule.action_add': 'Добавить блок',
   'reflect.schedule.stat_time': 'Запланировано времени',
   'reflect.schedule.stat_time_desc': 'Суммарная нагрузка за день',
@@ -416,7 +436,8 @@ const ru: Record<string, string> = {
   'reflect.schedule.empty_desc': 'На день {date} расписание пустое.',
   'reflect.schedule.action_schedule': 'Запланировать блок',
   'reflect.schedule.confirm_delete_title': 'Удалить блок из расписания?',
-  'reflect.schedule.confirm_delete_message': 'Вы уверены, что хотите удалить это событие? Действие не может быть отменено.',
+  'reflect.schedule.confirm_delete_message':
+    'Вы уверены, что хотите удалить это событие? Действие не может быть отменено.',
 
   'reflect.workout.error_duration': 'Продолжительность тренировки должна быть больше 0 минут',
   'reflect.workout.error_calories': 'Количество калорий должно быть положительным числом',
@@ -455,7 +476,8 @@ const ru: Record<string, string> = {
   'reflect.workout.type_walking_short': 'Ходьба',
   'reflect.workout.type_other_short': 'Другое',
   'reflect.workout.title': 'Спортивный журнал активности',
-  'reflect.workout.subtitle': 'Логирование физических нагрузок, учет калорий и управление тренировочным процессом',
+  'reflect.workout.subtitle':
+    'Логирование физических нагрузок, учет калорий и управление тренировочным процессом',
   'reflect.workout.action_add': 'Добавить занятие',
   'reflect.workout.stat_total': 'Всего занятий',
   'reflect.workout.stat_total_desc': 'Выполненных тренировок',
@@ -476,15 +498,14 @@ const ru: Record<string, string> = {
   'reflect.workout.column_calories': 'Калории',
   'reflect.workout.column_description': 'Описание / Заметки',
   'reflect.workout.empty_title': 'Нет спортивных записей',
-  'reflect.workout.empty_desc': 'Добавьте свою первую тренировку, чтобы вести учет активности, отслеживать прогресс и энергобаланс.',
+  'reflect.workout.empty_desc':
+    'Добавьте свою первую тренировку, чтобы вести учет активности, отслеживать прогресс и энергобаланс.',
   'reflect.workout.confirm_delete_title': 'Удалить тренировку?',
-  'reflect.workout.confirm_delete_message': 'Вы уверены, что хотите удалить эту запись из спортивного журнала? Это действие необратимо.',
-
-
-
+  'reflect.workout.confirm_delete_message':
+    'Вы уверены, что хотите удалить эту запись из спортивного журнала? Это действие необратимо.',
 
   // LOADING
-  'loading': 'Загрузка...',
+  loading: 'Загрузка...',
 
   // NAV
   'nav.analytics': 'Аналитика',
@@ -499,9 +520,11 @@ const ru: Record<string, string> = {
   'reflect.museum.action_capture': 'Запечатлеть',
   'reflect.museum.add': 'Запечатлеть мысль',
   'reflect.museum.category_label': 'Рубрика:',
-  'reflect.museum.delete_message': 'Вы уверены, что хотите удалить эту запись? Действие не может быть отменено.',
+  'reflect.museum.delete_message':
+    'Вы уверены, что хотите удалить эту запись? Действие не может быть отменено.',
   'reflect.museum.delete_title': 'Удалить мысль из музея?',
-  'reflect.museum.empty_desc': 'Запишите свои главные жизненные выводы, инсайты или чужие цитаты, которые заставили вас задуматься.',
+  'reflect.museum.empty_desc':
+    'Запишите свои главные жизненные выводы, инсайты или чужие цитаты, которые заставили вас задуматься.',
   'reflect.museum.empty_title': 'Музей мыслей пуст',
   'reflect.museum.default_category': 'Философия',
   'reflect.museum.error_empty': 'Содержание мысли не может быть пустым',
@@ -526,7 +549,8 @@ const ru: Record<string, string> = {
 
   // REFLECT KNOWLEDGE
   'reflect.knowledge.title': 'База знаний (Second Brain)',
-  'reflect.knowledge.subtitle': 'Накопление структурированной информации, конспекты книг, статьи и полезные ссылки',
+  'reflect.knowledge.subtitle':
+    'Накопление структурированной информации, конспекты книг, статьи и полезные ссылки',
   'reflect.knowledge.action_add': 'Добавить знания',
   'reflect.knowledge.action_add_summary': 'Добавить конспект',
   'reflect.knowledge.search_placeholder': 'Искать в конспектах, тегах и заголовках...',
@@ -534,9 +558,11 @@ const ru: Record<string, string> = {
   'reflect.knowledge.card_category_label': 'Категория:',
   'reflect.knowledge.card_source_label': 'Источник:',
   'reflect.knowledge.empty_title': 'База знаний пуста',
-  'reflect.knowledge.empty_description': 'Ничего не найдено. Добавьте конспекты, статьи или цитаты, чтобы начать формирование вашей базы знаний.',
+  'reflect.knowledge.empty_description':
+    'Ничего не найдено. Добавьте конспекты, статьи или цитаты, чтобы начать формирование вашей базы знаний.',
   'reflect.knowledge.confirm_delete_title': 'Удалить запись БЗ?',
-  'reflect.knowledge.confirm_delete_message': 'Вы уверены, что хотите удалить эту статью из базы знаний? Это действие необратимо.',
+  'reflect.knowledge.confirm_delete_message':
+    'Вы уверены, что хотите удалить эту статью из базы знаний? Это действие необратимо.',
   'reflect.knowledge.toast_updated': 'Статья БЗ обновлена',
   'reflect.knowledge.toast_created': 'Новые знания добавлены в базу',
   'reflect.knowledge.toast_deleted': 'Запись БЗ удалена',
@@ -571,7 +597,8 @@ const ru: Record<string, string> = {
 
   // REFLECT HABITS
   'reflect.habits.title': 'Трекер привычек и ритуалов',
-  'reflect.habits.subtitle': 'Закрепление полезных паттернов поведения, учет ежедневной дисциплины и анализ динамики страйков',
+  'reflect.habits.subtitle':
+    'Закрепление полезных паттернов поведения, учет ежедневной дисциплины и анализ динамики страйков',
   'reflect.habits.stat_total': 'Всего привычек в логе',
   'reflect.habits.stat_total_desc': 'Активно отслеживаемых паттернов',
   'reflect.habits.stat_streak': 'Максимальный страйк',
@@ -584,9 +611,11 @@ const ru: Record<string, string> = {
   'reflect.habits.action_create': 'Создать',
   'reflect.habits.column_title': 'Название привычки',
   'reflect.habits.column_streak': 'Страйк',
-  'reflect.habits.empty_message': 'Привычек не зарегистрировано. Начните с создания своей первой привычки!',
+  'reflect.habits.empty_message':
+    'Привычек не зарегистрировано. Начните с создания своей первой привычки!',
   'reflect.habits.confirm_delete_title': 'Удалить привычку?',
-  'reflect.habits.confirm_delete_message': 'Вы уверены, что хотите удалить эту привычку? Вся история ее соблюдения будет утеряна.',
+  'reflect.habits.confirm_delete_message':
+    'Вы уверены, что хотите удалить эту привычку? Вся история ее соблюдения будет утеряна.',
   'reflect.habits.toast_created': 'Привычка "{title}" добавлена в трекер',
   'reflect.habits.toast_deleted': 'Привычка удалена из архива',
   'reflect.habits.delete_aria': 'Удалить привычку: {title}',
@@ -605,8 +634,10 @@ const ru: Record<string, string> = {
   'settings.csv.rides': 'Поездки',
   'settings.csv.transactions': 'Транзакции',
   'settings.csv_export': 'Экспорт в CSV',
-  'settings.danger_zone': 'Опасная зона: безвозвратно удаляет всю базу данных, включая велотренировки и контакты.',
-  'settings.security_notice': 'Уведомление о безопасности: Все данные хранятся локально в вашем браузере (без шифрования). Не используйте приложение на общедоступных или совместных компьютерах.',
+  'settings.danger_zone':
+    'Опасная зона: безвозвратно удаляет всю базу данных, включая велотренировки и контакты.',
+  'settings.security_notice':
+    'Уведомление о безопасности: Все данные хранятся локально в вашем браузере (без шифрования). Не используйте приложение на общедоступных или совместных компьютерах.',
   'settings.db.active_tasks': 'Активных задач:',
   'settings.db.cycling_rides': 'Велозаездов:',
   'settings.db.finance_transactions': 'Финансовых транзакций:',
@@ -638,7 +669,8 @@ const ru: Record<string, string> = {
   'settings.theme_mode.adaptive': 'Авто по модулям',
   'settings.theme_mode.manual': 'Ручной выбор',
   'settings.theme_mode.system': 'По системным настройкам',
-  'settings.theme_system_hint': 'Тема будет автоматически переключаться между темной (Slate) и светлой (Reflect) в зависимости от настроек вашей ОС.',
+  'settings.theme_system_hint':
+    'Тема будет автоматически переключаться между темной (Slate) и светлой (Reflect) в зависимости от настроек вашей ОС.',
   'settings.title': 'Настройки платформы',
   'settings.user_name': 'Имя пользователя',
   'settings.user_name_placeholder': 'Ваше имя',
@@ -696,10 +728,12 @@ const ru: Record<string, string> = {
   'social.detail.last_touch': 'Последнее касание',
   'social.detail.metrics_title': 'Параметры близости',
   'social.detail.not_found': 'Связь не найдена',
-  'social.detail.notes_empty': 'Заметки отсутствуют. Запишите важные детали или планы на следующую встречу.',
+  'social.detail.notes_empty':
+    'Заметки отсутствуют. Запишите важные детали или планы на следующую встречу.',
   'social.detail.notes_title': 'Заметки / Договорённости',
   'social.detail.quality_label': 'Качество связи',
-  'social.detail.reflection_empty': 'Рефлексии пока нет. Запишите инсайты или эмоции, оставшиеся после общения.',
+  'social.detail.reflection_empty':
+    'Рефлексии пока нет. Запишите инсайты или эмоции, оставшиеся после общения.',
   'social.detail.reflection_title': 'Рефлексия (Выводы из общения)',
   'social.detail.touch_today': 'Касание сегодня',
   'social.empty_list': 'Связи не найдены',
@@ -707,7 +741,8 @@ const ru: Record<string, string> = {
   'social.filter.all_statuses': 'Все',
   'social.graph.hint': 'Перетаскивайте узлы, кликните на контакт для диагностики',
   'social.graph.me': 'Я',
-  'social.graph.no_contacts_desc': 'Добавьте ваших друзей или коллег в список контактов, чтобы построить социальный граф связей.',
+  'social.graph.no_contacts_desc':
+    'Добавьте ваших друзей или коллег в список контактов, чтобы построить социальный граф связей.',
   'social.graph.no_contacts_title': 'Нет контактов для отображения',
   'social.graph.title': 'Карта социального поля',
   'social.label.archetype': 'Архетип связи',
@@ -764,12 +799,18 @@ const ru: Record<string, string> = {
   'social.total_label': 'Всего связей:',
 
   // STATS
-  'stats.advice.cognitive': 'Обнаружено умственное утомление. Рекомендуется снизить интенсивность работы, запланировать 1-2 часа пассивного отдыха в расписании и временно не создавать новые задачи.',
-  'stats.advice.excellent': 'Все показатели находятся на оптимальном уровне! Вы прекрасно распределяете когнитивные, социальные и физические ресурсы. Продолжайте поддерживать баланс.',
-  'stats.advice.finance': 'Низкая норма сбережений за выбранный период ({rate}%). Рекомендуется проанализировать недавние списания и оптимизировать мелкие расходы в модуле Финансы.',
-  'stats.advice.mindful': 'Снизилась регулярность выполнения привычек или ведения рефлексии. Уделите 5 минут вечером для заполнения дневника настроения.',
-  'stats.advice.physical': 'Объем активности ({minutes} мин) ниже целевой нормы для поддержания бодрости. Запланируйте велосипедный заезд или легкую кардио-тренировку.',
-  'stats.advice.social': 'Часть ваших социальных связей начинает остывать. Проявите инициативу и свяжитесь с близкими людьми{names}.',
+  'stats.advice.cognitive':
+    'Обнаружено умственное утомление. Рекомендуется снизить интенсивность работы, запланировать 1-2 часа пассивного отдыха в расписании и временно не создавать новые задачи.',
+  'stats.advice.excellent':
+    'Все показатели находятся на оптимальном уровне! Вы прекрасно распределяете когнитивные, социальные и физические ресурсы. Продолжайте поддерживать баланс.',
+  'stats.advice.finance':
+    'Низкая норма сбережений за выбранный период ({rate}%). Рекомендуется проанализировать недавние списания и оптимизировать мелкие расходы в модуле Финансы.',
+  'stats.advice.mindful':
+    'Снизилась регулярность выполнения привычек или ведения рефлексии. Уделите 5 минут вечером для заполнения дневника настроения.',
+  'stats.advice.physical':
+    'Объем активности ({minutes} мин) ниже целевой нормы для поддержания бодрости. Запланируйте велосипедный заезд или легкую кардио-тренировку.',
+  'stats.advice.social':
+    'Часть ваших социальных связей начинает остывать. Проявите инициативу и свяжитесь с близкими людьми{names}.',
   'stats.balance_radar': 'Сводный радар баланса ресурсов',
   'stats.calories_burned': 'Сожжено калорий',
   'stats.cognitive_desc': 'Уровень бодрости и запас ментальных сил',

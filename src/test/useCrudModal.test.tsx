@@ -37,8 +37,8 @@ vi.mock('../i18n', () => {
           }
         }
         return text;
-      }
-    })
+      },
+    }),
   };
 });
 
@@ -56,7 +56,13 @@ function defaultData() {
       fontSizeScale: 1,
       isAdaptive: false,
       graphSensitivity: 50,
-      graphWeights: { energy: 0.3, resonance: 0.3, reciprocity: 0.2, volatility: 0.1, recency: 0.1 },
+      graphWeights: {
+        energy: 0.3,
+        resonance: 0.3,
+        reciprocity: 0.2,
+        volatility: 0.1,
+        recency: 0.1,
+      },
       weekStartDay: 0 as const,
     },
     people: [],
@@ -91,9 +97,7 @@ function Wrapper({ children }: { children: React.ReactNode }) {
     <MemoryRouter>
       <I18nProvider>
         <DataProvider>
-          <AppProvider>
-            {children}
-          </AppProvider>
+          <AppProvider>{children}</AppProvider>
         </DataProvider>
       </I18nProvider>
     </MemoryRouter>

@@ -13,7 +13,7 @@ const catColors = {
   health: 'var(--color-red, #ef4444)',
   mind: 'var(--color-blue, #2563eb)',
   productivity: 'var(--color-yellow, #f59e0b)',
-  other: 'var(--color-grey, #64748b)'
+  other: 'var(--color-grey, #64748b)',
 };
 
 // Generates an array of last N dates (YYYY-MM-DD)
@@ -56,12 +56,13 @@ const HabitRow = memo(function HabitRow({
           <span className="habits-category-dot" style={{ background: catColors[habit.category] }} />
           <span className="text-semibold">{habit.title}</span>
         </div>
-        <span className="habits-category-label">
-          {t(`reflect.habits.cat_${habit.category}`)}
-        </span>
+        <span className="habits-category-label">{t(`reflect.habits.cat_${habit.category}`)}</span>
       </td>
       <td style={{ textAlign: 'center' }}>
-        <div className="habits-streak-wrapper" style={{ color: streakLevel > 0 ? 'var(--accent)' : 'var(--text-secondary)' }}>
+        <div
+          className="habits-streak-wrapper"
+          style={{ color: streakLevel > 0 ? 'var(--accent)' : 'var(--text-secondary)' }}
+        >
           <Flame size={14} fill={streakLevel > 0 ? 'var(--accent)' : 'none'} />
           <strong className="text-md-scale">{streak.current}</strong>
           <span className="habits-streak-max">/ max {streak.max}</span>
@@ -126,13 +127,13 @@ export default function HabitsPage() {
       completedDates: [],
       isActive: true,
       createdAt: nowISO(),
-      updatedAt: nowISO()
+      updatedAt: nowISO(),
     };
 
     dispatch({
       type: 'ADD_ENTITY',
       entity: 'habits',
-      payload: newHabit
+      payload: newHabit,
     });
 
     setNewTitle('');
@@ -149,7 +150,7 @@ export default function HabitsPage() {
       dispatch({
         type: 'DELETE_ENTITY',
         entity: 'habits',
-        id: habitToDelete
+        id: habitToDelete,
       });
       setHabitToDelete(null);
       addToast(t('reflect.habits.toast_deleted'), 'warning');
@@ -157,36 +158,39 @@ export default function HabitsPage() {
     setIsDeleteOpen(false);
   }, [habitToDelete, dispatch, addToast, t]);
 
-  const handleToggleHabitDate = useCallback((habit: Habit, dateStr: string) => {
-    const dates = [...habit.completedDates];
-    const index = dates.indexOf(dateStr);
-    
-    if (index >= 0) {
-      // Remove date (uncheck)
-      dates.splice(index, 1);
-    } else {
-      // Add date (check)
-      dates.push(dateStr);
-    }
+  const handleToggleHabitDate = useCallback(
+    (habit: Habit, dateStr: string) => {
+      const dates = [...habit.completedDates];
+      const index = dates.indexOf(dateStr);
 
-    dispatch({
-      type: 'UPDATE_ENTITY',
-      entity: 'habits',
-      id: habit.id,
-      payload: { completedDates: dates }
-    });
-  }, [dispatch]);
+      if (index >= 0) {
+        // Remove date (uncheck)
+        dates.splice(index, 1);
+      } else {
+        // Add date (check)
+        dates.push(dateStr);
+      }
+
+      dispatch({
+        type: 'UPDATE_ENTITY',
+        entity: 'habits',
+        id: habit.id,
+        payload: { completedDates: dates },
+      });
+    },
+    [dispatch]
+  );
 
   // Compute stats for heat map (completions count per day)
   const heatmapStats = useMemo(() => {
     const stats: Record<string, number> = {};
-    
-    last30Days.forEach(date => {
+
+    last30Days.forEach((date) => {
       stats[date] = 0;
     });
 
-    data.habits.forEach(h => {
-      h.completedDates.forEach(date => {
+    data.habits.forEach((h) => {
+      h.completedDates.forEach((date) => {
         const key = date.slice(0, 10);
         if (stats[key] !== undefined) {
           stats[key]++;
@@ -218,12 +222,8 @@ export default function HabitsPage() {
     <div className="fade-in-entry flex-col-24">
       <div className="flex-row-between">
         <div>
-          <h2 className="text-lg-scale text-bold no-margin">
-            {t('reflect.habits.title')}
-          </h2>
-          <p className="text-sm-scale text-secondary margin-top4">
-            {t('reflect.habits.subtitle')}
-          </p>
+          <h2 className="text-lg-scale text-bold no-margin">{t('reflect.habits.title')}</h2>
+          <p className="text-sm-scale text-secondary margin-top4">{t('reflect.habits.subtitle')}</p>
         </div>
       </div>
 
@@ -256,17 +256,20 @@ export default function HabitsPage() {
           {last30Days.map((date) => {
             const count = heatmapStats[date] || 0;
             const cellColor = getHeatmapColor(count);
-            
+
             // Format label for tooltip
-            const dayLabel = new Date(date).toLocaleDateString(lang === 'en' ? 'en-US' : 'ru-RU', { day: 'numeric', month: 'short' });
-            
+            const dayLabel = new Date(date).toLocaleDateString(lang === 'en' ? 'en-US' : 'ru-RU', {
+              day: 'numeric',
+              month: 'short',
+            });
+
             return (
               <div
                 key={date}
                 className="habits-heatmap-cell"
                 style={{
                   background: cellColor,
-                  color: count > 0 ? '#fff' : 'var(--text-secondary)'
+                  color: count > 0 ? '#fff' : 'var(--text-secondary)',
                 }}
                 title={t('reflect.habits.heatmap_tooltip', { dayLabel, count })}
               >
@@ -318,10 +321,15 @@ export default function HabitsPage() {
             <thead>
               <tr className="habits-table-header-row">
                 <th>{t('reflect.habits.column_title')}</th>
-                <th style={{ width: '120px', textAlign: 'center' }}>{t('reflect.habits.column_streak')}</th>
+                <th style={{ width: '120px', textAlign: 'center' }}>
+                  {t('reflect.habits.column_streak')}
+                </th>
                 {last7Days.map((date) => {
                   const dayNum = new Date(date).getDate();
-                  const weekday = new Date(date).toLocaleDateString(lang === 'en' ? 'en-US' : 'ru-RU', { weekday: 'short' });
+                  const weekday = new Date(date).toLocaleDateString(
+                    lang === 'en' ? 'en-US' : 'ru-RU',
+                    { weekday: 'short' }
+                  );
                   return (
                     <th key={date} style={{ width: '60px', textAlign: 'center' }}>
                       <span className="habits-table-weekday">{weekday}</span>
@@ -356,18 +364,18 @@ export default function HabitsPage() {
         </div>
       </div>
 
-        {isDeleteOpen && (
-          <ConfirmDialog
-            isOpen={isDeleteOpen}
-            onConfirm={confirmDelete}
-            onCancel={() => setIsDeleteOpen(false)}
-            title={t('reflect.habits.confirm_delete_title')}
-            message={t('reflect.habits.confirm_delete_message')}
-            confirmLabel={t('action.delete')}
-            cancelLabel={t('action.cancel')}
-            variant="danger"
-          />
-        )}
+      {isDeleteOpen && (
+        <ConfirmDialog
+          isOpen={isDeleteOpen}
+          onConfirm={confirmDelete}
+          onCancel={() => setIsDeleteOpen(false)}
+          title={t('reflect.habits.confirm_delete_title')}
+          message={t('reflect.habits.confirm_delete_message')}
+          confirmLabel={t('action.delete')}
+          cancelLabel={t('action.cancel')}
+          variant="danger"
+        />
+      )}
     </div>
   );
 }

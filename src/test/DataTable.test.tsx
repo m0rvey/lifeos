@@ -25,12 +25,7 @@ describe('DataTable', () => {
   ];
 
   it('renders table with data', () => {
-    render(
-      <DataTable
-        columns={columns}
-        data={mockData}
-      />
-    );
+    render(<DataTable columns={columns} data={mockData} />);
 
     expect(screen.getByText('Item 1')).toBeInTheDocument();
     expect(screen.getByText('Item 2')).toBeInTheDocument();
@@ -41,37 +36,20 @@ describe('DataTable', () => {
   });
 
   it('renders empty state when data is empty', () => {
-    render(
-      <DataTable
-        columns={columns}
-        data={[]}
-        emptyMessage="No items found"
-      />
-    );
+    render(<DataTable columns={columns} data={[]} emptyMessage="No items found" />);
 
     expect(screen.getByText('No items found')).toBeInTheDocument();
   });
 
   it('renders default empty message when no emptyMessage provided', () => {
-    render(
-      <DataTable
-        columns={columns}
-        data={[]}
-      />
-    );
+    render(<DataTable columns={columns} data={[]} />);
 
     expect(screen.getByText('common.no_data')).toBeInTheDocument();
   });
 
   it('calls onDelete when delete button is clicked', () => {
     const onDelete = vi.fn();
-    render(
-      <DataTable
-        columns={columns}
-        data={mockData}
-        onDelete={onDelete}
-      />
-    );
+    render(<DataTable columns={columns} data={mockData} onDelete={onDelete} />);
 
     const deleteButtons = screen.getAllByRole('button');
     fireEvent.click(deleteButtons[0]);
@@ -79,12 +57,7 @@ describe('DataTable', () => {
   });
 
   it('does not render delete column when onDelete is not provided', () => {
-    const { container } = render(
-      <DataTable
-        columns={columns}
-        data={mockData}
-      />
-    );
+    const { container } = render(<DataTable columns={columns} data={mockData} />);
 
     const headers = container.querySelectorAll('th');
     expect(headers.length).toBe(2);
@@ -92,11 +65,7 @@ describe('DataTable', () => {
 
   it('renders delete column when onDelete is provided', () => {
     const { container } = render(
-      <DataTable
-        columns={columns}
-        data={mockData}
-        onDelete={() => {}}
-      />
+      <DataTable columns={columns} data={mockData} onDelete={() => {}} />
     );
 
     const headers = container.querySelectorAll('th');
@@ -113,12 +82,7 @@ describe('DataTable', () => {
       },
     ];
 
-    render(
-      <DataTable
-        columns={customColumns}
-        data={mockData}
-      />
-    );
+    render(<DataTable columns={customColumns} data={mockData} />);
 
     expect(screen.getByText('200')).toBeInTheDocument();
     expect(screen.getByText('400')).toBeInTheDocument();

@@ -1,6 +1,16 @@
 import { useState, useEffect, useRef, useMemo, type ComponentType } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home, Share2, Wallet, Bike, BrainCircuit, BarChart3, Settings, Menu, Search } from 'lucide-react';
+import {
+  Home,
+  Share2,
+  Wallet,
+  Bike,
+  BrainCircuit,
+  BarChart3,
+  Settings,
+  Menu,
+  Search,
+} from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useData } from '../context/DataContext';
 import { useI18n } from '../i18n';
@@ -12,7 +22,12 @@ interface AppHeaderProps {
   onOpenSearch?: () => void;
 }
 
-const TABS: { key: ModuleKey; i18nKey: string; icon: ComponentType<{ size?: number }>; route: string }[] = [
+const TABS: {
+  key: ModuleKey;
+  i18nKey: string;
+  icon: ComponentType<{ size?: number }>;
+  route: string;
+}[] = [
   { key: 'hub', i18nKey: 'nav.hub', icon: Home, route: '/hub' },
   { key: 'social', i18nKey: 'nav.social', icon: Share2, route: '/social' },
   { key: 'finance', i18nKey: 'nav.finance', icon: Wallet, route: '/finance' },
@@ -48,7 +63,8 @@ export default function AppHeader({ onOpenSettings, onOpenSearch }: AppHeaderPro
   };
 
   const overdueContactsCount = useMemo(() => data.people.filter(isDecaying).length, [data.people]);
-  const showSidebarToggle = activeModule !== 'hub' && activeModule !== 'analytics' && activeModule !== 'settings';
+  const showSidebarToggle =
+    activeModule !== 'hub' && activeModule !== 'analytics' && activeModule !== 'settings';
 
   return (
     <header className="app-header">
@@ -79,7 +95,7 @@ export default function AppHeader({ onOpenSettings, onOpenSearch }: AppHeaderPro
           const isActive = activeModule === tab.key;
           const Icon = tab.icon;
           const label = t(tab.i18nKey);
-          
+
           let badgeCount = 0;
           if (tab.key === 'social') badgeCount = overdueContactsCount;
 
@@ -95,16 +111,19 @@ export default function AppHeader({ onOpenSettings, onOpenSearch }: AppHeaderPro
               <Icon size={14} />
               <span>{label}</span>
               {badgeCount > 0 && (
-                <span className="tab-badge" style={{
-                  marginLeft: '6px',
-                  background: tab.key === 'social' ? 'var(--error)' : 'var(--accent)',
-                  color: 'white',
-                  fontSize: '10px',
-                  fontWeight: 'bold',
-                  padding: '2px 6px',
-                  borderRadius: '10px',
-                  lineHeight: 1
-                }}>
+                <span
+                  className="tab-badge"
+                  style={{
+                    marginLeft: '6px',
+                    background: tab.key === 'social' ? 'var(--error)' : 'var(--accent)',
+                    color: 'white',
+                    fontSize: '10px',
+                    fontWeight: 'bold',
+                    padding: '2px 6px',
+                    borderRadius: '10px',
+                    lineHeight: 1,
+                  }}
+                >
                   {badgeCount > 99 ? '99+' : badgeCount}
                 </span>
               )}
@@ -153,13 +172,22 @@ export default function AppHeader({ onOpenSettings, onOpenSearch }: AppHeaderPro
             <div className="profile-dropdown-stats">
               <div className="profile-dropdown-stat-row">
                 <span>{t('header.mental_fatigue')}</span>
-                <strong style={{ color: data.fatigue > 75 ? 'var(--error)' : data.fatigue > 45 ? 'var(--warning)' : 'var(--success)' }}>
+                <strong
+                  style={{
+                    color:
+                      data.fatigue > 75
+                        ? 'var(--error)'
+                        : data.fatigue > 45
+                          ? 'var(--warning)'
+                          : 'var(--success)',
+                  }}
+                >
                   {Math.round(data.fatigue)}%
                 </strong>
               </div>
               <div className="profile-dropdown-stat-row">
                 <span>{t('header.active_tasks')}</span>
-                <strong>{data.tasks.filter(t => !t.isCompleted).length}</strong>
+                <strong>{data.tasks.filter((t) => !t.isCompleted).length}</strong>
               </div>
               <div className="profile-dropdown-stat-row">
                 <span>{t('header.total_contacts')}</span>

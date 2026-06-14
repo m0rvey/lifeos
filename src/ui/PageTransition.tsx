@@ -23,7 +23,10 @@ export default function PageTransition({ children }: { children: React.ReactNode
   }, [location.pathname, children]);
 
   return (
-    <div className={transitionStage ? 'page-transition' : ''} style={{ opacity: transitionStage ? 1 : 0 }}>
+    <div
+      className={transitionStage ? 'page-transition' : ''}
+      style={{ opacity: transitionStage ? 1 : 0 }}
+    >
       {displayChildren}
     </div>
   );

@@ -53,9 +53,33 @@ describe('calculateFatigue', () => {
     const dataWithTasks = {
       ...baseData,
       tasks: [
-        { id: '1', title: 'Task 1', isCompleted: false, dateISO: daysAgoISO(1), priority: 'medium' as const, createdAt: daysAgoISO(1) + 'T00:00:00Z', updatedAt: daysAgoISO(1) + 'T00:00:00Z' },
-        { id: '2', title: 'Task 2', isCompleted: false, dateISO: daysAgoISO(1), priority: 'high' as const, createdAt: daysAgoISO(1) + 'T00:00:00Z', updatedAt: daysAgoISO(1) + 'T00:00:00Z' },
-        { id: '3', title: 'Task 3', isCompleted: true, dateISO: daysAgoISO(1), priority: 'low' as const, createdAt: daysAgoISO(1) + 'T00:00:00Z', updatedAt: daysAgoISO(1) + 'T00:00:00Z' },
+        {
+          id: '1',
+          title: 'Task 1',
+          isCompleted: false,
+          dateISO: daysAgoISO(1),
+          priority: 'medium' as const,
+          createdAt: daysAgoISO(1) + 'T00:00:00Z',
+          updatedAt: daysAgoISO(1) + 'T00:00:00Z',
+        },
+        {
+          id: '2',
+          title: 'Task 2',
+          isCompleted: false,
+          dateISO: daysAgoISO(1),
+          priority: 'high' as const,
+          createdAt: daysAgoISO(1) + 'T00:00:00Z',
+          updatedAt: daysAgoISO(1) + 'T00:00:00Z',
+        },
+        {
+          id: '3',
+          title: 'Task 3',
+          isCompleted: true,
+          dateISO: daysAgoISO(1),
+          priority: 'low' as const,
+          createdAt: daysAgoISO(1) + 'T00:00:00Z',
+          updatedAt: daysAgoISO(1) + 'T00:00:00Z',
+        },
       ],
     };
 
@@ -65,15 +89,17 @@ describe('calculateFatigue', () => {
   it('caps fatigue at 25 for many tasks', () => {
     const dataWithManyTasks = {
       ...baseData,
-      tasks: Array(10).fill(null).map((_, i) => ({
-        id: i.toString(),
-        title: `Task ${i}`,
-        isCompleted: false,
-        dateISO: daysAgoISO(1),
-        priority: 'medium' as const,
-        createdAt: '2026-01-01T00:00:00Z',
-        updatedAt: '2026-01-01T00:00:00Z',
-      })),
+      tasks: Array(10)
+        .fill(null)
+        .map((_, i) => ({
+          id: i.toString(),
+          title: `Task ${i}`,
+          isCompleted: false,
+          dateISO: daysAgoISO(1),
+          priority: 'medium' as const,
+          createdAt: '2026-01-01T00:00:00Z',
+          updatedAt: '2026-01-01T00:00:00Z',
+        })),
     };
 
     expect(calculateFatigue(dataWithManyTasks)).toBe(60);
@@ -83,7 +109,15 @@ describe('calculateFatigue', () => {
     const dataWithRest = {
       ...baseData,
       schedule: [
-        { id: '1', title: 'Rest', type: 'rest' as const, dateISO: daysAgoISO(1), isCompleted: true, createdAt: daysAgoISO(1) + 'T00:00:00Z', updatedAt: daysAgoISO(1) + 'T00:00:00Z' },
+        {
+          id: '1',
+          title: 'Rest',
+          type: 'rest' as const,
+          dateISO: daysAgoISO(1),
+          isCompleted: true,
+          createdAt: daysAgoISO(1) + 'T00:00:00Z',
+          updatedAt: daysAgoISO(1) + 'T00:00:00Z',
+        },
       ],
     };
 
@@ -94,7 +128,15 @@ describe('calculateFatigue', () => {
     const dataWithWork = {
       ...baseData,
       schedule: [
-        { id: '1', title: 'Work', type: 'work' as const, dateISO: daysAgoISO(1), isCompleted: true, createdAt: daysAgoISO(1) + 'T00:00:00Z', updatedAt: daysAgoISO(1) + 'T00:00:00Z' },
+        {
+          id: '1',
+          title: 'Work',
+          type: 'work' as const,
+          dateISO: daysAgoISO(1),
+          isCompleted: true,
+          createdAt: daysAgoISO(1) + 'T00:00:00Z',
+          updatedAt: daysAgoISO(1) + 'T00:00:00Z',
+        },
       ],
     };
 
@@ -105,8 +147,24 @@ describe('calculateFatigue', () => {
     const dataWithWorkouts = {
       ...baseData,
       workouts: [
-        { id: '1', title: 'Workout 1', dateISO: daysAgoISO(1), type: 'cardio' as const, durationMin: 60, createdAt: daysAgoISO(1) + 'T00:00:00Z', updatedAt: daysAgoISO(1) + 'T00:00:00Z' },
-        { id: '2', title: 'Workout 2', dateISO: daysAgoISO(1), type: 'strength' as const, durationMin: 45, createdAt: daysAgoISO(1) + 'T00:00:00Z', updatedAt: daysAgoISO(1) + 'T00:00:00Z' },
+        {
+          id: '1',
+          title: 'Workout 1',
+          dateISO: daysAgoISO(1),
+          type: 'cardio' as const,
+          durationMin: 60,
+          createdAt: daysAgoISO(1) + 'T00:00:00Z',
+          updatedAt: daysAgoISO(1) + 'T00:00:00Z',
+        },
+        {
+          id: '2',
+          title: 'Workout 2',
+          dateISO: daysAgoISO(1),
+          type: 'strength' as const,
+          durationMin: 45,
+          createdAt: daysAgoISO(1) + 'T00:00:00Z',
+          updatedAt: daysAgoISO(1) + 'T00:00:00Z',
+        },
       ],
     };
 
@@ -117,7 +175,15 @@ describe('calculateFatigue', () => {
     const dataWithRides = {
       ...baseData,
       rides: [
-        { id: '1', title: 'Ride 1', dateISO: daysAgoISO(1), distanceKm: 25, durationMin: 60, createdAt: daysAgoISO(1) + 'T00:00:00Z', updatedAt: daysAgoISO(1) + 'T00:00:00Z' },
+        {
+          id: '1',
+          title: 'Ride 1',
+          dateISO: daysAgoISO(1),
+          distanceKm: 25,
+          durationMin: 60,
+          createdAt: daysAgoISO(1) + 'T00:00:00Z',
+          updatedAt: daysAgoISO(1) + 'T00:00:00Z',
+        },
       ],
     };
 
@@ -128,10 +194,42 @@ describe('calculateFatigue', () => {
     const dataWithNegative = {
       ...baseData,
       schedule: [
-        { id: '1', title: 'Rest', type: 'rest' as const, dateISO: daysAgoISO(1), isCompleted: true, createdAt: daysAgoISO(1) + 'T00:00:00Z', updatedAt: daysAgoISO(1) + 'T00:00:00Z' },
-        { id: '2', title: 'Rest', type: 'rest' as const, dateISO: daysAgoISO(1), isCompleted: true, createdAt: daysAgoISO(1) + 'T00:00:00Z', updatedAt: daysAgoISO(1) + 'T00:00:00Z' },
-        { id: '3', title: 'Rest', type: 'rest' as const, dateISO: daysAgoISO(1), isCompleted: true, createdAt: daysAgoISO(1) + 'T00:00:00Z', updatedAt: daysAgoISO(1) + 'T00:00:00Z' },
-        { id: '4', title: 'Rest', type: 'rest' as const, dateISO: daysAgoISO(1), isCompleted: true, createdAt: daysAgoISO(1) + 'T00:00:00Z', updatedAt: daysAgoISO(1) + 'T00:00:00Z' },
+        {
+          id: '1',
+          title: 'Rest',
+          type: 'rest' as const,
+          dateISO: daysAgoISO(1),
+          isCompleted: true,
+          createdAt: daysAgoISO(1) + 'T00:00:00Z',
+          updatedAt: daysAgoISO(1) + 'T00:00:00Z',
+        },
+        {
+          id: '2',
+          title: 'Rest',
+          type: 'rest' as const,
+          dateISO: daysAgoISO(1),
+          isCompleted: true,
+          createdAt: daysAgoISO(1) + 'T00:00:00Z',
+          updatedAt: daysAgoISO(1) + 'T00:00:00Z',
+        },
+        {
+          id: '3',
+          title: 'Rest',
+          type: 'rest' as const,
+          dateISO: daysAgoISO(1),
+          isCompleted: true,
+          createdAt: daysAgoISO(1) + 'T00:00:00Z',
+          updatedAt: daysAgoISO(1) + 'T00:00:00Z',
+        },
+        {
+          id: '4',
+          title: 'Rest',
+          type: 'rest' as const,
+          dateISO: daysAgoISO(1),
+          isCompleted: true,
+          createdAt: daysAgoISO(1) + 'T00:00:00Z',
+          updatedAt: daysAgoISO(1) + 'T00:00:00Z',
+        },
       ],
     };
 
@@ -141,28 +239,32 @@ describe('calculateFatigue', () => {
   it('caps fatigue at maximum 95', () => {
     const dataWithTooMuch = {
       ...baseData,
-      tasks: Array(20).fill(null).map((_, i) => ({
-        id: i.toString(),
-        title: `Task ${i}`,
-        description: '',
-        emotion: 50,
-        urgency: 50,
-        deadlineISO: null,
-        isCompleted: false,
-        dateISO: daysAgoISO(1),
-        priority: 'high' as const,
-        createdAt: '2026-01-01T00:00:00Z',
-        updatedAt: '2026-01-01T00:00:00Z',
-      })),
-      workouts: Array(10).fill(null).map((_, i) => ({
-        id: `w${i}`,
-        title: `Workout ${i}`,
-        dateISO: daysAgoISO(1),
-        type: 'cardio' as const,
-        durationMin: 60,
-        createdAt: '2026-01-01T00:00:00Z',
-        updatedAt: '2026-01-01T00:00:00Z',
-      })),
+      tasks: Array(20)
+        .fill(null)
+        .map((_, i) => ({
+          id: i.toString(),
+          title: `Task ${i}`,
+          description: '',
+          emotion: 50,
+          urgency: 50,
+          deadlineISO: null,
+          isCompleted: false,
+          dateISO: daysAgoISO(1),
+          priority: 'high' as const,
+          createdAt: '2026-01-01T00:00:00Z',
+          updatedAt: '2026-01-01T00:00:00Z',
+        })),
+      workouts: Array(10)
+        .fill(null)
+        .map((_, i) => ({
+          id: `w${i}`,
+          title: `Workout ${i}`,
+          dateISO: daysAgoISO(1),
+          type: 'cardio' as const,
+          durationMin: 60,
+          createdAt: '2026-01-01T00:00:00Z',
+          updatedAt: '2026-01-01T00:00:00Z',
+        })),
     };
 
     expect(calculateFatigue(dataWithTooMuch)).toBe(95);

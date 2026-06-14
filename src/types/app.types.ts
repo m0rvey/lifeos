@@ -2,9 +2,23 @@ import type { Person } from './person.types';
 import type { Task } from './task.types';
 import type { Transaction, BillReminder } from './finance.types';
 import type { RideRecord, CycleRoute, MaintenanceRecord, GalleryNote } from './cycling.types';
-import type { JournalEntry, KnowledgeItem, ScheduleBlock, Habit, WorkoutRecord, Thought } from './reflect.types';
+import type {
+  JournalEntry,
+  KnowledgeItem,
+  ScheduleBlock,
+  Habit,
+  WorkoutRecord,
+  Thought,
+} from './reflect.types';
 
-export type ModuleKey = 'hub' | 'social' | 'finance' | 'cycling' | 'reflect' | 'analytics' | 'settings';
+export type ModuleKey =
+  | 'hub'
+  | 'social'
+  | 'finance'
+  | 'cycling'
+  | 'reflect'
+  | 'analytics'
+  | 'settings';
 
 export type ThemeType = 'mindveyz' | 'cyclist' | 'reflect' | 'slate';
 
@@ -23,11 +37,11 @@ export interface AppSettings {
 }
 
 export interface GraphWeights {
-  energy: number;      // 0.0–1.0
-  resonance: number;   // 0.0–1.0
+  energy: number; // 0.0–1.0
+  resonance: number; // 0.0–1.0
   reciprocity: number; // 0.0–1.0
-  volatility: number;  // 0.0–1.0
-  recency: number;     // 0.0–1.0
+  volatility: number; // 0.0–1.0
+  recency: number; // 0.0–1.0
 }
 
 export interface AppData {

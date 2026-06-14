@@ -1,24 +1,24 @@
 export function calcStreak(dates: string[]): { current: number; max: number } {
   if (dates.length === 0) return { current: 0, max: 0 };
-  
+
   // Unique-fy dates and slice to YYYY-MM-DD
-  const uniqueDates = Array.from(new Set(dates.map(d => d.slice(0, 10))));
+  const uniqueDates = Array.from(new Set(dates.map((d) => d.slice(0, 10))));
   const sorted = uniqueDates.sort().reverse(); // sorted descending (newest first)
-  
+
   const today = new Date().toISOString().slice(0, 10);
   const yesterdayDate = new Date(today);
   yesterdayDate.setUTCDate(yesterdayDate.getUTCDate() - 1);
   const yesterday = yesterdayDate.toISOString().slice(0, 10);
-  
+
   let current = 0;
-  
+
   // Check if today or yesterday was completed for current streak
   const lastDate = sorted[0];
   if (lastDate === today || lastDate === yesterday) {
     // Start counting back from the last logged date
     let checkDateStr = lastDate;
     let index = 0;
-    
+
     while (index < sorted.length) {
       if (sorted[index] === checkDateStr) {
         current++;
@@ -48,7 +48,7 @@ export function calcStreak(dates: string[]): { current: number; max: number } {
       const prev = new Date(chronological[i - 1]).getTime();
       const diffTime = curr - prev;
       const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-      
+
       if (diffDays === 1) {
         tempStreak++;
         max = Math.max(max, tempStreak);

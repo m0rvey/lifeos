@@ -26,13 +26,14 @@ const en: Record<string, string> = {
   'common.delete': 'Delete',
   'common.delete_record': 'Delete record',
 
-
   // CONFIRM
   'confirm.import_confirm': 'Import',
-  'confirm.import_message': 'Are you sure you want to import this file? All current data will be replaced with data from the backup.',
+  'confirm.import_message':
+    'Are you sure you want to import this file? All current data will be replaced with data from the backup.',
   'confirm.import_title': 'Import backup?',
   'confirm.wipe_confirm': 'Wipe all',
-  'confirm.wipe_message': 'WARNING: This will completely clear your local storage and delete all cycling rides, contacts, tasks and finance records. Recovery will be impossible without a backup file.',
+  'confirm.wipe_message':
+    'WARNING: This will completely clear your local storage and delete all cycling rides, contacts, tasks and finance records. Recovery will be impossible without a backup file.',
   'confirm.wipe_title': 'Delete entire database',
   'confirm.wipe_require_typing': 'RESET',
 
@@ -44,7 +45,8 @@ const en: Record<string, string> = {
   'cycling.common.service': 'Service',
   'cycling.dashboard.allRides': 'All rides',
   'cycling.dashboard.avgSpeed': 'Average speed',
-  'cycling.dashboard.bikeFullyServiced': 'The bicycle is fully serviced. There are no active warnings.',
+  'cycling.dashboard.bikeFullyServiced':
+    'The bicycle is fully serviced. There are no active warnings.',
   'cycling.dashboard.elevationGain': 'Elevation gain',
   'cycling.dashboard.for': 'for',
   'cycling.dashboard.maintenance': 'Maintenance service',
@@ -73,9 +75,11 @@ const en: Record<string, string> = {
   'cycling.maintenance.colType': 'Type of work',
   'cycling.maintenance.completed': 'Completed',
   'cycling.maintenance.createRecord': 'Create record',
-  'cycling.maintenance.deleteConfirmMessage': 'Are you sure you want to delete this maintenance record? This action is irreversible.',
+  'cycling.maintenance.deleteConfirmMessage':
+    'Are you sure you want to delete this maintenance record? This action is irreversible.',
   'cycling.maintenance.deleteConfirmTitle': 'Delete maintenance record?',
-  'cycling.maintenance.descriptionPlaceholder': 'Describe the work performed, new part brand or condition...',
+  'cycling.maintenance.descriptionPlaceholder':
+    'Describe the work performed, new part brand or condition...',
   'cycling.maintenance.done': 'Completed',
   'cycling.maintenance.emptyDescription': 'emptyDescription',
   'cycling.maintenance.emptyMessage': 'No bike maintenance records found.',
@@ -92,7 +96,8 @@ const en: Record<string, string> = {
   'cycling.maintenance.modalCreateTitle': 'modalCreateTitle',
   'cycling.maintenance.modalEditTitle': 'modalEditTitle',
   'cycling.maintenance.partPlaceholder': 'E.g. Chain, Shock absorber, Tires',
-  'cycling.maintenance.subtitle': 'Part wear control, repair cost tracking and bike service scheduling',
+  'cycling.maintenance.subtitle':
+    'Part wear control, repair cost tracking and bike service scheduling',
   'cycling.maintenance.title': 'Technical Maintenance (TO)',
   'cycling.maintenance.toastCreated': 'Added new bike maintenance record',
   'cycling.maintenance.toastDeleted': 'Maintenance record deleted',
@@ -110,7 +115,8 @@ const en: Record<string, string> = {
   'cycling.rides.addRide': 'Add ride',
   'cycling.rides.avg': 'Average',
   'cycling.rides.defaultTitle': 'Cycling workout',
-  'cycling.rides.deleteConfirmMessage': 'Are you sure you want to delete this cycling workout record? This action is irreversible.',
+  'cycling.rides.deleteConfirmMessage':
+    'Are you sure you want to delete this cycling workout record? This action is irreversible.',
   'cycling.rides.deleteConfirmTitle': 'Delete ride?',
   'cycling.rides.descriptionPlaceholder': 'Describe weather, well-being or technical condition...',
   'cycling.rides.distance': 'Distance',
@@ -154,7 +160,8 @@ const en: Record<string, string> = {
   'cycling.routes.completed': 'Completed',
   'cycling.routes.createRoute': 'Create route',
   'cycling.routes.defaultName': 'defaultName',
-  'cycling.routes.deleteConfirmMessage': 'Are you sure you want to delete this cycling route? This action is irreversible.',
+  'cycling.routes.deleteConfirmMessage':
+    'Are you sure you want to delete this cycling route? This action is irreversible.',
   'cycling.routes.deleteConfirmTitle': 'Delete route?',
   'cycling.routes.difficulty.easy': 'Easy',
   'cycling.routes.difficulty.easyDesc': 'Flat terrain, no difficult sections',
@@ -179,7 +186,8 @@ const en: Record<string, string> = {
   'cycling.routes.modalEditTitle': 'Edit route',
   'cycling.routes.namePlaceholder': 'E.g. Krylatskoe ring',
   'cycling.routes.planRoute': 'Plan route',
-  'cycling.routes.subtitle': 'Designing new routes, plotting waypoints and tracking completion stats',
+  'cycling.routes.subtitle':
+    'Designing new routes, plotting waypoints and tracking completion stats',
   'cycling.routes.title': 'Route planner',
   'cycling.routes.toastCreated': 'New route planned',
   'cycling.routes.toastDeleted': 'Route deleted from plan',
@@ -192,7 +200,8 @@ const en: Record<string, string> = {
   'dashboard.categories': 'note categories',
   'dashboard.completed': 'Completed',
   'dashboard.daySchedule': 'Daily schedule',
-  'dashboard.description': 'Integral overview of mental health, habits, physical activity and knowledge base',
+  'dashboard.description':
+    'Integral overview of mental health, habits, physical activity and knowledge base',
   'dashboard.events': 'events',
   'dashboard.general': 'general',
   'dashboard.habitTracker': 'Habit tracker',
@@ -221,7 +230,7 @@ const en: Record<string, string> = {
   'dashboard.workouts': 'Workouts',
 
   // DAYS_ABBREV
-  'days_abbrev': 'days',
+  days_abbrev: 'days',
 
   // ERROR
   'error.amount.positive': 'Transaction amount must be greater than zero',
@@ -245,7 +254,8 @@ const en: Record<string, string> = {
   'finance.column.category': 'Category',
   'finance.column.date': 'Date',
   'finance.column.description': 'Description',
-  'finance.confirm.deleteMessage': 'Are you sure you want to delete this financial transaction? This action is irreversible.',
+  'finance.confirm.deleteMessage':
+    'Are you sure you want to delete this financial transaction? This action is irreversible.',
   'finance.confirm.deleteTitle': 'Delete transaction?',
   'finance.confirm.record': 'Record',
   'finance.description.placeholder': 'Additional notes to transaction...',
@@ -269,7 +279,8 @@ const en: Record<string, string> = {
   'finance.stat.totalIncome': 'Total income',
   'finance.type.expense': 'Expense (Funds debit)',
   'finance.type.income': 'Income (Balance credit)',
-  'finance.chart.insufficientData': 'Not enough transactions to plot balance chart (at least 2 required).',
+  'finance.chart.insufficientData':
+    'Not enough transactions to plot balance chart (at least 2 required).',
   'finance.chart.balanceDynamics': 'Balance dynamics',
   'finance.reminder.paidDescription': 'Bill payment: {title}',
   'finance.reminder.paidToast': 'Payment for bill "{title}" recorded in expenses',
@@ -295,7 +306,8 @@ const en: Record<string, string> = {
   'finance.reminder.category.loansDebts': 'Loans / Debts',
   'finance.reminder.category.other': 'Other',
   'finance.reminder.confirm.deleteTitle': 'Delete bill?',
-  'finance.reminder.confirm.deleteMessage': 'Are you sure you want to delete this bill reminder? This action is irreversible.',
+  'finance.reminder.confirm.deleteMessage':
+    'Are you sure you want to delete this bill reminder? This action is irreversible.',
   'shortcuts.title': 'Keyboard Shortcuts',
   'shortcuts.module_nav': 'Navigation between modules',
   'shortcuts.export_backup': 'Export backup copy',
@@ -303,8 +315,6 @@ const en: Record<string, string> = {
   'shortcuts.element_nav': 'Navigation between elements',
   'shortcuts.activate_element': 'Activate element',
   'shortcuts.show_shortcuts': 'Keyboard shortcuts helper',
-
-
 
   // HEADER
   'header.active_tasks': 'Active tasks:',
@@ -323,7 +333,8 @@ const en: Record<string, string> = {
   'hub.cognitive_balance': 'Cognitive Balance',
   'hub.contacts': 'Contacts',
   'hub.cycling': 'Cycling',
-  'hub.description': 'Cognitive balance, social connections, finance, cycling workouts and habits — all in one place.',
+  'hub.description':
+    'Cognitive balance, social connections, finance, cycling workouts and habits — all in one place.',
   'hub.distance': 'Distance',
   'hub.fatigue': 'Fatigue',
   'hub.finance': 'Finance',
@@ -364,7 +375,8 @@ const en: Record<string, string> = {
   'reflect.journal.toast_created': 'New reflection page added to journal',
   'reflect.journal.toast_deleted': 'Journal entry deleted',
   'reflect.journal.title': 'Mood & Reflection Journal',
-  'reflect.journal.subtitle': 'Recording mental states, tracking mood fluctuations, and analyzing thoughts',
+  'reflect.journal.subtitle':
+    'Recording mental states, tracking mood fluctuations, and analyzing thoughts',
   'reflect.journal.action_new': 'New entry',
   'reflect.journal.stat_entries': 'Total entries',
   'reflect.journal.stat_entries_desc': 'Recorded days of reflection',
@@ -372,10 +384,12 @@ const en: Record<string, string> = {
   'reflect.journal.stat_mood_desc': 'General well-being indicator',
   'reflect.journal.mood_prefix': 'Mood:',
   'reflect.journal.empty_title': 'Journal is empty',
-  'reflect.journal.empty_desc': 'Write down your thoughts for today. Reflection helps to better cope with stress and fatigue.',
+  'reflect.journal.empty_desc':
+    'Write down your thoughts for today. Reflection helps to better cope with stress and fatigue.',
   'reflect.journal.action_start': 'Start journal',
   'reflect.journal.confirm_delete_title': 'Delete page from journal?',
-  'reflect.journal.confirm_delete_message': 'Are you sure you want to delete this entry? Mood reflection data for this day will be lost.',
+  'reflect.journal.confirm_delete_message':
+    'Are you sure you want to delete this entry? Mood reflection data for this day will be lost.',
 
   'reflect.schedule.error_title': 'Specify event title',
   'reflect.schedule.error_time': 'Specify start time',
@@ -404,7 +418,8 @@ const en: Record<string, string> = {
   'reflect.schedule.toast_uncompleted': 'Event returned to plans',
   'reflect.schedule.toast_completed': 'Event completed',
   'reflect.schedule.title': 'Gap Schedule Planner',
-  'reflect.schedule.subtitle': 'Maintaining a daily timeline, auto-searching for free gaps, and organizing schedules',
+  'reflect.schedule.subtitle':
+    'Maintaining a daily timeline, auto-searching for free gaps, and organizing schedules',
   'reflect.schedule.action_add': 'Add block',
   'reflect.schedule.stat_time': 'Scheduled time',
   'reflect.schedule.stat_time_desc': 'Total workload for the day',
@@ -416,7 +431,8 @@ const en: Record<string, string> = {
   'reflect.schedule.empty_desc': 'The schedule for {date} is empty.',
   'reflect.schedule.action_schedule': 'Schedule a block',
   'reflect.schedule.confirm_delete_title': 'Delete block from schedule?',
-  'reflect.schedule.confirm_delete_message': 'Are you sure you want to delete this event? This action cannot be undone.',
+  'reflect.schedule.confirm_delete_message':
+    'Are you sure you want to delete this event? This action cannot be undone.',
 
   'reflect.workout.error_duration': 'Workout duration must be greater than 0 minutes',
   'reflect.workout.error_calories': 'Calories amount must be a positive number',
@@ -455,7 +471,8 @@ const en: Record<string, string> = {
   'reflect.workout.type_walking_short': 'Walk',
   'reflect.workout.type_other_short': 'Other',
   'reflect.workout.title': 'Activity & Workout Log',
-  'reflect.workout.subtitle': 'Logging physical activities, calorie tracking and workout management',
+  'reflect.workout.subtitle':
+    'Logging physical activities, calorie tracking and workout management',
   'reflect.workout.action_add': 'Add workout',
   'reflect.workout.stat_total': 'Total workouts',
   'reflect.workout.stat_total_desc': 'Completed sessions',
@@ -476,15 +493,14 @@ const en: Record<string, string> = {
   'reflect.workout.column_calories': 'Calories',
   'reflect.workout.column_description': 'Description / Notes',
   'reflect.workout.empty_title': 'No physical records',
-  'reflect.workout.empty_desc': 'Add your first workout to track activity, progress and energy balance.',
+  'reflect.workout.empty_desc':
+    'Add your first workout to track activity, progress and energy balance.',
   'reflect.workout.confirm_delete_title': 'Delete workout?',
-  'reflect.workout.confirm_delete_message': 'Are you sure you want to delete this workout record? This action is irreversible.',
-
-
-
+  'reflect.workout.confirm_delete_message':
+    'Are you sure you want to delete this workout record? This action is irreversible.',
 
   // LOADING
-  'loading': 'Loading...',
+  loading: 'Loading...',
 
   // NAV
   'nav.analytics': 'Analytics',
@@ -499,9 +515,11 @@ const en: Record<string, string> = {
   'reflect.museum.action_capture': 'Capture',
   'reflect.museum.add': 'Capture a thought',
   'reflect.museum.category_label': 'Rubric:',
-  'reflect.museum.delete_message': 'Are you sure you want to delete this record? This action cannot be undone.',
+  'reflect.museum.delete_message':
+    'Are you sure you want to delete this record? This action cannot be undone.',
   'reflect.museum.delete_title': 'Delete thought from museum?',
-  'reflect.museum.empty_desc': 'Write down your main life lessons, insights, or others\' quotes that made you think.',
+  'reflect.museum.empty_desc':
+    "Write down your main life lessons, insights, or others' quotes that made you think.",
   'reflect.museum.empty_title': 'Thought museum is empty',
   'reflect.museum.default_category': 'Philosophy',
   'reflect.museum.error_empty': 'Thought content cannot be empty',
@@ -526,7 +544,8 @@ const en: Record<string, string> = {
 
   // REFLECT KNOWLEDGE
   'reflect.knowledge.title': 'Knowledge Base (Second Brain)',
-  'reflect.knowledge.subtitle': 'Accumulation of structured information, book summaries, articles, and useful links',
+  'reflect.knowledge.subtitle':
+    'Accumulation of structured information, book summaries, articles, and useful links',
   'reflect.knowledge.action_add': 'Add Knowledge',
   'reflect.knowledge.action_add_summary': 'Add summary',
   'reflect.knowledge.search_placeholder': 'Search notes, tags, and titles...',
@@ -534,9 +553,11 @@ const en: Record<string, string> = {
   'reflect.knowledge.card_category_label': 'Category:',
   'reflect.knowledge.card_source_label': 'Source:',
   'reflect.knowledge.empty_title': 'Knowledge base is empty',
-  'reflect.knowledge.empty_description': 'Nothing found. Add summaries, articles, or quotes to start building your knowledge base.',
+  'reflect.knowledge.empty_description':
+    'Nothing found. Add summaries, articles, or quotes to start building your knowledge base.',
   'reflect.knowledge.confirm_delete_title': 'Delete knowledge entry?',
-  'reflect.knowledge.confirm_delete_message': 'Are you sure you want to delete this article from the knowledge base? This action is irreversible.',
+  'reflect.knowledge.confirm_delete_message':
+    'Are you sure you want to delete this article from the knowledge base? This action is irreversible.',
   'reflect.knowledge.toast_updated': 'Knowledge entry updated',
   'reflect.knowledge.toast_created': 'New knowledge added to base',
   'reflect.knowledge.toast_deleted': 'Knowledge entry deleted',
@@ -558,7 +579,7 @@ const en: Record<string, string> = {
   'reflect.knowledge.category_podcasts': 'Podcasts',
   'reflect.knowledge.category_methodology': 'Methodologies / Personal',
   'reflect.knowledge.field_source': 'Information Source',
-  'reflect.knowledge.placeholder_source': 'E.g., John Smith\'s Blog, book by S. Miller',
+  'reflect.knowledge.placeholder_source': "E.g., John Smith's Blog, book by S. Miller",
   'reflect.knowledge.field_url': 'Link (URL)',
   'reflect.knowledge.field_content': 'Notes / Key Ideas',
   'reflect.knowledge.placeholder_content': 'Describe the main theses, notes, or quotes...',
@@ -571,7 +592,8 @@ const en: Record<string, string> = {
 
   // REFLECT HABITS
   'reflect.habits.title': 'Habit & Ritual Tracker',
-  'reflect.habits.subtitle': 'Instilling healthy behavioral patterns, monitoring daily discipline, and analyzing streak dynamics',
+  'reflect.habits.subtitle':
+    'Instilling healthy behavioral patterns, monitoring daily discipline, and analyzing streak dynamics',
   'reflect.habits.stat_total': 'Total habits logged',
   'reflect.habits.stat_total_desc': 'Actively tracked patterns',
   'reflect.habits.stat_streak': 'Maximum streak',
@@ -586,7 +608,8 @@ const en: Record<string, string> = {
   'reflect.habits.column_streak': 'Streak',
   'reflect.habits.empty_message': 'No habits registered. Start by creating your first habit!',
   'reflect.habits.confirm_delete_title': 'Delete habit?',
-  'reflect.habits.confirm_delete_message': 'Are you sure you want to delete this habit? All adherence history will be lost.',
+  'reflect.habits.confirm_delete_message':
+    'Are you sure you want to delete this habit? All adherence history will be lost.',
   'reflect.habits.toast_created': 'Habit "{title}" added to tracker',
   'reflect.habits.toast_deleted': 'Habit deleted from archive',
   'reflect.habits.delete_aria': 'Delete habit: {title}',
@@ -605,8 +628,10 @@ const en: Record<string, string> = {
   'settings.csv.rides': 'Rides',
   'settings.csv.transactions': 'Transactions',
   'settings.csv_export': 'Export to CSV',
-  'settings.danger_zone': 'Danger zone: permanently deletes the entire database, including cycling rides and contacts.',
-  'settings.security_notice': 'Security Notice: All data is stored locally in your browser (unencrypted). Do not use this application on public or shared computers.',
+  'settings.danger_zone':
+    'Danger zone: permanently deletes the entire database, including cycling rides and contacts.',
+  'settings.security_notice':
+    'Security Notice: All data is stored locally in your browser (unencrypted). Do not use this application on public or shared computers.',
   'settings.db.active_tasks': 'Active tasks:',
   'settings.db.cycling_rides': 'Cycling rides:',
   'settings.db.finance_transactions': 'Finance transactions:',
@@ -638,7 +663,8 @@ const en: Record<string, string> = {
   'settings.theme_mode.adaptive': 'Auto by module',
   'settings.theme_mode.manual': 'Manual selection',
   'settings.theme_mode.system': 'System settings',
-  'settings.theme_system_hint': 'Theme will automatically switch between dark (Slate) and light (Reflect) based on your OS settings.',
+  'settings.theme_system_hint':
+    'Theme will automatically switch between dark (Slate) and light (Reflect) based on your OS settings.',
   'settings.title': 'Platform Settings',
   'settings.user_name': 'Username',
   'settings.user_name_placeholder': 'Your name',
@@ -696,10 +722,12 @@ const en: Record<string, string> = {
   'social.detail.last_touch': 'Last contact',
   'social.detail.metrics_title': 'Closeness metrics',
   'social.detail.not_found': 'Connection not found',
-  'social.detail.notes_empty': 'No notes. Write down important details or plans for the next meeting.',
+  'social.detail.notes_empty':
+    'No notes. Write down important details or plans for the next meeting.',
   'social.detail.notes_title': 'Notes / Agreements',
   'social.detail.quality_label': 'Connection quality',
-  'social.detail.reflection_empty': 'No reflection yet. Write down insights or emotions left after talking.',
+  'social.detail.reflection_empty':
+    'No reflection yet. Write down insights or emotions left after talking.',
   'social.detail.reflection_title': 'Reflection (Insights from contact)',
   'social.detail.touch_today': 'Contact today',
   'social.empty_list': 'No connections found',
@@ -764,12 +792,18 @@ const en: Record<string, string> = {
   'social.total_label': 'Total connections:',
 
   // STATS
-  'stats.advice.cognitive': 'Mental fatigue detected. It is recommended to reduce work intensity, schedule 1-2 hours of passive rest, and temporarily avoid creating new tasks.',
-  'stats.advice.excellent': 'All indicators are at optimal levels! You are managing your cognitive, social, and physical resources beautifully. Keep maintaining this balance.',
-  'stats.advice.finance': 'Low savings rate for the selected period ({rate}%). We recommend analyzing recent transactions and optimizing small expenses in the Finance module.',
-  'stats.advice.mindful': 'Habit or reflection regularity has decreased. Spend 5 minutes in the evening filling out the mood journal.',
-  'stats.advice.physical': 'Activity volume ({minutes} min) is below the target norm to maintain vigor. Plan a bike ride or a light cardio workout.',
-  'stats.advice.social': 'Some of your social connections are cooling down. Take initiative and contact close people{names}.',
+  'stats.advice.cognitive':
+    'Mental fatigue detected. It is recommended to reduce work intensity, schedule 1-2 hours of passive rest, and temporarily avoid creating new tasks.',
+  'stats.advice.excellent':
+    'All indicators are at optimal levels! You are managing your cognitive, social, and physical resources beautifully. Keep maintaining this balance.',
+  'stats.advice.finance':
+    'Low savings rate for the selected period ({rate}%). We recommend analyzing recent transactions and optimizing small expenses in the Finance module.',
+  'stats.advice.mindful':
+    'Habit or reflection regularity has decreased. Spend 5 minutes in the evening filling out the mood journal.',
+  'stats.advice.physical':
+    'Activity volume ({minutes} min) is below the target norm to maintain vigor. Plan a bike ride or a light cardio workout.',
+  'stats.advice.social':
+    'Some of your social connections are cooling down. Take initiative and contact close people{names}.',
   'stats.balance_radar': 'Summary resource balance radar',
   'stats.calories_burned': 'Calories burned',
   'stats.cognitive_desc': 'Vigor level and mental reserve',
