@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { useData } from '../context/DataContext';
+import { useDispatch } from '../context/DataContext';
 import { useApp } from '../context/AppContext';
 import { useI18n } from '../i18n';
 import { type AppData } from '../types';
@@ -19,7 +19,7 @@ interface UseCrudModalOptions<T> {
 }
 
 export function useCrudModal<T extends { id: string }>(options: UseCrudModalOptions<T>) {
-  const { dispatch } = useData();
+  const dispatch = useDispatch();
   const { addToast } = useApp();
   const { t } = useI18n();
 

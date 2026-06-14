@@ -271,6 +271,15 @@
   color: var(--text-secondary);
   cursor: pointer;
   transition: all var(--duration-normal) var(--ease-out);
+  position: relative;
+}
+.sidebar-toggle-btn::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  bottom: -8px;
+  left: -8px;
+  right: -8px;
 }
 .sidebar-toggle-btn:hover {
   background: var(--surface-hover);

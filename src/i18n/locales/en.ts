@@ -606,6 +606,7 @@ const en: Record<string, string> = {
   'settings.csv.transactions': 'Transactions',
   'settings.csv_export': 'Export to CSV',
   'settings.danger_zone': 'Danger zone: permanently deletes the entire database, including cycling rides and contacts.',
+  'settings.security_notice': 'Security Notice: All data is stored locally in your browser (unencrypted). Do not use this application on public or shared computers.',
   'settings.db.active_tasks': 'Active tasks:',
   'settings.db.cycling_rides': 'Cycling rides:',
   'settings.db.finance_transactions': 'Finance transactions:',

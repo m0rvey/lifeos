@@ -1,6 +1,6 @@
-import { createContext, useContext, useReducer, useEffect, useRef, useMemo, type ReactNode, type Dispatch } from 'react';
+import { createContext, useContext, useReducer, useEffect, useRef, useMemo, useState, type ReactNode, type Dispatch } from 'react';
 import type { AppData } from '../types';
-import { loadData, saveDataAsync } from '../storage/engine';
+import { loadData, loadDataAsync, saveData, saveDataAsync } from '../storage/engine';
 import { getDefaultData } from '../storage/defaults';
 import { calculateFatigue } from '../cognitive/helpers';
 
@@ -22,7 +22,8 @@ export type DataAction =
   | { type: 'UPDATE_ENTITY'; entity: ArrayEntities; id: string; payload: unknown }
   | { type: 'DELETE_ENTITY'; entity: ArrayEntities; id: string }
   | { type: 'UNDO' }
-  | { type: 'REDO' };
+  | { type: 'REDO' }
+  | { type: 'INITIALIZE'; payload: AppData };
 
 export type HistoryAction =
   | { type: 'REPLACE_STATE'; previousState: AppData; newState: AppData }
@@ -125,6 +126,13 @@ function dataReducer(state: HistoryState, action: DataAction): HistoryState {
   const { past, present, future } = state;
 
   switch (action.type) {
+    case 'INITIALIZE': {
+      return {
+        past: [],
+        present: { ...action.payload, fatigue: calculateFatigue(action.payload) },
+        future: [],
+      };
+    }
     case 'UNDO': {
       if (past.length === 0) return state;
       const act = past[past.length - 1];
@@ -265,15 +273,41 @@ export const DataDispatchContext = createContext<Dispatch<DataAction> | null>(nu
 const UndoContext = createContext<{ canUndo: boolean; canRedo: boolean } | null>(null);
 
 export function DataProvider({ children }: { children: ReactNode }) {
+  const isTesting = typeof process !== 'undefined' && (process.env.NODE_ENV === 'test' || !!process.env.VITEST);
+
   const [history, dispatch] = useReducer(dataReducer, null, () => {
-    const loaded = loadData();
-    const initial = { ...loaded, fatigue: calculateFatigue(loaded) };
+    const loaded = isTesting ? loadData() : getDefaultData();
     return {
       past: [],
-      present: initial,
+      present: loaded,
       future: [],
     } as HistoryState;
   });
+
+  const [isInitialized, setIsInitialized] = useState(isTesting);
+
+  useEffect(() => {
+    if (isTesting) return;
+    let active = true;
+    const hydrate = async () => {
+      try {
+        const loaded = await loadDataAsync();
+        if (active) {
+          dispatch({ type: 'INITIALIZE', payload: loaded });
+          setIsInitialized(true);
+        }
+      } catch (err) {
+        console.error('[DataProvider] Hydration failed:', err);
+        if (active) {
+          setIsInitialized(true);
+        }
+      }
+    };
+    hydrate();
+    return () => {
+      active = false;
+    };
+  }, [isTesting]);
 
   const currentDataRef = useRef(history.present);
 
@@ -306,7 +340,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout> | undefined;
 
-    if (prevDataRef.current !== history.present) {
+    if (isInitialized && prevDataRef.current !== history.present) {
       timer = setTimeout(async () => {
         await saveDataAsync(history.present);
         prevDataRef.current = history.present;
@@ -314,8 +348,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
     }
 
     const handleBeforeUnload = () => {
-      if (prevDataRef.current !== history.present) {
-        saveDataAsync(history.present);
+      if (isInitialized && prevDataRef.current !== history.present) {
+        saveData(history.present);
       }
     };
 
@@ -325,7 +359,31 @@ export function DataProvider({ children }: { children: ReactNode }) {
       if (timer) clearTimeout(timer);
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [history.present]);
+  }, [history.present, isInitialized]);
+
+  if (!isInitialized) {
+    return (
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh',
+        background: 'var(--bg-primary)',
+        color: 'var(--text-secondary)',
+        gap: '16px'
+      }}>
+        <div style={{
+          width: '40px',
+          height: '40px',
+          border: '3px solid var(--border)',
+          borderTopColor: 'var(--accent)',
+          borderRadius: '50%',
+          animation: 'spin 1s linear infinite'
+        }} />
+      </div>
+    );
+  }
 
   return (
     <StoreContext.Provider value={store}>

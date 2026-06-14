@@ -131,4 +131,11 @@ export function wipeAllData(): void {
       // ignore
     }
   });
+  try {
+    if (typeof indexedDB !== 'undefined') {
+      indexedDB.deleteDatabase('lifeos');
+    }
+  } catch {
+    // ignore
+  }
 }

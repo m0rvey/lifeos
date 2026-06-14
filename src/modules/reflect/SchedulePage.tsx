@@ -10,12 +10,12 @@ import ScheduleModal from './ScheduleModal';
 import { useCrudModal } from '../../hooks/useCrudModal';
 
 const typeColors: Record<ScheduleBlock['type'], string> = {
-  work: '#3b82f6',      // Blue
-  personal: '#10b981',  // Green
-  health: '#ef4444',    // Red
-  social: '#8b5cf6',    // Purple
-  learning: '#f59e0b',  // Yellow
-  rest: '#64748b'       // Grey
+  work: 'var(--color-blue, #3b82f6)',
+  personal: 'var(--success, #10b981)',
+  health: 'var(--color-red, #ef4444)',
+  social: 'var(--color-purple, #8b5cf6)',
+  learning: 'var(--color-yellow, #f59e0b)',
+  rest: 'var(--color-grey, #64748b)'
 };
 
 function parseTime(time: string): number {

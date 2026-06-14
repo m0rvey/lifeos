@@ -62,10 +62,10 @@ export default function SocialPage() {
     const depths = [Depth.CORE, Depth.INNER, Depth.SOCIAL, Depth.PERIPHERY];
     const total = data.people.length || 1;
     const colors: Record<Depth, string> = {
-      [Depth.CORE]: '#bb86fc',      // Purple
-      [Depth.INNER]: '#ff6d00',     // Orange
-      [Depth.SOCIAL]: '#2e7d32',    // Green
-      [Depth.PERIPHERY]: '#9aa0a6', // Grey
+      [Depth.CORE]: 'var(--error, #ef4444)',
+      [Depth.INNER]: 'var(--warning, #f59e0b)',
+      [Depth.SOCIAL]: 'var(--primary, #10b981)',
+      [Depth.PERIPHERY]: 'var(--text-tertiary, #9ca3af)',
     };
     const labels: Record<Depth, string> = {
       [Depth.CORE]: t('social.depth.core'),

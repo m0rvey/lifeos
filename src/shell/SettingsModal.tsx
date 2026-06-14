@@ -4,7 +4,7 @@ import { useData } from '../context/DataContext';
 import { useI18n, type Language } from '../i18n';
 import { exportBackup, importBackup, wipeAllData, exportTransactionsCsv, exportRidesCsv, exportPeopleCsv } from '../storage/backup';
 import { ConfirmDialog, Modal } from '../ui';
-import { Database, Sliders, SlidersHorizontal, Trash2, Download, Upload, Info, ExternalLink, User } from 'lucide-react';
+import { Database, Sliders, SlidersHorizontal, Trash2, Download, Upload, Info, ExternalLink, User, ShieldAlert } from 'lucide-react';
 import type { ThemeType, ThemeMode } from '../types';
 
 interface SettingsModalProps {
@@ -255,20 +255,13 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                   <label className="settings-label">{t('settings.accent_color')}</label>
                   <div className="settings-accents-row">
                     {(['purple', 'orange', 'green', 'blue', 'rose'] as const).map(color => {
-                      const colorHex = 
-                        color === 'purple' ? '#a855f7' :
-                        color === 'orange' ? '#f97316' :
-                        color === 'green' ? '#22c55e' :
-                        color === 'blue' ? '#3b82f6' :
-                        '#ec4899';
                       const isActive = accentColor === color;
                       return (
                         <button
                           key={color}
                           type="button"
                           onClick={() => setAccentColor(color)}
-                          className={`settings-accent-btn ${isActive ? 'active' : ''}`}
-                          style={{ background: colorHex }}
+                          className={`settings-accent-btn ${color} ${isActive ? 'active' : ''}`}
                           title={color}
                         />
                       );
@@ -549,6 +542,23 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                   <button className="btn btn--danger btn--sm" onClick={handleWipeData}>
                     <Trash2 size={14} /> {t('settings.wipe_all')}
                   </button>
+                </div>
+
+                <div style={{
+                  marginTop: 'var(--sp-4)',
+                  padding: 'var(--sp-3)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius-md)',
+                  backgroundColor: 'rgba(245, 158, 11, 0.05)',
+                  borderColor: 'rgba(245, 158, 11, 0.2)',
+                  fontSize: '0.75rem',
+                  color: 'var(--text-secondary)',
+                  display: 'flex',
+                  gap: 'var(--sp-2)',
+                  alignItems: 'flex-start'
+                }}>
+                  <ShieldAlert size={16} style={{ color: 'var(--warning)', flexShrink: 0, marginTop: '2px' }} />
+                  <span>{t('settings.security_notice')}</span>
                 </div>
               </div>
             </div>

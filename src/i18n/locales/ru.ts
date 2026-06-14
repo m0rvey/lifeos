@@ -606,6 +606,7 @@ const ru: Record<string, string> = {
   'settings.csv.transactions': 'Транзакции',
   'settings.csv_export': 'Экспорт в CSV',
   'settings.danger_zone': 'Опасная зона: безвозвратно удаляет всю базу данных, включая велотренировки и контакты.',
+  'settings.security_notice': 'Уведомление о безопасности: Все данные хранятся локально в вашем браузере (без шифрования). Не используйте приложение на общедоступных или совместных компьютерах.',
   'settings.db.active_tasks': 'Активных задач:',
   'settings.db.cycling_rides': 'Велозаездов:',
   'settings.db.finance_transactions': 'Финансовых транзакций:',

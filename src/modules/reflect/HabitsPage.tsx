@@ -9,11 +9,11 @@ import { uid, nowISO } from '../../cognitive/helpers';
 import { useI18n } from '../../i18n';
 
 const catColors = {
-  social: '#8b5cf6',      // Purple
-  health: '#ef4444',      // Red
-  mind: '#2563eb',        // Blue
-  productivity: '#f59e0b',// Yellow
-  other: '#64748b'        // Grey
+  social: 'var(--color-purple, #8b5cf6)',
+  health: 'var(--color-red, #ef4444)',
+  mind: 'var(--color-blue, #2563eb)',
+  productivity: 'var(--color-yellow, #f59e0b)',
+  other: 'var(--color-grey, #64748b)'
 };
 
 // Generates an array of last N dates (YYYY-MM-DD)

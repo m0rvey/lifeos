@@ -177,6 +177,15 @@
   padding: 0;
   border-radius: var(--radius-sm);
   flex-shrink: 0;
+  position: relative;
+}
+.btn--icon::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  bottom: -6px;
+  left: -6px;
+  right: -6px;
 }
 .btn--icon:hover { transform: scale(1.08) !important; }
 
@@ -551,6 +560,11 @@ tr:nth-child(even) td { background: color-mix(in srgb, var(--surface) 50%, trans
   cursor: pointer;
   transition: all var(--duration-fast);
 }
+.settings-accent-btn.purple { background-color: #a855f7; }
+.settings-accent-btn.orange { background-color: #f97316; }
+.settings-accent-btn.green  { background-color: #22c55e; }
+.settings-accent-btn.blue   { background-color: #3b82f6; }
+.settings-accent-btn.rose   { background-color: #ec4899; }
 
 .settings-accent-btn.active {
   border: 3px solid var(--text-primary);
@@ -748,8 +762,19 @@ tr:nth-child(even) td { background: color-mix(in srgb, var(--surface) 50%, trans
 .padding-20-flex-col-16 { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
 
 .action-btn-row { display: flex; gap: 8px; }
-.btn-padding-4-6 { padding: 4px 6px; }
-.btn-padding-4-6-red { padding: 4px 6px; color: var(--error, #ef4444); }
+.btn-padding-4-6, .btn-padding-4-6-red {
+  padding: 4px 6px;
+  position: relative;
+}
+.btn-padding-4-6::before, .btn-padding-4-6-red::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  bottom: -10px;
+  left: -8px;
+  right: -8px;
+}
+.btn-padding-4-6-red { color: var(--error, #ef4444); }
 
 /* Error Boundary Styling */
 .error-boundary-container {
@@ -1013,6 +1038,16 @@ tr:nth-child(even) td { background: color-mix(in srgb, var(--surface) 50%, trans
   border-radius: 50%;
   padding: 0;
   transition: background var(--duration-fast), color var(--duration-fast);
+  position: relative;
+}
+
+.tag-chip-remove::before {
+  content: '';
+  position: absolute;
+  top: -13px;
+  bottom: -13px;
+  left: -13px;
+  right: -13px;
 }
 
 .tag-chip-remove:hover {
