@@ -1,15 +1,12 @@
-import { useContext, useSyncExternalStore, useCallback, type ReactNode } from 'react';
-import { useDataStore, DataDispatchContext } from '../DataContext';
+import { useSyncExternalStore, useCallback, type ReactNode } from 'react';
+import { useDataStore, useDispatch } from '../DataContext';
 
 export function ReflectProvider({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
 
 export function useReflect() {
-  const dispatch = useContext(DataDispatchContext);
-  if (!dispatch) {
-    throw new Error('useReflect must be used within DataProvider');
-  }
+  const dispatch = useDispatch();
 
   const store = useDataStore();
 
