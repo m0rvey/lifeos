@@ -10,6 +10,7 @@ import {
   Settings,
   Menu,
   Search,
+  Leaf,
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useData } from '../context/DataContext';
@@ -82,7 +83,7 @@ export default function AppHeader({ onOpenSettings, onOpenSearch }: AppHeaderPro
       {/* Platform Logo */}
       <div className="app-logo" onClick={() => navigate('/hub')} style={{ cursor: 'pointer' }}>
         <div className="app-logo-mark">
-          LO
+          <Leaf size={14} fill="currentColor" />
           <span className="app-logo-pulse" />
         </div>
         <span>LifeOS</span>
