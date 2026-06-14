@@ -87,6 +87,7 @@ export default function SchedulePage() {
         durationMin: blockData.durationMin || 60,
         type: blockData.type || 'work',
         isCompleted: blockData.isCompleted || false,
+        tags: [],
         createdAt: nowISO(),
         updatedAt: nowISO()
       };

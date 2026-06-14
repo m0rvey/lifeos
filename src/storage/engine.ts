@@ -2,6 +2,9 @@ import type { AppData } from '../types';
 import { getDefaultData } from './defaults';
 import { safeSaveItem } from './atomic';
 import { migrateData } from './migrations';
+import { loadDataIDB, saveDataIDB, migrateFromLocalStorage, hasIDBData } from './idbEngine';
+
+export { hasIDBData };
 
 export const STORAGE_KEY = 'lifeos_platform_v1';
 
@@ -9,7 +12,6 @@ export function loadData(): AppData {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) {
-      // If V3 key is empty, check if we can migrate legacy data
       return migrateData(null);
     }
     const parsed = JSON.parse(raw);
@@ -38,4 +40,30 @@ export function saveData(data: AppData): void {
       window.dispatchEvent(new CustomEvent('storage-error', { detail }));
     }
   }
+}
+
+export async function loadDataAsync(): Promise<AppData> {
+  try {
+    const hasIDB = await hasIDBData();
+    if (hasIDB) {
+      return loadDataIDB();
+    }
+    const migrated = await migrateFromLocalStorage();
+    if (migrated) {
+      return loadDataIDB();
+    }
+  } catch (err) {
+    console.warn('[Storage] IndexedDB unavailable, falling back to localStorage:', err);
+  }
+  return loadData();
+}
+
+export async function saveDataAsync(data: AppData): Promise<void> {
+  try {
+    await saveDataIDB(data);
+    return;
+  } catch (err) {
+    console.warn('[Storage] IndexedDB save failed, falling back to localStorage:', err);
+  }
+  saveData(data);
 }

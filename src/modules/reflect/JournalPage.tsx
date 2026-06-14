@@ -56,6 +56,7 @@ export default function JournalPage() {
         content: entryData.content || '',
         mood: entryData.mood ?? 50,
         dateISO: entryData.dateISO || new Date().toISOString(),
+        tags: [],
         createdAt: nowISO(),
         updatedAt: nowISO()
       };

@@ -18,6 +18,7 @@ export const PersonSchema = z.object({
   lastContactISO: z.string(),
   reflection: z.string(),
   notes: z.string(),
+  tags: z.array(z.string()),
   createdAt: z.string(),
   updatedAt: z.string(),
 });
@@ -30,6 +31,7 @@ export const TaskSchema = z.object({
   urgency: z.number().min(0).max(100),
   deadlineISO: z.string().nullable(),
   isCompleted: z.boolean(),
+  tags: z.array(z.string()),
   createdAt: z.string(),
   updatedAt: z.string(),
 });
@@ -116,6 +118,7 @@ export const JournalEntrySchema = z.object({
   content: z.string(),
   mood: z.number().min(0).max(100),
   dateISO: z.string(),
+  tags: z.array(z.string()),
   createdAt: z.string(),
   updatedAt: z.string(),
 });
@@ -140,6 +143,7 @@ export const ScheduleBlockSchema = z.object({
   durationMin: z.number().positive(),
   type: z.enum(['work', 'personal', 'health', 'social', 'learning', 'rest']),
   isCompleted: z.boolean(),
+  tags: z.array(z.string()),
   createdAt: z.string(),
   updatedAt: z.string(),
 });

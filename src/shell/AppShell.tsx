@@ -1,10 +1,11 @@
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useLocation, Link } from 'react-router-dom';
 import { CheckCircle, XCircle, AlertTriangle, Info, X } from 'lucide-react';
 import AppHeader from './AppHeader';
 import AppSidebar from './AppSidebar';
 import SettingsModal from './SettingsModal';
+import SearchOverlay from '../ui/SearchOverlay';
 import { useApp } from '../context/AppContext';
 import { useI18n } from '../i18n';
 
@@ -34,9 +35,21 @@ const PATH_I18N: Record<string, string> = {
 
 export default function AppShell({ children }: AppShellProps) {
   const [showSettings, setShowSettings] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
   const { toasts, removeToast } = useApp();
   const { t } = useI18n();
   const location = useLocation();
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setShowSearch(v => !v);
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
 
   const pathnames = location.pathname.split('/').filter(x => x);
   const showBreadcrumbs = pathnames.length > 0 && pathnames[0] !== 'hub';
@@ -49,7 +62,7 @@ export default function AppShell({ children }: AppShellProps) {
       <div className="bg-blob bg-blob-3" />
 
       {/* Header navbar */}
-      <AppHeader onOpenSettings={() => setShowSettings(true)} />
+      <AppHeader onOpenSettings={() => setShowSettings(true)} onOpenSearch={() => setShowSearch(true)} />
 
       {/* App main layout */}
       <div className="app-body">
@@ -108,6 +121,9 @@ export default function AppShell({ children }: AppShellProps) {
         </div>,
         document.body
       )}
+
+      {/* SearchOverlay */}
+      {showSearch && <SearchOverlay onClose={() => setShowSearch(false)} />}
 
       {/* Settings Modal */}
       {showSettings && (

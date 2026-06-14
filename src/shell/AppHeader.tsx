@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, type ComponentType } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home, Share2, Wallet, Bike, BrainCircuit, BarChart3, Settings, Menu } from 'lucide-react';
+import { Home, Share2, Wallet, Bike, BrainCircuit, BarChart3, Settings, Menu, Search } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useData } from '../context/DataContext';
 import { useI18n } from '../i18n';
@@ -10,6 +10,7 @@ import '../styles/header-dropdown.css';
 
 interface AppHeaderProps {
   onOpenSettings: () => void;
+  onOpenSearch?: () => void;
 }
 
 const TABS: { key: ModuleKey; i18nKey: string; icon: ComponentType<{ size?: number }>; route: string }[] = [
@@ -21,7 +22,7 @@ const TABS: { key: ModuleKey; i18nKey: string; icon: ComponentType<{ size?: numb
   { key: 'analytics', i18nKey: 'nav.analytics', icon: BarChart3, route: '/analytics' },
 ];
 
-export default function AppHeader({ onOpenSettings }: AppHeaderProps) {
+export default function AppHeader({ onOpenSettings, onOpenSearch }: AppHeaderProps) {
   const navigate = useNavigate();
   const { activeModule, userName, isSidebarOpen, setSidebarOpen } = useApp();
   const { data } = useData();
@@ -115,6 +116,14 @@ export default function AppHeader({ onOpenSettings }: AppHeaderProps) {
 
       {/* Right Actions */}
       <div className="app-header-actions" style={{ position: 'relative' }}>
+        <button
+          className="icon-btn"
+          onClick={onOpenSearch}
+          title="Search (Cmd+K)"
+          aria-label="Search"
+        >
+          <Search size={16} />
+        </button>
         <button
           className="icon-btn"
           onClick={onOpenSettings}

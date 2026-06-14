@@ -4,6 +4,7 @@ export interface JournalEntry {
   content: string;
   mood: number; // 0–100
   dateISO: string; // YYYY-MM-DD
+  tags: string[];
   createdAt: string;
   updatedAt: string;
 }
@@ -28,6 +29,7 @@ export interface ScheduleBlock {
   durationMin: number;
   type: 'work' | 'personal' | 'health' | 'social' | 'learning' | 'rest';
   isCompleted: boolean;
+  tags: string[];
   createdAt: string;
   updatedAt: string;
 }

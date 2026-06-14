@@ -2,7 +2,7 @@ import { type ReactNode } from 'react';
 import { Trash2 } from 'lucide-react';
 import { useI18n } from '../i18n';
  
-interface Column<T> {
+export interface Column<T> {
   key: keyof T & string;
   label: string;
   render?: (val: T[keyof T], row: T) => ReactNode;

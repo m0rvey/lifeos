@@ -77,6 +77,7 @@ export default function SocialPage() {
       lastContactISO: personData.lastContactISO || todayISO(),
       reflection: personData.reflection || '',
       notes: personData.notes || '',
+      tags: [],
       createdAt: nowISO(),
       updatedAt: nowISO(),
     };

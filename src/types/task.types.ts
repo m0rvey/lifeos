@@ -6,6 +6,7 @@ export interface Task {
   urgency: number;     // 0–100
   deadlineISO: string | null;
   isCompleted: boolean;
+  tags: string[];
   createdAt: string;
   updatedAt: string;
 }

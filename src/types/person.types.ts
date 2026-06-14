@@ -36,6 +36,7 @@ export interface Person {
   lastContactISO: string; // ISO date (YYYY-MM-DD)
   reflection: string;
   notes: string;
+  tags: string[];
   createdAt: string;
   updatedAt: string;
 }

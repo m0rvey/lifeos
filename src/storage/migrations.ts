@@ -53,6 +53,7 @@ function sanitizePerson(p: unknown): Person {
     lastContactISO: typeof obj?.lastContactISO === 'string' ? obj.lastContactISO : new Date().toISOString().slice(0, 10),
     reflection: typeof obj?.reflection === 'string' ? obj.reflection : '',
     notes: typeof obj?.notes === 'string' ? obj.notes : '',
+    tags: [],
     createdAt: typeof obj?.createdAt === 'string' ? obj.createdAt : new Date().toISOString(),
     updatedAt: typeof obj?.updatedAt === 'string' ? obj.updatedAt : new Date().toISOString(),
   };
@@ -68,6 +69,7 @@ function sanitizeTask(t: unknown): Task {
     urgency: typeof obj?.urgency === 'number' ? Math.max(0, Math.min(100, obj.urgency)) : 50,
     deadlineISO: typeof obj?.deadlineISO === 'string' ? obj.deadlineISO : null,
     isCompleted: typeof obj?.isCompleted === 'boolean' ? obj.isCompleted : false,
+    tags: [],
     createdAt: typeof obj?.createdAt === 'string' ? obj.createdAt : new Date().toISOString(),
     updatedAt: typeof obj?.updatedAt === 'string' ? obj.updatedAt : new Date().toISOString(),
   };
@@ -190,6 +192,7 @@ function sanitizeJournal(j: unknown): JournalEntry {
     content: typeof obj?.content === 'string' ? obj.content : '',
     mood: typeof obj?.mood === 'number' ? Math.max(0, Math.min(100, obj.mood)) : 50,
     dateISO: typeof obj?.dateISO === 'string' ? obj.dateISO : new Date().toISOString().slice(0, 10),
+    tags: [],
     createdAt: typeof obj?.createdAt === 'string' ? obj.createdAt : new Date().toISOString(),
     updatedAt: typeof obj?.updatedAt === 'string' ? obj.updatedAt : (typeof obj?.createdAt === 'string' ? obj.createdAt : new Date().toISOString()),
   };
@@ -225,6 +228,7 @@ function sanitizeSchedule(s: unknown): ScheduleBlock {
     durationMin: typeof obj?.durationMin === 'number' ? Math.max(5, obj.durationMin) : 60,
     type: typeVal,
     isCompleted: typeof obj?.isCompleted === 'boolean' ? obj.isCompleted : false,
+    tags: [],
     createdAt: typeof obj?.createdAt === 'string' ? obj.createdAt : new Date().toISOString(),
     updatedAt: typeof obj?.updatedAt === 'string' ? obj.updatedAt : (typeof obj?.createdAt === 'string' ? obj.createdAt : new Date().toISOString()),
   };
@@ -489,16 +493,19 @@ function recoverLegacyData(): AppData {
         if (Array.isArray(s.tasks) && s.tasks.length > 0) {
           data.tasks = s.tasks.map((t: LegacySyntharaTask) => ({
             id: t.id || `t_${Math.random().toString(36).slice(2, 8)}`,
-            title: t.title || 'Без названия',
+                        title: t.title || 'Без названия',
             description: t.description || '',
             emotion: typeof t.emotion === 'number' ? Math.round(t.emotion * (t.emotion <= 1.0 ? 100 : 1)) : 50,
             urgency: typeof t.urgency === 'number' ? Math.round(t.urgency * (t.urgency <= 1.0 ? 100 : 1)) : 50,
             deadlineISO: t.deadline || null,
             isCompleted: !!t.completed,
+            tags: [],
             createdAt: t.createdAt || new Date().toISOString(),
             updatedAt: new Date().toISOString(),
           }));
         }
+
+    
         if (Array.isArray(s.transactions) && s.transactions.length > 0) {
           data.transactions = s.transactions.map((tx: LegacySyntharaTx) => ({
             id: String(tx.id || `tx_${Math.random().toString(36).slice(2, 8)}`),
@@ -534,6 +541,7 @@ function recoverLegacyData(): AppData {
             content: j.content || '',
             mood: typeof j.mood === 'number' ? (j.mood <= 10 ? j.mood * 10 : j.mood) : 50,
             dateISO: j.date || new Date().toISOString().slice(0, 10),
+            tags: [],
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
           }));
@@ -550,6 +558,7 @@ function recoverLegacyData(): AppData {
             durationMin: sb.duration || 60,
             type: (sb.type && ['work', 'personal', 'health', 'social', 'learning', 'rest'].includes(sb.type)) ? (sb.type as ScheduleBlock['type']) : 'personal',
             isCompleted: false,
+            tags: [],
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
           }));
