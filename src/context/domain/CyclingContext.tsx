@@ -1,4 +1,4 @@
-import { useContext, useSyncExternalStore, type ReactNode } from 'react';
+import { useContext, useSyncExternalStore, useCallback, type ReactNode } from 'react';
 import { useDataStore, DataDispatchContext } from '../DataContext';
 
 export function CyclingProvider({ children }: { children: ReactNode }) {
@@ -13,10 +13,15 @@ export function useCycling() {
 
   const store = useDataStore();
 
-  const rides = useSyncExternalStore(store.subscribe, () => store.getSnapshot().rides);
-  const routes = useSyncExternalStore(store.subscribe, () => store.getSnapshot().routes);
-  const maintenance = useSyncExternalStore(store.subscribe, () => store.getSnapshot().maintenance);
-  const galleryNotes = useSyncExternalStore(store.subscribe, () => store.getSnapshot().galleryNotes);
+  const getRides = useCallback(() => store.getSnapshot().rides, [store]);
+  const getRoutes = useCallback(() => store.getSnapshot().routes, [store]);
+  const getMaintenance = useCallback(() => store.getSnapshot().maintenance, [store]);
+  const getGalleryNotes = useCallback(() => store.getSnapshot().galleryNotes, [store]);
+
+  const rides = useSyncExternalStore(store.subscribe, getRides);
+  const routes = useSyncExternalStore(store.subscribe, getRoutes);
+  const maintenance = useSyncExternalStore(store.subscribe, getMaintenance);
+  const galleryNotes = useSyncExternalStore(store.subscribe, getGalleryNotes);
 
   return { rides, routes, maintenance, galleryNotes, dispatch };
 }

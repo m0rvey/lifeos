@@ -1,4 +1,4 @@
-import { useContext, useSyncExternalStore, type ReactNode } from 'react';
+import { useContext, useSyncExternalStore, useCallback, type ReactNode } from 'react';
 import { useDataStore, DataDispatchContext } from '../DataContext';
 
 export function SocialProvider({ children }: { children: ReactNode }) {
@@ -13,10 +13,8 @@ export function useSocial() {
 
   const store = useDataStore();
 
-  const people = useSyncExternalStore(
-    store.subscribe,
-    () => store.getSnapshot().people
-  );
+  const getPeople = useCallback(() => store.getSnapshot().people, [store]);
+  const people = useSyncExternalStore(store.subscribe, getPeople);
 
   return { people, dispatch };
 }

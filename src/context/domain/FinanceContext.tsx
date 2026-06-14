@@ -1,4 +1,4 @@
-import { useContext, useSyncExternalStore, type ReactNode } from 'react';
+import { useContext, useSyncExternalStore, useCallback, type ReactNode } from 'react';
 import { useDataStore, DataDispatchContext } from '../DataContext';
 
 export function FinanceProvider({ children }: { children: ReactNode }) {
@@ -13,15 +13,11 @@ export function useFinance() {
 
   const store = useDataStore();
 
-  const transactions = useSyncExternalStore(
-    store.subscribe,
-    () => store.getSnapshot().transactions
-  );
+  const getTransactions = useCallback(() => store.getSnapshot().transactions, [store]);
+  const getReminders = useCallback(() => store.getSnapshot().reminders, [store]);
 
-  const reminders = useSyncExternalStore(
-    store.subscribe,
-    () => store.getSnapshot().reminders
-  );
+  const transactions = useSyncExternalStore(store.subscribe, getTransactions);
+  const reminders = useSyncExternalStore(store.subscribe, getReminders);
 
   return { transactions, reminders, dispatch };
 }

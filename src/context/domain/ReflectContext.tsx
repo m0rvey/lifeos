@@ -1,4 +1,4 @@
-import { useContext, useSyncExternalStore, type ReactNode } from 'react';
+import { useContext, useSyncExternalStore, useCallback, type ReactNode } from 'react';
 import { useDataStore, DataDispatchContext } from '../DataContext';
 
 export function ReflectProvider({ children }: { children: ReactNode }) {
@@ -13,12 +13,19 @@ export function useReflect() {
 
   const store = useDataStore();
 
-  const journal = useSyncExternalStore(store.subscribe, () => store.getSnapshot().journal);
-  const knowledge = useSyncExternalStore(store.subscribe, () => store.getSnapshot().knowledge);
-  const schedule = useSyncExternalStore(store.subscribe, () => store.getSnapshot().schedule);
-  const habits = useSyncExternalStore(store.subscribe, () => store.getSnapshot().habits);
-  const workouts = useSyncExternalStore(store.subscribe, () => store.getSnapshot().workouts);
-  const thoughts = useSyncExternalStore(store.subscribe, () => store.getSnapshot().thoughts);
+  const getJournal = useCallback(() => store.getSnapshot().journal, [store]);
+  const getKnowledge = useCallback(() => store.getSnapshot().knowledge, [store]);
+  const getSchedule = useCallback(() => store.getSnapshot().schedule, [store]);
+  const getHabits = useCallback(() => store.getSnapshot().habits, [store]);
+  const getWorkouts = useCallback(() => store.getSnapshot().workouts, [store]);
+  const getThoughts = useCallback(() => store.getSnapshot().thoughts, [store]);
+
+  const journal = useSyncExternalStore(store.subscribe, getJournal);
+  const knowledge = useSyncExternalStore(store.subscribe, getKnowledge);
+  const schedule = useSyncExternalStore(store.subscribe, getSchedule);
+  const habits = useSyncExternalStore(store.subscribe, getHabits);
+  const workouts = useSyncExternalStore(store.subscribe, getWorkouts);
+  const thoughts = useSyncExternalStore(store.subscribe, getThoughts);
 
   return { journal, knowledge, schedule, habits, workouts, thoughts, dispatch };
 }

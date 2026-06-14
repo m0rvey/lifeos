@@ -1,4 +1,4 @@
-import { useContext, useSyncExternalStore, type ReactNode } from 'react';
+import { useContext, useSyncExternalStore, useCallback, type ReactNode } from 'react';
 import { useDataStore, DataDispatchContext } from '../DataContext';
 
 export function TasksProvider({ children }: { children: ReactNode }) {
@@ -13,10 +13,8 @@ export function useTasks() {
 
   const store = useDataStore();
 
-  const tasks = useSyncExternalStore(
-    store.subscribe,
-    () => store.getSnapshot().tasks
-  );
+  const getTasks = useCallback(() => store.getSnapshot().tasks, [store]);
+  const tasks = useSyncExternalStore(store.subscribe, getTasks);
 
   return { tasks, dispatch };
 }

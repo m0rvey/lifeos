@@ -22,7 +22,7 @@ export default tseslint.config({ ignores: ['dist', 'storybook-static'] }, {
     ...reactHooks.configs.recommended.rules,
     'react-refresh/only-export-components': [
       'warn',
-      { allowConstantExport: true, allowExportNames: ['useI18n', 'Language'] },
+      { allowConstantExport: true, allowExportNames: ['useI18n', 'Language', 'useData', 'useUndoRedo', 'useTagRegistry', 'useCycling', 'useFinance', 'useReflect', 'useSocial', 'useTasks'] },
     ],
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     '@typescript-eslint/no-explicit-any': 'error',
