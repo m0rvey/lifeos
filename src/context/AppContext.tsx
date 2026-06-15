@@ -27,6 +27,10 @@ interface AppContextValue {
   setAccentColor: (accent: 'purple' | 'orange' | 'green' | 'blue' | 'rose') => void;
   fontSizeScale: number;
   setFontSizeScale: (scale: number) => void;
+  animations: 'on' | 'off' | 'system';
+  setAnimations: (mode: 'on' | 'off' | 'system') => void;
+  graphicsMode: 'high' | 'low';
+  setGraphicsMode: (mode: 'high' | 'low') => void;
   toasts: ToastMessage[];
   addToast: (
     message: string,
@@ -178,6 +182,36 @@ export function AppProvider({ children }: { children: ReactNode }) {
     [dispatch]
   );
 
+  const setAnimations = useCallback(
+    (mode: 'on' | 'off' | 'system') => {
+      dispatch({
+        type: 'SET_DATA',
+        payload: {
+          settings: {
+            ...settingsRef.current,
+            animations: mode,
+          },
+        },
+      });
+    },
+    [dispatch]
+  );
+
+  const setGraphicsMode = useCallback(
+    (mode: 'high' | 'low') => {
+      dispatch({
+        type: 'SET_DATA',
+        payload: {
+          settings: {
+            ...settingsRef.current,
+            graphicsMode: mode,
+          },
+        },
+      });
+    },
+    [dispatch]
+  );
+
   // 3. Toasts manager
   const addToast = useCallback(
     (message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info', duration = 3000) => {
@@ -275,6 +309,38 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [settings.fontSizeScale]);
 
   useEffect(() => {
+    const applyAnimations = () => {
+      const isOff = settings.animations === 'off';
+      const isSystemReduce =
+        settings.animations === 'system' &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (isOff || isSystemReduce) {
+        document.body.classList.add('reduced-motion');
+      } else {
+        document.body.classList.remove('reduced-motion');
+      }
+    };
+
+    applyAnimations();
+
+    if (settings.animations === 'system') {
+      const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const handler = () => applyAnimations();
+      mq.addEventListener('change', handler);
+      return () => mq.removeEventListener('change', handler);
+    }
+    return undefined;
+  }, [settings.animations]);
+
+  useEffect(() => {
+    if (settings.graphicsMode === 'low') {
+      document.body.classList.add('graphics-low');
+    } else {
+      document.body.classList.remove('graphics-low');
+    }
+  }, [settings.graphicsMode]);
+
+  useEffect(() => {
     const handleStorageError = (e: Event) => {
       const customEvent = e as CustomEvent;
       const errorMsg = customEvent.detail?.message || t('error.storage_quota');
@@ -300,6 +366,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setAccentColor,
         fontSizeScale: settings.fontSizeScale,
         setFontSizeScale,
+        animations: settings.animations,
+        setAnimations,
+        graphicsMode: settings.graphicsMode,
+        setGraphicsMode,
         toasts,
         addToast,
         removeToast,

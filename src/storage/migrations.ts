@@ -511,6 +511,14 @@ export function sanitizeData(data: unknown): AppData {
         rawSettings.weekStartDay === 0 || rawSettings.weekStartDay === 1
           ? (rawSettings.weekStartDay as 0 | 1)
           : def.settings.weekStartDay,
+      animations:
+        rawSettings.animations === 'on' || rawSettings.animations === 'off' || rawSettings.animations === 'system'
+          ? (rawSettings.animations as 'on' | 'off' | 'system')
+          : def.settings.animations,
+      graphicsMode:
+        rawSettings.graphicsMode === 'high' || rawSettings.graphicsMode === 'low'
+          ? (rawSettings.graphicsMode as 'high' | 'low')
+          : def.settings.graphicsMode,
     },
     people: Array.isArray(obj.people) ? obj.people.map(sanitizePerson) : def.people,
     tasks: Array.isArray(obj.tasks) ? obj.tasks.map(sanitizeTask) : def.tasks,

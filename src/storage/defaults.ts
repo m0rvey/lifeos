@@ -19,6 +19,8 @@ export function getDefaultData(): AppData {
         recency: 0.15,
       },
       weekStartDay: 1,
+      animations: 'system',
+      graphicsMode: 'high',
     },
     people: [],
     tasks: [],

@@ -41,6 +41,10 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
     setAccentColor,
     fontSizeScale,
     setFontSizeScale,
+    animations,
+    setAnimations,
+    graphicsMode,
+    setGraphicsMode,
     addToast,
   } = useApp();
   const { t, lang, setLang } = useI18n();
@@ -327,6 +331,33 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                 >
                   <option value="ru">{t('settings.language.ru')}</option>
                   <option value="en">{t('settings.language.en')}</option>
+                </select>
+              </div>
+
+              {/* Animations */}
+              <div className="settings-form-group">
+                <label className="settings-label">{t('settings.animations')}</label>
+                <select
+                  value={animations}
+                  onChange={(e) => setAnimations(e.target.value as 'on' | 'off' | 'system')}
+                  className="settings-select"
+                >
+                  <option value="system">{t('settings.animations.system')}</option>
+                  <option value="on">{t('settings.animations.on')}</option>
+                  <option value="off">{t('settings.animations.off')}</option>
+                </select>
+              </div>
+
+              {/* Graphics Mode */}
+              <div className="settings-form-group">
+                <label className="settings-label">{t('settings.graphics')}</label>
+                <select
+                  value={graphicsMode}
+                  onChange={(e) => setGraphicsMode(e.target.value as 'high' | 'low')}
+                  className="settings-select"
+                >
+                  <option value="high">{t('settings.graphics.high')}</option>
+                  <option value="low">{t('settings.graphics.low')}</option>
                 </select>
               </div>
             </div>

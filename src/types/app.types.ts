@@ -34,6 +34,8 @@ export interface AppSettings {
   graphSensitivity: number;
   graphWeights: GraphWeights;
   weekStartDay: 0 | 1;
+  animations: 'on' | 'off' | 'system';
+  graphicsMode: 'high' | 'low';
 }
 
 export interface GraphWeights {

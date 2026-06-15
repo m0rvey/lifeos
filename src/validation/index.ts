@@ -197,6 +197,8 @@ export const AppSettingsSchema = z.object({
   graphSensitivity: z.number().min(1).max(10),
   graphWeights: GraphWeightsSchema,
   weekStartDay: z.union([z.literal(0), z.literal(1)]),
+  animations: z.enum(['on', 'off', 'system']),
+  graphicsMode: z.enum(['high', 'low']),
 });
 
 export const AppDataSchema = z.object({

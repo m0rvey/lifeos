@@ -535,28 +535,46 @@ input[type='checkbox'] {
   background: color-mix(in srgb, var(--scrollbar-thumb) 55%, var(--text-secondary));
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-delay: -1ms !important;
-    animation-duration: 1ms !important;
-    animation-iteration-count: 1 !important;
-    background-attachment: scroll !important;
-    scroll-behavior: auto !important;
-    transition-duration: 0s !important;
-    transition-delay: 0s !important;
-  }
-  .bg-blob,
-  .bg-blob-1,
-  .bg-blob-2,
-  .bg-blob-3 {
-    animation: none !important;
-    will-change: auto !important;
-    display: none !important;
-  }
-  .theme-mindveyz::before,
-  .theme-slate::before {
-    animation: none !important;
-  }
+body.reduced-motion,
+body.reduced-motion *,
+body.reduced-motion *::before,
+body.reduced-motion *::after {
+  animation-delay: -1ms !important;
+  animation-duration: 1ms !important;
+  animation-iteration-count: 1 !important;
+  background-attachment: scroll !important;
+  scroll-behavior: auto !important;
+  transition-duration: 0s !important;
+  transition-delay: 0s !important;
 }
+body.reduced-motion .bg-blob,
+body.reduced-motion .bg-blob-1,
+body.reduced-motion .bg-blob-2,
+body.reduced-motion .bg-blob-3 {
+  animation: none !important;
+  will-change: auto !important;
+  display: none !important;
+}
+body.reduced-motion .theme-mindveyz::before,
+body.reduced-motion .theme-slate::before {
+  animation: none !important;
+}
+
+/* ── Graphics Mode: Low overrides for performance on Windows/laggy systems ── */
+body.graphics-low .bg-blob {
+  display: none !important;
+}
+body.graphics-low,
+body.graphics-low * {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+/* When backdrop-filter is disabled, make glass surfaces slightly more opaque for readability */
+body.graphics-low .glass-panel {
+  background: var(--bg-secondary) !important;
+  border-color: var(--border) !important;
+}
+body.graphics-low .app-header {
+  background: var(--bg-secondary) !important;
+}
+
