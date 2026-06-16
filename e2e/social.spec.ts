@@ -12,13 +12,13 @@ test.describe('Social CRUD flow', () => {
 
     // Edit
     await page.locator('text=E2E Test Person').click();
-    await page.locator('button[title="Edit"]').first().click();
+    await page.locator('.detail-btn-edit').first().click();
     await page.locator('input[placeholder="John Doe"]').fill('E2E Test Person (Updated)');
     await page.locator('button', { hasText: 'Save changes' }).click();
     await expect(page.locator('text=E2E Test Person (Updated)')).toBeVisible();
 
     // Delete
-    await page.locator('button[title="Delete"]').first().click();
+    await page.locator('.detail-btn-delete').first().click();
     await page.locator('button', { hasText: 'Delete' }).click();
     await expect(page.locator('text=E2E Test Person (Updated)')).not.toBeVisible();
   });

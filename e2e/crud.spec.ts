@@ -12,8 +12,8 @@ test.describe('Journal CRUD flow', () => {
     await page.locator('button', { hasText: 'New entry' }).click();
 
     // 3. Fill in the modal fields
-    await page.fill('input[placeholder="Morning mood..."]', 'E2E Test Entry');
-    await page.fill('textarea[placeholder="Today I felt..."]', 'Hello from E2E test script!');
+    await page.locator('input[type="text"]').first().fill('E2E Test Entry');
+    await page.locator('textarea').first().fill('Hello from E2E test script!');
 
     // 4. Submit the form
     await page.locator('button', { hasText: 'Record in journal' }).click();
@@ -27,7 +27,7 @@ test.describe('Journal CRUD flow', () => {
     await page.locator('.glass-panel').filter({ hasText: 'E2E Test Entry' }).locator('button').first().click();
 
     // 7. Update the title and content
-    await page.fill('input[placeholder="Morning mood..."]', 'E2E Test Entry (Updated)');
+    await page.locator('input[type="text"]').first().fill('E2E Test Entry (Updated)');
     await page.locator('button', { hasText: 'Save changes' }).click();
 
     // 8. Verify the updated title
