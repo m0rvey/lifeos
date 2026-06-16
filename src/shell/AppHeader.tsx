@@ -82,7 +82,7 @@ export default function AppHeader({ onOpenSettings, onOpenSearch }: AppHeaderPro
 
       {/* Platform Logo */}
       <div className="app-logo" onClick={() => navigate('/hub')} style={{ cursor: 'pointer' }}>
-        <div className="app-logo-mark">
+        <div className="app-logo-mark" style={activeModule === 'social' ? { color: '#ffffff' } : undefined}>
           <Leaf size={14} fill="currentColor" />
           <span className="app-logo-pulse" />
         </div>

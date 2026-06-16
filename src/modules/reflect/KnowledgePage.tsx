@@ -206,7 +206,7 @@ export default function KnowledgePage() {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            style={{ height: '40px', padding: '0 12px', fontSize: '0.85rem' }}
+            style={{ height: '40px', padding: '0 34px 0 12px', fontSize: '0.85rem' }}
           >
             {categories.map((cat) => (
               <option key={cat} value={cat}>

@@ -179,7 +179,7 @@ export default function CapitalPage() {
                   onChange={(e) => setSelectedCategory(e.target.value)}
                   style={{
                     height: '40px',
-                    padding: '0 12px',
+                    padding: '0 34px 0 12px',
                     fontSize: '0.85rem',
                     background: 'var(--bg-secondary)',
                     border: '1px solid var(--border)',

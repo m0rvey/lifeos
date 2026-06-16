@@ -701,7 +701,7 @@ tr:nth-child(even) td {
 
 .settings-select {
   width: 100%;
-  padding: 6px 10px;
+  padding: 6px 30px 6px 10px;
   background: var(--bg-secondary);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
@@ -2302,7 +2302,7 @@ tr:nth-child(even) td {
 
 .social-filter-select {
   height: 32px;
-  padding: 0 8px;
+  padding: 0 28px 0 8px;
   font-size: var(--text-sm);
   width: 100%;
 }
@@ -2329,7 +2329,8 @@ tr:nth-child(even) td {
 .social-sort-select {
   border: none;
   background: transparent;
-  padding: 0;
+  padding: 0 16px 0 0;
+  background-position: right 0 center;
   width: auto;
   font-weight: bold;
   color: var(--accent);
@@ -3012,7 +3013,7 @@ tr:nth-child(even) td {
 
 .habits-form-select {
   height: 36px;
-  padding: 0 8px;
+  padding: 0 28px 0 8px;
   font-size: 0.8rem;
   background: var(--surface);
   border: 1px solid var(--border);
@@ -3326,4 +3327,52 @@ tr:nth-child(even) td {
 }
 .dash-justify-center {
   justify-content: center;
+}
+
+/* ── Switch Toggle ── */
+.switch-toggle {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+  flex-shrink: 0;
+}
+.switch-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.switch-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  transition: border-color var(--duration-fast), background-color var(--duration-fast);
+  border-radius: 20px;
+}
+.switch-slider:before {
+  position: absolute;
+  content: "";
+  height: 12px;
+  width: 12px;
+  left: 3px;
+  bottom: 3px;
+  background-color: var(--text-secondary);
+  transition: transform var(--duration-fast) var(--ease-spring), background-color var(--duration-fast);
+  border-radius: 50%;
+}
+.switch-toggle input:checked + .switch-slider {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+.switch-toggle input:checked + .switch-slider:before {
+  transform: translateX(20px);
+  background-color: var(--bg-primary, #fff);
+}
+.switch-toggle input:focus + .switch-slider {
+  border-color: var(--accent);
 }

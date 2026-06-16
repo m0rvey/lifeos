@@ -155,7 +155,7 @@ export default function RidesPage() {
                 className={`tab-btn ${filter === 'all' ? 'active' : ''}`}
                 onClick={() => setFilter('all')}
               >
-                {t('cycling.rides.filterAll')} ({data.rides.length})
+                {t('cycling.rides.filterAll', { count: data.rides.length })}
               </button>
               <button
                 className={`tab-btn ${filter === 'recent' ? 'active' : ''}`}

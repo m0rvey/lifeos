@@ -120,14 +120,24 @@ export default function RouteModal({ isOpen, onClose, route, onSave }: RouteModa
           </FormField>
 
           <FormField label={t('cycling.routes.fieldCompleted')}>
-            <div style={{ display: 'flex', alignItems: 'center', height: '38px', gap: '8px' }}>
-              <input
-                type="checkbox"
-                id="route-completed"
-                checked={isCompleted}
-                onChange={(e) => setIsCompleted(e.target.checked)}
-              />
-              <label htmlFor="route-completed" style={{ fontSize: '0.8rem', cursor: 'pointer' }}>
+            <div style={{ display: 'flex', alignItems: 'center', height: '38px', gap: '10px' }}>
+              <label className="switch-toggle" style={{ margin: 0 }}>
+                <input
+                  type="checkbox"
+                  id="route-completed"
+                  checked={isCompleted}
+                  onChange={(e) => setIsCompleted(e.target.checked)}
+                />
+                <span className="switch-slider"></span>
+              </label>
+              <label
+                htmlFor="route-completed"
+                style={{
+                  fontSize: '0.85rem',
+                  cursor: 'pointer',
+                  color: isCompleted ? 'var(--text-primary)' : 'var(--text-secondary)',
+                }}
+              >
                 {t('cycling.routes.completed')}
               </label>
             </div>
