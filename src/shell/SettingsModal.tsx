@@ -1,7 +1,8 @@
 import { useState, useMemo, useRef, type ChangeEvent } from 'react';
 import { useApp } from '../context/AppContext';
 import { useData } from '../context/DataContext';
-import { useI18n, type Language } from '../i18n';
+import { useI18n } from '../i18n';
+import { type Language } from '../i18n/language';
 import {
   exportBackup,
   importBackup,

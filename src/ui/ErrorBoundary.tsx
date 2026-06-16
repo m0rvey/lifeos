@@ -1,5 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
-import { getCurrentLanguage } from '../i18n';
+import { getCurrentLanguage } from '../i18n/language';
 
 interface Props {
   children: ReactNode;

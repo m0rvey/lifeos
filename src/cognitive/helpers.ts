@@ -1,5 +1,5 @@
 import type { AppData } from '../types';
-import { getCurrentLanguage } from '../i18n/index';
+import { getCurrentLanguage } from '../i18n/language';
 
 export function uid(): string {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
