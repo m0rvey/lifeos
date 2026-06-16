@@ -4,9 +4,7 @@ import { safeSaveItem } from './atomic';
 import { migrateData } from './migrations';
 import { loadDataIDB, saveDataIDB, migrateFromLocalStorage, hasIDBData } from './idbEngine';
 
-export { hasIDBData };
-
-export const STORAGE_KEY = 'lifeos_platform_v1';
+const STORAGE_KEY = 'lifeos_platform_v1';
 
 export function loadData(): AppData {
   try {

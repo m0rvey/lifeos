@@ -441,7 +441,7 @@ function sanitizeThought(t: unknown): Thought {
   };
 }
 
-export function sanitizeData(data: unknown): AppData {
+function sanitizeData(data: unknown): AppData {
   const def = getDefaultData();
   const obj = data as Record<string, unknown> | null | undefined;
   if (!obj || typeof obj !== 'object') return def;

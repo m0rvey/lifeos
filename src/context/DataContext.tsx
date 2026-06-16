@@ -4,7 +4,6 @@ import {
   useReducer,
   useEffect,
   useRef,
-  useMemo,
   useState,
   type ReactNode,
   type Dispatch,
@@ -15,13 +14,6 @@ import { getDefaultData } from '../storage/defaults';
 import { dataReducer, type DataAction, type HistoryState } from './dataHistory';
 import LoadingScreen from '../ui/LoadingScreen';
 
-export interface DataStore {
-  subscribe: (listener: () => void) => () => void;
-  getSnapshot: () => AppData;
-  update: () => void;
-}
-
-const StoreContext = createContext<DataStore | null>(null);
 const DataStateContext = createContext<AppData | null>(null);
 const DataDispatchContext = createContext<Dispatch<DataAction> | null>(null);
 const UndoContext = createContext<{ canUndo: boolean; canRedo: boolean } | null>(null);
@@ -64,33 +56,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     };
   }, [isTesting]);
 
-  const currentDataRef = useRef(history.present);
-
-  const listenersRef = useRef(new Set<() => void>());
-
-  const store = useMemo<DataStore>(() => {
-    return {
-      subscribe(listener: () => void) {
-        listenersRef.current.add(listener);
-        return () => {
-          listenersRef.current.delete(listener);
-        };
-      },
-      getSnapshot() {
-        return currentDataRef.current;
-      },
-      update() {
-        listenersRef.current.forEach((l) => l());
-      },
-    };
-  }, []);
-
   const prevDataRef = useRef(history.present);
-
-  useEffect(() => {
-    currentDataRef.current = history.present;
-    store.update();
-  }, [history.present, store]);
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout> | undefined;
@@ -121,26 +87,16 @@ export function DataProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <StoreContext.Provider value={store}>
-      <DataStateContext.Provider value={history.present}>
-        <DataDispatchContext.Provider value={dispatch}>
-          <UndoContext.Provider
-            value={{ canUndo: history.past.length > 0, canRedo: history.future.length > 0 }}
-          >
-            {children}
-          </UndoContext.Provider>
-        </DataDispatchContext.Provider>
-      </DataStateContext.Provider>
-    </StoreContext.Provider>
+    <DataStateContext.Provider value={history.present}>
+      <DataDispatchContext.Provider value={dispatch}>
+        <UndoContext.Provider
+          value={{ canUndo: history.past.length > 0, canRedo: history.future.length > 0 }}
+        >
+          {children}
+        </UndoContext.Provider>
+      </DataDispatchContext.Provider>
+    </DataStateContext.Provider>
   );
-}
-
-export function useDataStore() {
-  const ctx = useContext(StoreContext);
-  if (!ctx) {
-    throw new Error('useDataStore must be used within DataProvider');
-  }
-  return ctx;
 }
 
 export function useData() {

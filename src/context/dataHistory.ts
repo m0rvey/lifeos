@@ -4,7 +4,7 @@ import { calculateFatigue } from '../cognitive/helpers';
 
 const MAX_HISTORY = 50;
 
-export type ArrayEntities = Extract<
+type ArrayEntities = Extract<
   keyof AppData,
   | 'people'
   | 'tasks'
@@ -33,7 +33,7 @@ export type DataAction =
   | { type: 'REDO' }
   | { type: 'INITIALIZE'; payload: AppData };
 
-export type HistoryAction =
+type HistoryAction =
   | { type: 'REPLACE_STATE'; previousState: AppData; newState: AppData }
   | { type: 'UPDATE_FIELDS'; previousFields: Partial<AppData>; newFields: Partial<AppData> }
   | { type: 'ADD_ENTITY'; entity: ArrayEntities; payload: unknown }
@@ -52,7 +52,7 @@ export interface HistoryState {
   future: HistoryAction[];
 }
 
-export function inverseAction(action: HistoryAction): HistoryAction {
+function inverseAction(action: HistoryAction): HistoryAction {
   switch (action.type) {
     case 'REPLACE_STATE':
       return {
@@ -90,7 +90,7 @@ export function inverseAction(action: HistoryAction): HistoryAction {
   }
 }
 
-export function applyHistoryAction(state: AppData, action: HistoryAction): AppData {
+function applyHistoryAction(state: AppData, action: HistoryAction): AppData {
   switch (action.type) {
     case 'REPLACE_STATE':
       return action.newState;

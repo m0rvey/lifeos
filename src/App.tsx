@@ -3,11 +3,6 @@ import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-
 import { DataProvider, useData } from './context/DataContext';
 import { TagRegistryProvider } from './context/TagRegistry';
 import { AppProvider, useApp } from './context/AppContext';
-import { SocialProvider } from './context/domain/SocialContext';
-import { TasksProvider } from './context/domain/TasksContext';
-import { FinanceProvider } from './context/domain/FinanceContext';
-import { CyclingProvider } from './context/domain/CyclingContext';
-import { ReflectProvider } from './context/domain/ReflectContext';
 import { useI18n } from './i18n';
 import AppShell from './shell/AppShell';
 import { ErrorBoundary, PageTransition } from './ui';
@@ -82,69 +77,59 @@ function AppInner() {
           </div>
         }
       >
-        <SocialProvider>
-          <TasksProvider>
-            <FinanceProvider>
-              <CyclingProvider>
-                <ReflectProvider>
-                  <PageTransition>
-                    <Routes>
-                      <Route path="/" element={<Navigate to="/hub" replace />} />
-                      <Route
-                        path="/hub"
-                        element={
-                          <ErrorBoundary key={location.pathname}>
-                            <HubPage />
-                          </ErrorBoundary>
-                        }
-                      />
-                      <Route
-                        path="/social/*"
-                        element={
-                          <ErrorBoundary key={location.pathname}>
-                            <SocialModule />
-                          </ErrorBoundary>
-                        }
-                      />
-                      <Route
-                        path="/finance/*"
-                        element={
-                          <ErrorBoundary key={location.pathname}>
-                            <FinanceModule />
-                          </ErrorBoundary>
-                        }
-                      />
-                      <Route
-                        path="/cycling/*"
-                        element={
-                          <ErrorBoundary key={location.pathname}>
-                            <CyclingModule />
-                          </ErrorBoundary>
-                        }
-                      />
-                      <Route
-                        path="/reflect/*"
-                        element={
-                          <ErrorBoundary key={location.pathname}>
-                            <ReflectModule />
-                          </ErrorBoundary>
-                        }
-                      />
-                      <Route
-                        path="/analytics"
-                        element={
-                          <ErrorBoundary key={location.pathname}>
-                            <StatisticsPage />
-                          </ErrorBoundary>
-                        }
-                      />
-                    </Routes>
-                  </PageTransition>
-                </ReflectProvider>
-              </CyclingProvider>
-            </FinanceProvider>
-          </TasksProvider>
-        </SocialProvider>
+        <PageTransition>
+          <Routes>
+            <Route path="/" element={<Navigate to="/hub" replace />} />
+            <Route
+              path="/hub"
+              element={
+                <ErrorBoundary key={location.pathname}>
+                  <HubPage />
+                </ErrorBoundary>
+              }
+            />
+            <Route
+              path="/social/*"
+              element={
+                <ErrorBoundary key={location.pathname}>
+                  <SocialModule />
+                </ErrorBoundary>
+              }
+            />
+            <Route
+              path="/finance/*"
+              element={
+                <ErrorBoundary key={location.pathname}>
+                  <FinanceModule />
+                </ErrorBoundary>
+              }
+            />
+            <Route
+              path="/cycling/*"
+              element={
+                <ErrorBoundary key={location.pathname}>
+                  <CyclingModule />
+                </ErrorBoundary>
+              }
+            />
+            <Route
+              path="/reflect/*"
+              element={
+                <ErrorBoundary key={location.pathname}>
+                  <ReflectModule />
+                </ErrorBoundary>
+              }
+            />
+            <Route
+              path="/analytics"
+              element={
+                <ErrorBoundary key={location.pathname}>
+                  <StatisticsPage />
+                </ErrorBoundary>
+              }
+            />
+          </Routes>
+        </PageTransition>
       </Suspense>
     </AppShell>
   );
