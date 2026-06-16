@@ -32,13 +32,27 @@ export interface WorkerTickMessage {
   type: 'TICK';
 }
 
+export interface WorkerPinMessage {
+  type: 'PIN';
+  id: string;
+  isPinned: boolean;
+  x?: number;
+  y?: number;
+}
+
+export interface WorkerPinAllResetMessage {
+  type: 'PIN_ALL_RESET';
+}
+
 export type WorkerIncomingMessage =
   | WorkerInitMessage
   | WorkerTickMessage
   | WorkerDragStartMessage
   | WorkerDragMoveMessage
   | WorkerDragEndMessage
-  | WorkerDestroyMessage;
+  | WorkerDestroyMessage
+  | WorkerPinMessage
+  | WorkerPinAllResetMessage;
 
 const ctx = self as unknown as DedicatedWorkerGlobalScope;
 
@@ -50,6 +64,7 @@ interface NodeState {
   vy: number;
   targetRadius: number;
   angle: number;
+  isPinned?: boolean;
 }
 
 let nodes: NodeState[] = [];
@@ -89,7 +104,7 @@ function tick() {
 
   // Radial gravity (toward target radius)
   for (const node of nodes) {
-    if (node.id === dragId) continue;
+    if (node.id === dragId || node.isPinned) continue;
     const dx = centerX - node.x;
     const dy = centerY - node.y;
     const dist = Math.sqrt(dx * dx + dy * dy) || 1;
@@ -121,7 +136,7 @@ function tick() {
 
   // Velocity damping + position update
   for (const node of nodes) {
-    if (node.id === dragId) continue;
+    if (node.id === dragId || node.isPinned) continue;
     node.vx *= 0.85;
     node.vy *= 0.85;
     node.x += node.vx;
@@ -171,6 +186,7 @@ ctx.onmessage = (e: MessageEvent<WorkerIncomingMessage>) => {
             vy: 0,
             targetRadius: n.targetRadius,
             angle: n.angle,
+            isPinned: false,
           };
         }
       });
@@ -209,6 +225,37 @@ ctx.onmessage = (e: MessageEvent<WorkerIncomingMessage>) => {
     case 'DRAG_END':
       dragId = null;
       break;
+    case 'PIN': {
+      if (typeof msg.id !== 'string') return;
+      const node = nodes.find((n) => n.id === msg.id);
+      if (node) {
+        node.isPinned = msg.isPinned;
+        if (typeof msg.x === 'number' && typeof msg.y === 'number') {
+          node.x = msg.x;
+          node.y = msg.y;
+        }
+        if (msg.isPinned) {
+          node.vx = 0;
+          node.vy = 0;
+        }
+      }
+      // Re-trigger physics calculations on pinning state change
+      tickCount = 0;
+      if (!intervalId) {
+        intervalId = setInterval(tick, 16);
+      }
+      break;
+    }
+    case 'PIN_ALL_RESET': {
+      nodes.forEach((n) => {
+        n.isPinned = false;
+      });
+      tickCount = 0;
+      if (!intervalId) {
+        intervalId = setInterval(tick, 16);
+      }
+      break;
+    }
     case 'DESTROY':
       if (intervalId) {
         clearInterval(intervalId);

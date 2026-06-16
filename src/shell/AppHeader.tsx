@@ -120,9 +120,14 @@ export default function AppHeader({ onOpenSettings, onOpenSearch }: AppHeaderPro
                     color: 'white',
                     fontSize: '10px',
                     fontWeight: 'bold',
-                    padding: '2px 6px',
-                    borderRadius: '10px',
+                    padding: '1px 4.5px',
+                    borderRadius: '6px',
                     lineHeight: 1,
+                    minWidth: '14px',
+                    height: '14px',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                   }}
                 >
                   {badgeCount > 99 ? '99+' : badgeCount}

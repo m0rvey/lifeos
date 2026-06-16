@@ -325,6 +325,7 @@ body,
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   perspective: 1000px;
+  filter: blur(120px);
 }
 .bg-blob-1 {
   width: 500px;

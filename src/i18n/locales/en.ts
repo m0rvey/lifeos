@@ -746,6 +746,7 @@ const en: Record<string, string> = {
   'social.filter.all_statuses': 'All',
   'social.graph.hint': 'Drag nodes, click a contact for diagnostics',
   'social.graph.me': 'Me',
+  'social.graph.reset_pins': 'Reset Pinned Nodes',
   'social.graph.no_contacts_desc': 'no contacts desc',
   'social.graph.no_contacts_title': 'No contacts to display',
   'social.graph.title': 'Social field map',

@@ -162,6 +162,7 @@ export default function SocialGraph({
   }, [people, centerX, centerY, settings.graphWeights, t]);
 
   const [positions, setPositions] = useState<Record<string, { x: number; y: number }>>({});
+  const [pinnedIds, setPinnedIds] = useState<Set<string>>(new Set());
 
   const nodes = useMemo(() => {
     return initialData.initialNodes.map((node) => {
@@ -171,6 +172,39 @@ export default function SocialGraph({
   }, [initialData.initialNodes, positions]);
 
   const [draggedNodeId, setDraggedNodeId] = useState<string | null>(null);
+
+  const handleNodeDoubleClick = (nodeId: string, nodeX: number, nodeY: number) => {
+    if (nodeId === 'me') return;
+    setPinnedIds((prev) => {
+      const next = new Set(prev);
+      const isCurrentlyPinned = next.has(nodeId);
+      if (isCurrentlyPinned) {
+        next.delete(nodeId);
+        if (workerRef.current) {
+          workerRef.current.postMessage({ type: 'PIN', id: nodeId, isPinned: false });
+        }
+      } else {
+        next.add(nodeId);
+        if (workerRef.current) {
+          workerRef.current.postMessage({
+            type: 'PIN',
+            id: nodeId,
+            isPinned: true,
+            x: nodeX,
+            y: nodeY,
+          });
+        }
+      }
+      return next;
+    });
+  };
+
+  const handleResetPins = () => {
+    setPinnedIds(new Set());
+    if (workerRef.current) {
+      workerRef.current.postMessage({ type: 'PIN_ALL_RESET' });
+    }
+  };
 
   // Initialize Web Worker once
   useEffect(() => {
@@ -284,6 +318,21 @@ export default function SocialGraph({
   const handleMouseUp = () => {
     if (draggedNodeId && workerRef.current) {
       workerRef.current.postMessage({ type: 'DRAG_END' });
+      
+      // If the node being dragged is pinned, send a PIN message to lock it in place at its final dragged coordinates
+      if (pinnedIds.has(draggedNodeId)) {
+        const node = nodes.find((n) => n.id === draggedNodeId);
+        if (node) {
+          workerRef.current.postMessage({
+            type: 'PIN',
+            id: draggedNodeId,
+            isPinned: true,
+            x: node.x,
+            y: node.y,
+          });
+        }
+      }
+      
       setDraggedNodeId(null);
     }
   };
@@ -308,225 +357,302 @@ export default function SocialGraph({
   }
 
   return (
-    <div ref={containerRef} className={styles.graphCanvasContainer}>
-      <svg
-        viewBox="0 0 800 600"
-        width="100%"
-        height="100%"
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
-        style={{ cursor: draggedNodeId ? 'grabbing' : 'grab' }}
-      >
-        <defs>
-          <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.25" />
-            <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
-          </radialGradient>
-          <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#000" floodOpacity="0.4" />
-          </filter>
-        </defs>
-
-        {/* Concentric rings guidelines */}
-        <circle
-          cx={centerX}
-          cy={centerY}
-          r={75}
-          fill="none"
-          stroke="rgba(255,255,255,0.04)"
-          strokeWidth="1.5"
-          strokeDasharray="5,5"
-        />
-        <circle
-          cx={centerX}
-          cy={centerY}
-          r={150}
-          fill="none"
-          stroke="rgba(255,255,255,0.04)"
-          strokeWidth="1.5"
-          strokeDasharray="5,5"
-        />
-        <circle
-          cx={centerX}
-          cy={centerY}
-          r={225}
-          fill="none"
-          stroke="rgba(255,255,255,0.04)"
-          strokeWidth="1.5"
-          strokeDasharray="5,5"
-        />
-        <circle
-          cx={centerX}
-          cy={centerY}
-          r={300}
-          fill="none"
-          stroke="rgba(255,255,255,0.04)"
-          strokeWidth="1.5"
-          strokeDasharray="5,5"
-        />
-
-        {/* Ring labels */}
-        <text
-          x={centerX + 8}
-          y={centerY - 75 - 5}
-          fill="var(--text-secondary)"
-          fontSize="0.65rem"
-          opacity="0.4"
+    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+      {pinnedIds.size > 0 && (
+        <button
+          className="btn btn--secondary"
+          onClick={handleResetPins}
+          style={{
+            position: 'absolute',
+            top: '12px',
+            right: '12px',
+            padding: '6px 10px',
+            fontSize: '0.75rem',
+            zIndex: 10,
+            background: 'var(--surface)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-sm)',
+            color: 'var(--text-primary)',
+            cursor: 'pointer',
+          }}
         >
-          {t('social.depth.core')}
-        </text>
-        <text
-          x={centerX + 8}
-          y={centerY - 150 - 5}
-          fill="var(--text-secondary)"
-          fontSize="0.65rem"
-          opacity="0.4"
+          {t('social.graph.reset_pins')}
+        </button>
+      )}
+      <div ref={containerRef} className={styles.graphCanvasContainer}>
+        <svg
+          viewBox="0 0 800 600"
+          width="100%"
+          height="100%"
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+          style={{ cursor: draggedNodeId ? 'grabbing' : 'grab' }}
         >
-          {t('social.depth.inner')}
-        </text>
-        <text
-          x={centerX + 8}
-          y={centerY - 225 - 5}
-          fill="var(--text-secondary)"
-          fontSize="0.65rem"
-          opacity="0.4"
-        >
-          {t('social.depth.social')}
-        </text>
-        <text
-          x={centerX + 8}
-          y={centerY - 300 - 5}
-          fill="var(--text-secondary)"
-          fontSize="0.65rem"
-          opacity="0.4"
-        >
-          {t('social.depth.periphery')}
-        </text>
+          <defs>
+            <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.25" />
+              <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
+            </radialGradient>
+            <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#000" floodOpacity="0.4" />
+            </filter>
+            <filter id="linkGlow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
 
-        {/* Glow halo under active node */}
-        {nodes.map((n) => {
-          if (n.id !== activeId) return null;
-          return (
-            <circle
-              key={`glow-${n.id}`}
-              cx={n.x}
-              cy={n.y}
-              r={n.size * 2.5}
-              fill="url(#glowGrad)"
-              pointerEvents="none"
-            />
-          );
-        })}
+          {/* Concentric rings guidelines */}
+          <circle
+            cx={centerX}
+            cy={centerY}
+            r={75}
+            fill="none"
+            stroke="rgba(255,255,255,0.04)"
+            strokeWidth="1.5"
+            strokeDasharray="5,5"
+          />
+          <circle
+            cx={centerX}
+            cy={centerY}
+            r={150}
+            fill="none"
+            stroke="rgba(255,255,255,0.04)"
+            strokeWidth="1.5"
+            strokeDasharray="5,5"
+          />
+          <circle
+            cx={centerX}
+            cy={centerY}
+            r={225}
+            fill="none"
+            stroke="rgba(255,255,255,0.04)"
+            strokeWidth="1.5"
+            strokeDasharray="5,5"
+          />
+          <circle
+            cx={centerX}
+            cy={centerY}
+            r={300}
+            fill="none"
+            stroke="rgba(255,255,255,0.04)"
+            strokeWidth="1.5"
+            strokeDasharray="5,5"
+          />
 
-        {/* Links */}
-        {(() => {
-          const nodeMap = new Map(nodes.map((n) => [n.id, n]));
-          return initialData.initialLinks.map((link, i) => {
-            const s = nodeMap.get(link.source);
-            const t = nodeMap.get(link.target);
-            if (!s || !t) return null;
+          {/* Ring labels */}
+          <text
+            x={centerX + 8}
+            y={centerY - 75 - 5}
+            fill="var(--text-secondary)"
+            fontSize="0.65rem"
+            opacity="0.4"
+          >
+            {t('social.depth.core')}
+          </text>
+          <text
+            x={centerX + 8}
+            y={centerY - 150 - 5}
+            fill="var(--text-secondary)"
+            fontSize="0.65rem"
+            opacity="0.4"
+          >
+            {t('social.depth.inner')}
+          </text>
+          <text
+            x={centerX + 8}
+            y={centerY - 225 - 5}
+            fill="var(--text-secondary)"
+            fontSize="0.65rem"
+            opacity="0.4"
+          >
+            {t('social.depth.social')}
+          </text>
+          <text
+            x={centerX + 8}
+            y={centerY - 300 - 5}
+            fill="var(--text-secondary)"
+            fontSize="0.65rem"
+            opacity="0.4"
+          >
+            {t('social.depth.periphery')}
+          </text>
 
-            const isActiveLink = activeId && (link.source === activeId || link.target === activeId);
-
+          {/* Glow halo under active node */}
+          {nodes.map((n) => {
+            if (n.id !== activeId) return null;
             return (
-              <line
-                key={`link-${i}`}
-                x1={s.x}
-                y1={s.y}
-                x2={t.x}
-                y2={t.y}
-                stroke={isActiveLink ? 'var(--accent)' : 'var(--border)'}
-                strokeWidth={isActiveLink ? link.value * 2.0 : link.value * 1.0}
-                strokeOpacity={isActiveLink ? 0.75 : 0.15}
-                style={{ transition: 'stroke 0.2s, stroke-width 0.2s' }}
+              <circle
+                key={`glow-${n.id}`}
+                cx={n.x}
+                cy={n.y}
+                r={n.size * 2.5}
+                fill="url(#glowGrad)"
+                pointerEvents="none"
               />
             );
-          });
-        })()}
+          })}
 
-        {/* Nodes */}
-        {nodes.map((node) => {
-          const isActive = node.id === activeId;
-          const isCenter = node.depth === 'Me';
+          {/* Links */}
+          {(() => {
+            const nodeMap = new Map(nodes.map((n) => [n.id, n]));
+            return initialData.initialLinks.map((link, i) => {
+              const s = nodeMap.get(link.source);
+              const t = nodeMap.get(link.target);
+              if (!s || !t) return null;
 
-          return (
-            <g
-              key={node.id}
-              transform={`translate(${node.x || 0}, ${node.y || 0})`}
-              onMouseDown={(e) => handleMouseDown(e, node.id)}
-              onClick={() => {
-                if (!wasDraggedRef.current && node.id !== 'me') {
-                  onSelectNode(node.id);
-                }
-              }}
-              style={{ cursor: isCenter ? 'default' : 'pointer' }}
-            >
-              {isActive && (
-                <circle
-                  r={node.size + 5}
-                  fill="none"
-                  stroke="var(--accent)"
-                  strokeWidth="2"
-                  style={{ transition: 'r 0.2s' }}
+              const isActiveLink = activeId && (link.source === activeId || link.target === activeId);
+              
+              const isSourceDecaying = s.id !== 'me' && (() => {
+                const p = people.find((person) => person.id === s.id);
+                return p ? isDecaying(p) : false;
+              })();
+              const isTargetDecaying = t.id !== 'me' && (() => {
+                const p = people.find((person) => person.id === t.id);
+                return p ? isDecaying(p) : false;
+              })();
+              const isLinkDecaying = isSourceDecaying || isTargetDecaying;
+
+              let strokeColor = 'var(--border)';
+              let opacity = 0.15;
+              if (isActiveLink) {
+                strokeColor = 'var(--accent)';
+                opacity = 0.75;
+              } else if (isLinkDecaying) {
+                strokeColor = 'rgba(104, 104, 122, 0.2)';
+                opacity = 0.08;
+              } else {
+                strokeColor = 'var(--primary)';
+                opacity = 0.25;
+              }
+
+              return (
+                <line
+                  key={`link-${i}`}
+                  x1={s.x}
+                  y1={s.y}
+                  x2={t.x}
+                  y2={t.y}
+                  stroke={strokeColor}
+                  strokeWidth={isActiveLink ? link.value * 2.0 : link.value * 1.0}
+                  strokeOpacity={opacity}
+                  filter={isActiveLink ? 'url(#linkGlow)' : undefined}
+                  className={isActiveLink ? styles.activeLink : undefined}
+                  style={{ transition: 'stroke 0.2s, stroke-width 0.2s' }}
                 />
-              )}
+              );
+            });
+          })()}
 
-              <circle
-                r={node.size}
-                fill={isCenter ? 'var(--accent)' : 'var(--bg-secondary)'}
-                stroke={isCenter ? 'transparent' : node.color}
-                strokeWidth={isActive ? 3 : 2}
-                filter="url(#shadow)"
-                style={{ transition: 'r 0.2s, fill 0.2s' }}
-              />
+          {/* Nodes */}
+          {nodes.map((node) => {
+            const isActive = node.id === activeId;
+            const isCenter = node.depth === 'Me';
+            
+            const targetPerson = people.find((p) => p.id === node.id);
+            const isNodeDecaying = targetPerson ? isDecaying(targetPerson) : false;
+            const isPinned = pinnedIds.has(node.id);
 
-              {!isCenter &&
-                (() => {
-                  const target = people.find((p) => p.id === node.id);
-                  if (!target) return null;
-                  if (isDecaying(target)) {
-                    return (
-                      <circle
-                        cx={node.size - 2}
-                        cy={-node.size + 2}
-                        r={4}
-                        fill="var(--error, #ef4444)"
-                      />
-                    );
+            let nodeStrokeColor = node.color;
+            if (isCenter) {
+              nodeStrokeColor = 'transparent';
+            } else if (isNodeDecaying) {
+              nodeStrokeColor = 'rgba(104, 104, 122, 0.4)';
+            }
+
+            return (
+              <g
+                key={node.id}
+                transform={`translate(${node.x || 0}, ${node.y || 0})`}
+                onMouseDown={(e) => handleMouseDown(e, node.id)}
+                onDoubleClick={() => handleNodeDoubleClick(node.id, node.x, node.y)}
+                onClick={() => {
+                  if (!wasDraggedRef.current && node.id !== 'me') {
+                    onSelectNode(node.id);
                   }
-                  return null;
-                })()}
+                }}
+                style={{ cursor: isCenter ? 'default' : 'pointer' }}
+              >
+                {isActive && (
+                  <circle
+                    r={node.size + 5}
+                    fill="none"
+                    stroke="var(--accent)"
+                    strokeWidth="2"
+                    style={{ transition: 'r 0.2s' }}
+                  />
+                )}
 
-              <text
-                textAnchor="middle"
-                y={node.size + 14}
-                fill="var(--bg-primary)"
-                stroke="var(--bg-primary)"
-                strokeWidth="4"
-                strokeLinejoin="round"
-                fontSize="0.75rem"
-                fontWeight={isActive ? '800' : '600'}
-                pointerEvents="none"
-                style={{ opacity: 0.9 }}
-              >
-                {node.name}
-              </text>
-              <text
-                textAnchor="middle"
-                y={node.size + 14}
-                fill={isActive ? 'var(--accent)' : 'var(--text-primary)'}
-                fontSize="0.75rem"
-                fontWeight={isActive ? '800' : '600'}
-                pointerEvents="none"
-                style={{ transition: 'fill 0.2s' }}
-              >
-                {node.name}
-              </text>
-            </g>
-          );
-        })}
-      </svg>
+                <circle
+                  r={node.size}
+                  fill={isCenter ? 'var(--accent)' : 'var(--bg-secondary)'}
+                  stroke={nodeStrokeColor}
+                  strokeWidth={isActive ? 3 : 2}
+                  filter="url(#shadow)"
+                  style={{ transition: 'r 0.2s, fill 0.2s' }}
+                />
+
+                {isPinned && (
+                  <circle
+                    cx={-node.size + 4}
+                    cy={-node.size + 4}
+                    r={3.5}
+                    fill="var(--accent)"
+                    stroke="#ffffff"
+                    strokeWidth="1"
+                    pointerEvents="none"
+                  />
+                )}
+
+                {!isCenter &&
+                  (() => {
+                    if (isNodeDecaying) {
+                      return (
+                        <circle
+                          cx={node.size - 2}
+                          cy={-node.size + 2}
+                          r={4}
+                          fill="var(--error, #ef4444)"
+                        />
+                      );
+                    }
+                    return null;
+                  })()}
+
+                <text
+                  textAnchor="middle"
+                  y={node.size + 14}
+                  fill="var(--bg-primary)"
+                  stroke="var(--bg-primary)"
+                  strokeWidth="4"
+                  strokeLinejoin="round"
+                  fontSize="0.75rem"
+                  fontWeight={isActive ? '800' : '600'}
+                  pointerEvents="none"
+                  style={{ opacity: 0.9 }}
+                >
+                  {node.name}
+                </text>
+                <text
+                  textAnchor="middle"
+                  y={node.size + 14}
+                  fill={isActive ? 'var(--accent)' : 'var(--text-primary)'}
+                  fontSize="0.75rem"
+                  fontWeight={isActive ? '800' : '600'}
+                  pointerEvents="none"
+                  style={{ transition: 'fill 0.2s' }}
+                >
+                  {node.name}
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+      </div>
     </div>
   );
 }

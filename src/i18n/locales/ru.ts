@@ -752,6 +752,7 @@ const ru: Record<string, string> = {
   'social.filter.all_statuses': 'Все',
   'social.graph.hint': 'Перетаскивайте узлы, кликните на контакт для диагностики',
   'social.graph.me': 'Я',
+  'social.graph.reset_pins': 'Сбросить закрепления',
   'social.graph.no_contacts_desc':
     'Добавьте ваших друзей или коллег в список контактов, чтобы построить социальный граф связей.',
   'social.graph.no_contacts_title': 'Нет контактов для отображения',
