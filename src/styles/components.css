@@ -161,6 +161,9 @@
   cursor: pointer;
   user-select: none;
 }
+.btn svg {
+  flex-shrink: 0;
+}
 .btn::after {
   content: '';
   position: absolute;
