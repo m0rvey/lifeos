@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useData } from '../context/DataContext';
 
 export interface SearchResult {
@@ -130,15 +130,12 @@ export function useGlobalSearch(query: string): SearchResult[] {
     };
   }, [query]);
 
-  const [results, setResults] = useState<SearchResult[]>([]);
-
-  useEffect(() => {
+  const results = useMemo(() => {
     if (!debouncedQuery.trim()) {
-      setResults([]);
-      return;
+      return [];
     }
-    setResults(search(debouncedQuery, data));
-  }, [debouncedQuery, data.journal, data.knowledge, data.thoughts, data.people, data.tasks]);
+    return search(debouncedQuery, data);
+  }, [debouncedQuery, data]);
 
   return results;
 }

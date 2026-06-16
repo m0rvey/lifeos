@@ -29,7 +29,7 @@ class LocalStorageMock {
 }
 
 const mockLocalStorage = new LocalStorageMock();
-global.localStorage = mockLocalStorage as any;
+global.localStorage = mockLocalStorage as unknown as Storage;
 
 if (typeof window !== 'undefined') {
   Object.defineProperty(window, 'localStorage', {
