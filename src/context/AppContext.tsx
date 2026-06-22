@@ -6,6 +6,7 @@ import {
   useEffect,
   useCallback,
   useRef,
+  useMemo,
   type ReactNode,
 } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -350,33 +351,59 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('storage-error', handleStorageError);
   }, [addToast, t]);
 
+  const contextValue = useMemo(
+    () => ({
+      activeModule,
+      theme: settings.theme,
+      setTheme,
+      themeMode: settings.themeMode,
+      setThemeMode,
+      userName: settings.userName,
+      setUserName,
+      isAdaptive: settings.isAdaptive,
+      setIsAdaptive,
+      accentColor: settings.accentColor,
+      setAccentColor,
+      fontSizeScale: settings.fontSizeScale,
+      setFontSizeScale,
+      animations: settings.animations,
+      setAnimations,
+      graphicsMode: settings.graphicsMode,
+      setGraphicsMode,
+      toasts,
+      addToast,
+      removeToast,
+      isSidebarOpen,
+      setSidebarOpen,
+    }),
+    [
+      activeModule,
+      settings.theme,
+      setTheme,
+      settings.themeMode,
+      setThemeMode,
+      settings.userName,
+      setUserName,
+      settings.isAdaptive,
+      setIsAdaptive,
+      settings.accentColor,
+      setAccentColor,
+      settings.fontSizeScale,
+      setFontSizeScale,
+      settings.animations,
+      setAnimations,
+      settings.graphicsMode,
+      setGraphicsMode,
+      toasts,
+      addToast,
+      removeToast,
+      isSidebarOpen,
+      setSidebarOpen,
+    ]
+  );
+
   return (
-    <AppContext.Provider
-      value={{
-        activeModule,
-        theme: settings.theme,
-        setTheme,
-        themeMode: settings.themeMode,
-        setThemeMode,
-        userName: settings.userName,
-        setUserName,
-        isAdaptive: settings.isAdaptive,
-        setIsAdaptive,
-        accentColor: settings.accentColor,
-        setAccentColor,
-        fontSizeScale: settings.fontSizeScale,
-        setFontSizeScale,
-        animations: settings.animations,
-        setAnimations,
-        graphicsMode: settings.graphicsMode,
-        setGraphicsMode,
-        toasts,
-        addToast,
-        removeToast,
-        isSidebarOpen,
-        setSidebarOpen,
-      }}
-    >
+    <AppContext.Provider value={contextValue}>
       {children}
     </AppContext.Provider>
   );

@@ -5,6 +5,7 @@ import {
   useEffect,
   useRef,
   useState,
+  useMemo,
   type ReactNode,
   type Dispatch,
 } from 'react';
@@ -82,6 +83,14 @@ export function DataProvider({ children }: { children: ReactNode }) {
     };
   }, [history.present, isInitialized]);
 
+  const undoRedoState = useMemo(
+    () => ({
+      canUndo: history.past.length > 0,
+      canRedo: history.future.length > 0,
+    }),
+    [history.past.length, history.future.length]
+  );
+
   if (!isInitialized) {
     return <LoadingScreen />;
   }
@@ -89,9 +98,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   return (
     <DataStateContext.Provider value={history.present}>
       <DataDispatchContext.Provider value={dispatch}>
-        <UndoContext.Provider
-          value={{ canUndo: history.past.length > 0, canRedo: history.future.length > 0 }}
-        >
+        <UndoContext.Provider value={undoRedoState}>
           {children}
         </UndoContext.Provider>
       </DataDispatchContext.Provider>

@@ -164,6 +164,10 @@ export default function SocialGraph({
   const [positions, setPositions] = useState<Record<string, { x: number; y: number }>>({});
   const [pinnedIds, setPinnedIds] = useState<Set<string>>(new Set());
 
+  const decayingSet = useMemo(() => {
+    return new Set(people.filter(isDecaying).map((p) => p.id));
+  }, [people]);
+
   const nodes = useMemo(() => {
     return initialData.initialNodes.map((node) => {
       const pos = positions[node.id];
@@ -499,7 +503,10 @@ export default function SocialGraph({
 
           {/* Links */}
           {(() => {
-            const nodeMap = new Map(nodes.map((n) => [n.id, n]));
+            const nodeMap = new Map<string, typeof nodes[0]>();
+            for (let idx = 0; idx < nodes.length; idx++) {
+              nodeMap.set(nodes[idx].id, nodes[idx]);
+            }
             return initialData.initialLinks.map((link, i) => {
               const s = nodeMap.get(link.source);
               const t = nodeMap.get(link.target);
@@ -507,14 +514,8 @@ export default function SocialGraph({
 
               const isActiveLink = activeId && (link.source === activeId || link.target === activeId);
               
-              const isSourceDecaying = s.id !== 'me' && (() => {
-                const p = people.find((person) => person.id === s.id);
-                return p ? isDecaying(p) : false;
-              })();
-              const isTargetDecaying = t.id !== 'me' && (() => {
-                const p = people.find((person) => person.id === t.id);
-                return p ? isDecaying(p) : false;
-              })();
+              const isSourceDecaying = s.id !== 'me' && decayingSet.has(s.id);
+              const isTargetDecaying = t.id !== 'me' && decayingSet.has(t.id);
               const isLinkDecaying = isSourceDecaying || isTargetDecaying;
 
               let strokeColor = 'var(--border)';
@@ -553,8 +554,7 @@ export default function SocialGraph({
             const isActive = node.id === activeId;
             const isCenter = node.depth === 'Me';
             
-            const targetPerson = people.find((p) => p.id === node.id);
-            const isNodeDecaying = targetPerson ? isDecaying(targetPerson) : false;
+            const isNodeDecaying = node.id !== 'me' && decayingSet.has(node.id);
             const isPinned = pinnedIds.has(node.id);
 
             let nodeStrokeColor = node.color;
