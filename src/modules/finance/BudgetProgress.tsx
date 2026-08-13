@@ -251,7 +251,7 @@ export default function BudgetProgress({ transactions }: BudgetProgressProps) {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           title={editingGoal ? t('finance.budget.goals_title') : t('finance.budget.add_goal')}
-          maxWidth="xs"
+          maxWidth="sm"
         >
           <form onSubmit={handleSaveGoal} className="flex-col-16">
             <FormField label={t('finance.budget.goal_name')} required>
