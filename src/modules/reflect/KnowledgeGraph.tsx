@@ -90,11 +90,13 @@ export default function KnowledgeGraph({ items, onSelectItem }: KnowledgeGraphPr
     const initialNodes: GraphNode[] = items.map((item, idx) => {
       const angle = (idx / items.length) * 2 * Math.PI;
       const radiusOffset = 140 + (idx % 3) * 60;
+      const jitterX = Math.sin(idx * 7.13) * 20;
+      const jitterY = Math.cos(idx * 5.17) * 20;
       return {
         id: item.id,
         item,
-        x: centerX + Math.cos(angle) * radiusOffset + (Math.random() - 0.5) * 40,
-        y: centerY + Math.sin(angle) * radiusOffset + (Math.random() - 0.5) * 40,
+        x: centerX + Math.cos(angle) * radiusOffset + jitterX,
+        y: centerY + Math.sin(angle) * radiusOffset + jitterY,
         vx: 0,
         vy: 0,
         radius: Math.max(16, Math.min(28, 14 + (item.tags?.length || 0) * 3)),
