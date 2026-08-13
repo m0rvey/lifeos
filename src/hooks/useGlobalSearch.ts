@@ -78,7 +78,7 @@ function search(query: string, data: ReturnType<typeof useData>['data']): Search
         title: thought.content.slice(0, 60),
         preview: highlightMatches(thought.content, q),
         module: 'reflect',
-        url: `/reflect/museum/${thought.id}`,
+        url: `/reflect/thoughts`,
       });
     }
   }

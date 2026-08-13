@@ -26,6 +26,7 @@ export default function MaintenanceModal({
     record?.dateISO ? record.dateISO.slice(0, 10) : todayISO()
   );
   const [isDone, setIsDone] = useState(record?.isDone || false);
+  const [bikeName, setBikeName] = useState(record?.bikeName || '');
   const [error, setError] = useState('');
 
   const handleSubmit = (e: FormEvent) => {
@@ -48,6 +49,7 @@ export default function MaintenanceModal({
       cost,
       dateISO,
       isDone,
+      bikeName: bikeName.trim() || null,
     });
   };
 
@@ -63,16 +65,35 @@ export default function MaintenanceModal({
       <form onSubmit={handleSubmit} className="flex-col-16">
         {error && <div className="text-error-bold">{error}</div>}
 
-        <FormField label={t('cycling.maintenance.fieldPart')} required>
-          <input
-            type="text"
-            value={bikePart}
-            onChange={(e) => setBikePart(e.target.value)}
-            placeholder={t('cycling.maintenance.partPlaceholder')}
-            required
-            style={{ width: '100%' }}
-          />
-        </FormField>
+        <div className="form-row">
+          <FormField label={t('cycling.maintenance.fieldPart')} required>
+            <input
+              type="text"
+              value={bikePart}
+              onChange={(e) => setBikePart(e.target.value)}
+              placeholder={t('cycling.maintenance.partPlaceholder')}
+              required
+              style={{ width: '100%' }}
+            />
+          </FormField>
+
+          <FormField label={t('cycling.bike.label')}>
+            <input
+              type="text"
+              list="maint-bike-suggestions"
+              value={bikeName}
+              onChange={(e) => setBikeName(e.target.value)}
+              placeholder={t('cycling.bike.custom_placeholder')}
+              style={{ width: '100%' }}
+            />
+            <datalist id="maint-bike-suggestions">
+              <option value={t('cycling.bike.road')} />
+              <option value={t('cycling.bike.gravel')} />
+              <option value={t('cycling.bike.mtb')} />
+              <option value={t('cycling.bike.commuter')} />
+            </datalist>
+          </FormField>
+        </div>
 
         <div className="form-row">
           <FormField label={t('cycling.maintenance.fieldType')}>

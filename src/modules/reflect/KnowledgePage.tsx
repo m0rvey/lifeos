@@ -12,10 +12,15 @@ import {
   Trash2,
   ChevronDown,
   ChevronUp,
+  LayoutGrid,
+  Share2,
+  FileDown,
 } from 'lucide-react';
 import { EmptyState, ConfirmDialog } from '../../ui';
 import { uid, nowISO, sanitizeUrl } from '../../cognitive/helpers';
+import { exportKnowledgeMarkdown } from '../../storage/backup';
 import KnowledgeModal from './KnowledgeModal';
+import KnowledgeGraph from './KnowledgeGraph';
 import { useI18n } from '../../i18n';
 
 export default function KnowledgePage() {
@@ -23,6 +28,7 @@ export default function KnowledgePage() {
   const { addToast } = useApp();
   const { t } = useI18n();
 
+  const [viewMode, setViewMode] = useState<'cards' | 'graph'>('cards');
   const [isOpen, setIsOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<KnowledgeItem | null>(null);
 
@@ -34,6 +40,11 @@ export default function KnowledgePage() {
   // Delete dialog
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
+
+  const handleExportMarkdown = () => {
+    exportKnowledgeMarkdown(data);
+    addToast(t('reflect.knowledge.toast_exported_md'), 'success');
+  };
 
   const getCategoryLabel = useCallback(
     (cat: string) => {
@@ -85,6 +96,11 @@ export default function KnowledgePage() {
 
   const handleEdit = (e: MouseEvent, item: KnowledgeItem) => {
     e.stopPropagation();
+    setEditingItem(item);
+    setIsOpen(true);
+  };
+
+  const handleEditFromGraph = (item: KnowledgeItem) => {
     setEditingItem(item);
     setIsOpen(true);
   };
@@ -148,7 +164,7 @@ export default function KnowledgePage() {
 
   return (
     <div className="flex-col-24 fade-in-entry">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
         <div>
           <h2
             style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}
@@ -159,14 +175,56 @@ export default function KnowledgePage() {
             {t('reflect.knowledge.subtitle')}
           </p>
         </div>
-        <button
-          className="btn btn--primary"
-          onClick={handleAddNew}
-          style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
-        >
-          <Plus size={16} />
-          <span>{t('reflect.knowledge.action_add')}</span>
-        </button>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          {/* View Switcher */}
+          <div
+            style={{
+              display: 'flex',
+              background: 'var(--surface)',
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-sm)',
+              padding: '2px',
+            }}
+          >
+            <button
+              className={`btn btn--secondary ${viewMode === 'cards' ? 'btn--primary' : ''}`}
+              style={{ padding: '4px 10px', height: '32px', fontSize: '0.75rem', border: 'none' }}
+              onClick={() => setViewMode('cards')}
+              title={t('reflect.knowledge.view_cards')}
+            >
+              <LayoutGrid size={14} style={{ marginRight: '4px' }} />
+              <span>{t('reflect.knowledge.view_cards')}</span>
+            </button>
+            <button
+              className={`btn btn--secondary ${viewMode === 'graph' ? 'btn--primary' : ''}`}
+              style={{ padding: '4px 10px', height: '32px', fontSize: '0.75rem', border: 'none' }}
+              onClick={() => setViewMode('graph')}
+              title={t('reflect.knowledge.view_graph')}
+            >
+              <Share2 size={14} style={{ marginRight: '4px' }} />
+              <span>{t('reflect.knowledge.view_graph')}</span>
+            </button>
+          </div>
+
+          <button
+            className="btn btn--secondary"
+            onClick={handleExportMarkdown}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', height: '36px' }}
+            title={t('reflect.knowledge.export_md')}
+          >
+            <FileDown size={15} />
+            <span>{t('reflect.knowledge.export_md')}</span>
+          </button>
+
+          <button
+            className="btn btn--primary"
+            onClick={handleAddNew}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', height: '36px' }}
+          >
+            <Plus size={16} />
+            <span>{t('reflect.knowledge.action_add')}</span>
+          </button>
+        </div>
       </div>
 
       {/* Search and Filters row */}
@@ -217,8 +275,12 @@ export default function KnowledgePage() {
         </div>
       </div>
 
-      {/* Roster of knowledge items */}
-      <div className="flex-col-12">
+      {/* Main Content: Graph vs Cards */}
+      {viewMode === 'graph' ? (
+        <KnowledgeGraph items={filteredItems} onSelectItem={handleEditFromGraph} />
+      ) : (
+        /* Roster of knowledge items */
+        <div className="flex-col-12">
         {filteredItems.length > 0 ? (
           filteredItems.map((item) => {
             const isExpanded = expandedItemId === item.id;

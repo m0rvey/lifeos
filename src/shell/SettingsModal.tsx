@@ -10,6 +10,8 @@ import {
   exportTransactionsCsv,
   exportRidesCsv,
   exportPeopleCsv,
+  exportJournalMarkdown,
+  exportKnowledgeMarkdown,
 } from '../storage/backup';
 import { ConfirmDialog, Modal } from '../ui';
 import {
@@ -602,6 +604,26 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                     }}
                   >
                     <Download size={14} /> {t('settings.csv.contacts')}
+                  </button>
+                </div>
+                <div className="settings-actions-row" style={{ marginTop: '8px' }}>
+                  <button
+                    className="btn btn--secondary settings-actions-btn"
+                    onClick={() => {
+                      exportJournalMarkdown(data);
+                      addToast(t('reflect.journal.toast_exported_md'), 'success');
+                    }}
+                  >
+                    <Download size={14} /> {t('reflect.journal.export_md')} (Journal)
+                  </button>
+                  <button
+                    className="btn btn--secondary settings-actions-btn"
+                    onClick={() => {
+                      exportKnowledgeMarkdown(data);
+                      addToast(t('reflect.knowledge.toast_exported_md'), 'success');
+                    }}
+                  >
+                    <Download size={14} /> {t('reflect.knowledge.export_md')} (Zettelkasten)
                   </button>
                 </div>
               </div>

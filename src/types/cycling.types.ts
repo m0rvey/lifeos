@@ -11,6 +11,7 @@ export interface RideRecord {
   avgHrBpm: number | null;
   description: string;
   routeId: string | null;
+  bikeName?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -35,6 +36,7 @@ export interface MaintenanceRecord {
   cost: number;
   dateISO: string; // YYYY-MM-DD
   isDone: boolean;
+  bikeName?: string | null;
   createdAt: string;
   updatedAt: string;
 }

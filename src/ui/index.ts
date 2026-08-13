@@ -10,3 +10,4 @@ export { default as Skeleton } from './Skeleton';
 export { default as ShortcutsHelp } from './ShortcutsHelp';
 export { default as PageTransition } from './PageTransition';
 export { default as LoadingScreen } from './LoadingScreen';
+export { default as SearchOverlay } from './SearchOverlay';

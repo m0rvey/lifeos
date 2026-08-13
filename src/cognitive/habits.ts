@@ -1,3 +1,5 @@
+import { todayISO } from './helpers';
+
 export function calcStreak(dates: string[]): { current: number; max: number } {
   if (dates.length === 0) return { current: 0, max: 0 };
 
@@ -5,10 +7,10 @@ export function calcStreak(dates: string[]): { current: number; max: number } {
   const uniqueDates = Array.from(new Set(dates.map((d) => d.slice(0, 10))));
   const sorted = uniqueDates.sort().reverse(); // sorted descending (newest first)
 
-  const today = new Date().toISOString().slice(0, 10);
-  const yesterdayDate = new Date(today);
-  yesterdayDate.setUTCDate(yesterdayDate.getUTCDate() - 1);
-  const yesterday = yesterdayDate.toISOString().slice(0, 10);
+  const today = todayISO();
+  const [ty, tm, td] = today.split('-').map(Number);
+  const yesterdayObj = new Date(ty, tm - 1, td - 1);
+  const yesterday = `${yesterdayObj.getFullYear()}-${String(yesterdayObj.getMonth() + 1).padStart(2, '0')}-${String(yesterdayObj.getDate()).padStart(2, '0')}`;
 
   let current = 0;
 
@@ -22,10 +24,9 @@ export function calcStreak(dates: string[]): { current: number; max: number } {
     while (index < sorted.length) {
       if (sorted[index] === checkDateStr) {
         current++;
-        // Move check date back by 1 day in UTC
-        const checkDate = new Date(checkDateStr);
-        checkDate.setUTCDate(checkDate.getUTCDate() - 1);
-        checkDateStr = checkDate.toISOString().slice(0, 10);
+        const [cy, cm, cd] = checkDateStr.split('-').map(Number);
+        const prevDate = new Date(cy, cm - 1, cd - 1);
+        checkDateStr = `${prevDate.getFullYear()}-${String(prevDate.getMonth() + 1).padStart(2, '0')}-${String(prevDate.getDate()).padStart(2, '0')}`;
         index++;
       } else {
         // Gap found

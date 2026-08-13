@@ -85,11 +85,12 @@ const en: Record<string, string> = {
   'cycling.maintenance.descriptionPlaceholder':
     'Describe the work performed, new part brand or condition...',
   'cycling.maintenance.done': 'Completed',
-  'cycling.maintenance.emptyDescription': 'emptyDescription',
+  'cycling.maintenance.emptyDescription':
+    'Record info about chain replacements, fork maintenance, or drivetrain cleaning.',
   'cycling.maintenance.emptyMessage': 'No bike maintenance records found.',
   'cycling.maintenance.emptyTitle': 'Maintenance history is empty',
-  'cycling.maintenance.errorCost': 'errorCost',
-  'cycling.maintenance.errorPart': 'errorPart',
+  'cycling.maintenance.errorCost': 'Cost must be a number greater than or equal to zero',
+  'cycling.maintenance.errorPart': 'Specify the serviced bike part / component',
   'cycling.maintenance.fieldCost': 'Service cost ($)',
   'cycling.maintenance.fieldDate': 'Date performed',
   'cycling.maintenance.fieldDescription': 'Work description / Details',
@@ -97,8 +98,8 @@ const en: Record<string, string> = {
   'cycling.maintenance.fieldStatus': 'Execution status',
   'cycling.maintenance.fieldType': 'Service type',
   'cycling.maintenance.inPlan': 'In plan',
-  'cycling.maintenance.modalCreateTitle': 'modalCreateTitle',
-  'cycling.maintenance.modalEditTitle': 'modalEditTitle',
+  'cycling.maintenance.modalCreateTitle': 'Record maintenance service',
+  'cycling.maintenance.modalEditTitle': 'Edit maintenance record',
   'cycling.maintenance.partPlaceholder': 'E.g. Chain, Shock absorber, Tires',
   'cycling.maintenance.subtitle':
     'Part wear control, repair cost tracking and bike service scheduling',
@@ -163,7 +164,7 @@ const en: Record<string, string> = {
   'cycling.routes.colWaypoints': 'Waypoints',
   'cycling.routes.completed': 'Completed',
   'cycling.routes.createRoute': 'Create route',
-  'cycling.routes.defaultName': 'defaultName',
+  'cycling.routes.defaultName': 'New route',
   'cycling.routes.deleteConfirmMessage':
     'Are you sure you want to delete this cycling route? This action is irreversible.',
   'cycling.routes.deleteConfirmTitle': 'Delete route?',
@@ -865,6 +866,62 @@ const en: Record<string, string> = {
   'toast.transaction.updated': 'Transaction successfully updated',
   'toast.transactions_exported': 'Transactions exported',
   'toast.wipe_success': 'All data has been reset to defaults',
+
+  // REFLECT EXTENSIONS
+  'reflect.knowledge.view_cards': 'Cards',
+  'reflect.knowledge.view_graph': 'Knowledge Graph',
+  'reflect.knowledge.export_md': 'Export MD',
+  'reflect.knowledge.toast_exported_md': 'Knowledge base exported to Markdown',
+  'reflect.knowledge.graph_hint': 'Interactive 2D note graph. Nodes connect by shared tags and categories.',
+  'reflect.knowledge.graph_connections': 'Connections',
+  'reflect.journal.export_md': 'Export MD',
+  'reflect.journal.toast_exported_md': 'Journal exported to Markdown',
+
+  // CYCLING GARAGE
+  'cycling.bike.label': 'Bike',
+  'cycling.bike.all': 'All Bikes',
+  'cycling.bike.road': 'Road Bike',
+  'cycling.bike.gravel': 'Gravel',
+  'cycling.bike.mtb': 'MTB',
+  'cycling.bike.commuter': 'City / Commuter',
+  'cycling.bike.custom_placeholder': 'Bike model / name',
+  'cycling.dashboard.garage': 'Bike Garage',
+  'cycling.dashboard.rides_count': 'rides',
+
+  // FINANCE BUDGETS & GOALS
+  'finance.budget.title': 'Monthly Budgets',
+  'finance.budget.spent': 'Spent',
+  'finance.budget.limit': 'Limit',
+  'finance.budget.over_budget': 'Over budget',
+  'finance.budget.goals_title': 'Savings Goals',
+  'finance.budget.goal_target': 'Target',
+  'finance.budget.add_goal': 'Add Goal',
+  'finance.budget.goal_name': 'Goal Name',
+  'finance.budget.goal_saved': 'Saved',
+  'finance.budget.no_goals': 'No active savings goals yet',
+
+  // TASKS & EISENHOWER MATRIX
+  'tasks.title': 'Tasks & Eisenhower Matrix',
+  'tasks.subtitle': 'Intelligent prioritization by urgency and importance',
+  'tasks.action_add': 'New Task',
+  'tasks.modal_create_title': 'Create Task',
+  'tasks.modal_edit_title': 'Edit Task',
+  'tasks.field_title': 'Task Title',
+  'tasks.field_desc': 'Description / Notes',
+  'tasks.field_urgency': 'Urgency (0-100%)',
+  'tasks.field_emotion': 'Importance / Emotional Weight (0-100%)',
+  'tasks.field_deadline': 'Deadline',
+  'tasks.field_tags': 'Tags (comma separated)',
+  'tasks.matrix_q1': 'Do First (Urgent & Important)',
+  'tasks.matrix_q2': 'Schedule (Important, Not Urgent)',
+  'tasks.matrix_q3': 'Delegate / Quick (Urgent, Not Important)',
+  'tasks.matrix_q4': 'Eliminate / Backlog (Neither)',
+  'tasks.empty_quadrant': 'No tasks in this quadrant',
+  'tasks.all_completed': 'All tasks completed! Great work.',
+  'tasks.toast_created': 'Task created',
+  'tasks.toast_updated': 'Task updated',
+  'tasks.toast_deleted': 'Task deleted',
+  'nav.tasks': 'Tasks',
 };
 
 export default en;

@@ -42,6 +42,18 @@ export default function Dashboard({ onNavigateTab }: DashboardProps) {
       .slice(0, 3);
   }, [rides]);
 
+  const bikeStats = useMemo(() => {
+    const map = new Map<string, { distance: number; ridesCount: number }>();
+    rides.forEach((r) => {
+      const bike = r.bikeName || t('cycling.bike.road');
+      const curr = map.get(bike) || { distance: 0, ridesCount: 0 };
+      curr.distance += r.distanceKm;
+      curr.ridesCount += 1;
+      map.set(bike, curr);
+    });
+    return Array.from(map.entries()).map(([bike, stats]) => ({ bike, ...stats }));
+  }, [rides, t]);
+
   return (
     <div className="flex-col-24">
       {/* Overview Stat Cards */}
@@ -79,6 +91,72 @@ export default function Dashboard({ onNavigateTab }: DashboardProps) {
           icon={<Mountain size={20} />}
         />
       </div>
+
+      {/* Bike Garage Overview */}
+      {bikeStats.length > 0 && (
+        <div className="glass-panel" style={{ padding: '20px' }}>
+          <h3
+            style={{
+              fontSize: '0.85rem',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              color: 'var(--text-secondary)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              margin: '0 0 16px 0',
+            }}
+          >
+            <Bike size={18} style={{ color: 'var(--accent)' }} />
+            <span>{t('cycling.dashboard.garage')}</span>
+          </h3>
+
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+              gap: '16px',
+            }}
+          >
+            {bikeStats.map((item) => {
+              const pct = totalDist > 0 ? Math.round((item.distance / totalDist) * 100) : 0;
+              return (
+                <div
+                  key={item.bike}
+                  style={{
+                    padding: '12px 16px',
+                    background: 'var(--surface)',
+                    border: '1px solid var(--border)',
+                    borderRadius: 'var(--radius-md)',
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                    <strong style={{ color: 'var(--text-primary)', fontSize: '0.9rem' }}>{item.bike}</strong>
+                    <span style={{ color: 'var(--accent)', fontSize: '0.85rem', fontWeight: 700 }}>
+                      {formatDistance(item.distance)}
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '8px' }}>
+                    <span>{item.ridesCount} {t('cycling.dashboard.rides_count')}</span>
+                    <span>{pct}%</span>
+                  </div>
+                  <div style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+                    <div
+                      style={{
+                        width: `${pct}%`,
+                        height: '100%',
+                        background: 'var(--primary)',
+                        borderRadius: '3px',
+                        transition: 'width 0.5s ease',
+                      }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Grid: Recent Rides vs Pending Maintenance */}
       <div
@@ -143,7 +221,7 @@ export default function Dashboard({ onNavigateTab }: DashboardProps) {
                     {ride.title}
                   </strong>
                   <span style={{ color: 'var(--text-secondary)', fontSize: '0.7rem' }}>
-                    {formatDate(ride.dateISO)}
+                    {formatDate(ride.dateISO)} {ride.bikeName ? `· ${ride.bikeName}` : ''}
                   </span>
                 </div>
                 <div style={{ textAlign: 'right' }}>
@@ -240,7 +318,7 @@ export default function Dashboard({ onNavigateTab }: DashboardProps) {
                     }}
                   >
                     {t('cycling.dashboard.maintenanceRequired', {
-                      part: m.bikePart,
+                      part: m.bikePart + (m.bikeName ? ` (${m.bikeName})` : ''),
                       type:
                         m.type === 'replace'
                           ? t('cycling.common.replacement')

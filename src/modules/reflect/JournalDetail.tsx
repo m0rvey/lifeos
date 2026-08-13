@@ -56,7 +56,7 @@ export default function JournalDetail() {
     return (
       <div className="flex-col-24 fade-in-entry" style={{ padding: '24px', textAlign: 'center' }}>
         <h3 style={{ color: 'var(--text-primary)' }}>{t('reflect.journal.empty_title')}</h3>
-        <p style={{ color: 'var(--text-secondary)' }}>Entry not found.</p>
+        <p style={{ color: 'var(--text-secondary)' }}>{t('common.no_data')}</p>
         <button
           className="btn btn--secondary"
           onClick={() => navigate('/reflect/journal')}
@@ -68,7 +68,7 @@ export default function JournalDetail() {
           }}
         >
           <ArrowLeft size={16} />
-          <span>{t('common.cancel')}</span>
+          <span>{t('action.back')}</span>
         </button>
       </div>
     );
@@ -85,7 +85,7 @@ export default function JournalDetail() {
           style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
         >
           <ArrowLeft size={16} />
-          <span>{t('common.cancel')}</span>
+          <span>{t('action.back')}</span>
         </button>
 
         <div style={{ display: 'flex', gap: '10px' }}>
@@ -95,7 +95,7 @@ export default function JournalDetail() {
             style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
           >
             <Edit2 size={14} />
-            <span>Edit</span>
+            <span>{t('action.edit')}</span>
           </button>
           <button
             className="btn btn--secondary btn-padding-4-6-red"

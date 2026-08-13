@@ -163,6 +163,7 @@ function sanitizeRide(r: unknown): RideRecord {
     avgHrBpm: typeof obj?.avgHrBpm === 'number' ? obj.avgHrBpm : null,
     description: typeof obj?.description === 'string' ? obj.description : '',
     routeId: typeof obj?.routeId === 'string' ? obj.routeId : null,
+    bikeName: typeof obj?.bikeName === 'string' && obj.bikeName ? obj.bikeName : null,
     createdAt: typeof obj?.createdAt === 'string' ? obj.createdAt : new Date().toISOString(),
     updatedAt:
       typeof obj?.updatedAt === 'string'
@@ -228,6 +229,7 @@ function sanitizeMaintenance(m: unknown): MaintenanceRecord {
     cost: typeof obj?.cost === 'number' ? Math.max(0, obj.cost) : 0,
     dateISO: typeof obj?.dateISO === 'string' ? obj.dateISO : new Date().toISOString().slice(0, 10),
     isDone: typeof obj?.isDone === 'boolean' ? obj.isDone : false,
+    bikeName: typeof obj?.bikeName === 'string' && obj.bikeName ? obj.bikeName : null,
     createdAt: typeof obj?.createdAt === 'string' ? obj.createdAt : new Date().toISOString(),
     updatedAt:
       typeof obj?.updatedAt === 'string'
@@ -986,14 +988,6 @@ export function migrateData(raw: unknown, fallbackToDefaults = true): AppData {
   // Validate via Zod AppDataSchema
   try {
     const validated = AppDataSchema.parse(sanitized);
-    try {
-      safeSaveItem(STORAGE_KEY, JSON.stringify(validated));
-    } catch (saveErr) {
-      console.error(
-        '[Migration] Failed to save validated data (possible quota exceeded):',
-        saveErr
-      );
-    }
     return validated;
   } catch (err) {
     console.error('[Migration] Critical: Zod schema parsing failed even after sanitization!', err);
@@ -1001,11 +995,6 @@ export function migrateData(raw: unknown, fallbackToDefaults = true): AppData {
       throw err;
     }
     const def = getDefaultData();
-    try {
-      safeSaveItem(STORAGE_KEY, JSON.stringify(def));
-    } catch (saveErr) {
-      console.error('[Migration] Failed to save default fallback data:', saveErr);
-    }
     return def;
   }
 }

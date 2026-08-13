@@ -7,6 +7,7 @@ import { formatDate, formatCurrency, uid, nowISO, todayISO } from '../../cogniti
 import { useI18n } from '../../i18n';
 import BalanceChart from './BalanceChart';
 import ReminderList from './ReminderList';
+import BudgetProgress from './BudgetProgress';
 import TransactionModal from './TransactionModal';
 
 import { useCrudModal } from '../../hooks/useCrudModal';
@@ -268,8 +269,9 @@ export default function CapitalPage() {
           </div>
         </div>
 
-        {/* Right Side (Reminders Sidebar) */}
-        <div className="flex-layout-right">
+        {/* Right Side (Reminders & Budgets Sidebar) */}
+        <div className="flex-layout-right flex-col-16">
+          <BudgetProgress transactions={data.transactions} />
           <ReminderList />
         </div>
       </div>

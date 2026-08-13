@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { calcStreak, getStreakLevel } from '../cognitive/habits';
+import { todayISO } from '../cognitive/helpers';
+
+function getOffsetDateISO(daysOffset: number): string {
+  const [y, m, d] = todayISO().split('-').map(Number);
+  const date = new Date(y, m - 1, d + daysOffset);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
 
 describe('calcStreak', () => {
   it('returns 0 for empty dates array', () => {
@@ -7,45 +14,31 @@ describe('calcStreak', () => {
   });
 
   it('returns current streak of 1 for single date', () => {
-    const today = new Date().toISOString().slice(0, 10);
+    const today = todayISO();
     expect(calcStreak([today])).toEqual({ current: 1, max: 1 });
   });
 
   it('calculates current streak for consecutive dates', () => {
-    const today = new Date().toISOString().slice(0, 10);
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayStr = yesterday.toISOString().slice(0, 10);
-    const twoDaysAgo = new Date();
-    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-    const twoDaysAgoStr = twoDaysAgo.toISOString().slice(0, 10);
+    const today = todayISO();
+    const yesterdayStr = getOffsetDateISO(-1);
+    const twoDaysAgoStr = getOffsetDateISO(-2);
 
     expect(calcStreak([today, yesterdayStr, twoDaysAgoStr])).toEqual({ current: 3, max: 3 });
   });
 
   it('resets current streak when gap found', () => {
-    const today = new Date().toISOString().slice(0, 10);
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayStr = yesterday.toISOString().slice(0, 10);
-    const twoDaysAgo = new Date();
-    twoDaysAgo.setDate(twoDaysAgo.getDate() - 3);
-    const twoDaysAgoStr = twoDaysAgo.toISOString().slice(0, 10);
+    const today = todayISO();
+    const yesterdayStr = getOffsetDateISO(-1);
+    const twoDaysAgoStr = getOffsetDateISO(-3);
 
     expect(calcStreak([today, yesterdayStr, twoDaysAgoStr])).toEqual({ current: 2, max: 2 });
   });
 
   it('calculates max streak correctly', () => {
-    const today = new Date().toISOString().slice(0, 10);
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayStr = yesterday.toISOString().slice(0, 10);
-    const twoDaysAgo = new Date();
-    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-    const twoDaysAgoStr = twoDaysAgo.toISOString().slice(0, 10);
-    const threeDaysAgo = new Date();
-    threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
-    const threeDaysAgoStr = threeDaysAgo.toISOString().slice(0, 10);
+    const today = todayISO();
+    const yesterdayStr = getOffsetDateISO(-1);
+    const twoDaysAgoStr = getOffsetDateISO(-2);
+    const threeDaysAgoStr = getOffsetDateISO(-3);
 
     expect(calcStreak([today, yesterdayStr, twoDaysAgoStr, threeDaysAgoStr])).toEqual({
       current: 4,
@@ -54,7 +47,7 @@ describe('calcStreak', () => {
   });
 
   it('handles duplicate dates', () => {
-    const today = new Date().toISOString().slice(0, 10);
+    const today = todayISO();
     expect(calcStreak([today, today, today])).toEqual({ current: 1, max: 1 });
   });
 });

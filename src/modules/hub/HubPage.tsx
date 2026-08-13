@@ -101,12 +101,20 @@ export default function HubPage() {
 
       {/* Grid of Modules */}
       <div className="hub-grid">
-        {/* Когнитивный баланс */}
-        <div className="glass-panel hub-card hub-card--cognitive">
+        {/* Когнитивный баланс & Задачи */}
+        <div
+          className="glass-panel hub-card hub-card--cognitive"
+          style={{ cursor: 'pointer' }}
+          onClick={() => navigate('/tasks')}
+        >
           <div className="hub-card-header">
             <div className="hub-card-title-row">
               <Brain size={16} />
               <span>{t('hub.cognitive_balance')}</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', color: 'var(--accent)' }}>
+              <span>{t('nav.tasks')}</span>
+              <ArrowRight size={12} />
             </div>
           </div>
 
@@ -131,8 +139,9 @@ export default function HubPage() {
             </div>
           </div>
 
-          <div className="hub-text-sm hub-empty-hint">
-            {t('hub.tasks_active', { count: activeTasks.length })}
+          <div className="hub-text-sm hub-empty-hint" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span>{t('hub.tasks_active', { count: activeTasks.length })}</span>
+            <span style={{ color: 'var(--accent)', fontSize: '0.75rem' }}>Eisenhower Matrix &rarr;</span>
           </div>
         </div>
 

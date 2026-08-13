@@ -32,10 +32,10 @@ interface Link {
 
 const depthColors: Record<Depth | 'Me', string> = {
   Me: 'var(--text-primary)',
-  [Depth.CORE]: 'var(--error)', // Purple/Violet (mapped to error/alert style)
-  [Depth.INNER]: 'var(--warning)', // Orange (mapped to warning/attention style)
-  [Depth.SOCIAL]: 'var(--primary)', // Green (mapped to primary/active style)
-  [Depth.PERIPHERY]: 'var(--text-tertiary)', // Grey (mapped to tertiary/muted style)
+  [Depth.CORE]: 'var(--color-purple, #a78bfa)', // Vibrant purple for core inner circle
+  [Depth.INNER]: 'var(--warning)', // Amber / Orange
+  [Depth.SOCIAL]: 'var(--primary)', // Green / Accent
+  [Depth.PERIPHERY]: 'var(--text-tertiary)', // Grey
 };
 
 // Deterministic pseudo-random angle generator

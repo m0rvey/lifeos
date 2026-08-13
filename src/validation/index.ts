@@ -72,6 +72,7 @@ export const RideRecordSchema = z.object({
   avgHrBpm: z.number().nullable(),
   description: z.string(),
   routeId: z.string().nullable(),
+  bikeName: z.string().nullable().optional(),
   createdAt: z.string(),
   updatedAt: z.string(),
 });
@@ -96,6 +97,7 @@ export const MaintenanceRecordSchema = z.object({
   cost: z.number().nonnegative(),
   dateISO: z.string(),
   isDone: z.boolean(),
+  bikeName: z.string().nullable().optional(),
   createdAt: z.string(),
   updatedAt: z.string(),
 });

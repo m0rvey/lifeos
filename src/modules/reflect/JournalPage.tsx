@@ -1,16 +1,24 @@
 import { useMemo } from 'react';
 import { useData } from '../../context/DataContext';
+import { useApp } from '../../context/AppContext';
 import { useI18n } from '../../i18n';
 import { type JournalEntry } from '../../types';
-import { Plus, BookOpen, Smile, Edit2, Trash2 } from 'lucide-react';
+import { Plus, BookOpen, Smile, Edit2, Trash2, FileDown } from 'lucide-react';
 import { StatCard, EmptyState, ConfirmDialog } from '../../ui';
 import { formatDate, uid, nowISO, getMoodEmoji } from '../../cognitive/helpers';
+import { exportJournalMarkdown } from '../../storage/backup';
 import JournalModal from './JournalModal';
 import { useCrudModal } from '../../hooks/useCrudModal';
 
 export default function JournalPage() {
   const { data } = useData();
+  const { addToast } = useApp();
   const { t } = useI18n();
+
+  const handleExportMarkdown = () => {
+    exportJournalMarkdown(data);
+    addToast(t('reflect.journal.toast_exported_md'), 'success');
+  };
 
   const {
     isOpen,
@@ -55,7 +63,7 @@ export default function JournalPage() {
 
   return (
     <div className="flex-col-24 fade-in-entry">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
         <div>
           <h2
             style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}
@@ -66,14 +74,25 @@ export default function JournalPage() {
             {t('reflect.journal.subtitle')}
           </p>
         </div>
-        <button
-          className="btn btn--primary"
-          onClick={handleAddNew}
-          style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
-        >
-          <Plus size={16} />
-          <span>{t('reflect.journal.action_new')}</span>
-        </button>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <button
+            className="btn btn--secondary"
+            onClick={handleExportMarkdown}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', height: '36px' }}
+            title={t('reflect.journal.export_md')}
+          >
+            <FileDown size={15} />
+            <span>{t('reflect.journal.export_md')}</span>
+          </button>
+          <button
+            className="btn btn--primary"
+            onClick={handleAddNew}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', height: '36px' }}
+          >
+            <Plus size={16} />
+            <span>{t('reflect.journal.action_new')}</span>
+          </button>
+        </div>
       </div>
 
       {/* Summary stats */}

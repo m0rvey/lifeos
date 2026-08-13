@@ -26,6 +26,7 @@ export default function RidesPage() {
   const { data } = useData();
 
   const [filter, setFilter] = useState<'all' | 'recent'>('all');
+  const [selectedBike, setSelectedBike] = useState<string>('ALL');
 
   const {
     isOpen,
@@ -57,10 +58,19 @@ export default function RidesPage() {
       avgHrBpm: rideData?.avgHrBpm ?? null,
       description: rideData?.description || '',
       routeId: rideData?.routeId || null,
+      bikeName: rideData?.bikeName || null,
       createdAt: nowISO(),
       updatedAt: nowISO(),
     }),
   });
+
+  const uniqueBikes = useMemo(() => {
+    const set = new Set<string>();
+    data.rides.forEach((r) => {
+      if (r.bikeName) set.add(r.bikeName);
+    });
+    return ['ALL', ...Array.from(set)];
+  }, [data.rides]);
 
   const {
     totalDistance,
@@ -72,11 +82,14 @@ export default function RidesPage() {
   } = useRideStats(data.rides);
 
   const filteredRides = useMemo(() => {
-    const sorted = [...data.rides].sort(
+    let sorted = [...data.rides].sort(
       (a, b) => new Date(b.dateISO).getTime() - new Date(a.dateISO).getTime()
     );
+    if (selectedBike !== 'ALL') {
+      sorted = sorted.filter((r) => r.bikeName === selectedBike);
+    }
     return filter === 'recent' ? sorted.slice(0, 5) : sorted;
-  }, [data.rides, filter]);
+  }, [data.rides, filter, selectedBike]);
 
   return (
     <div className="fade-in-entry cycling-page">
@@ -149,7 +162,20 @@ export default function RidesPage() {
             <span>{t('cycling.rides.trainingJournal')}</span>
           </h3>
 
-          <div className="cycling-actions">
+          <div className="cycling-actions" style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+            {uniqueBikes.length > 1 && (
+              <select
+                value={selectedBike}
+                onChange={(e) => setSelectedBike(e.target.value)}
+                style={{ height: '36px', padding: '0 28px 0 10px', fontSize: '0.8rem' }}
+              >
+                {uniqueBikes.map((b) => (
+                  <option key={b} value={b}>
+                    {b === 'ALL' ? t('cycling.bike.all') : b}
+                  </option>
+                ))}
+              </select>
+            )}
             <div className="filter-tabs" style={{ marginBottom: 0 }}>
               <button
                 className={`tab-btn ${filter === 'all' ? 'active' : ''}`}

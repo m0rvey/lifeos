@@ -254,6 +254,7 @@ describe('useGlobalSearch', () => {
     tick();
     expect(result.current).toHaveLength(1);
     expect(result.current[0].type).toBe('thought');
+    expect(result.current[0].url).toBe('/reflect/thoughts');
   });
 
   it('returns max 20 results', () => {

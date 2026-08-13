@@ -872,6 +872,62 @@ const ru: Record<string, string> = {
   'toast.transaction.updated': 'Транзакция успешно обновлена',
   'toast.transactions_exported': 'Транзакции экспортированы',
   'toast.wipe_success': 'Все данные были сброшены к начальным настройкам',
+
+  // REFLECT EXTENSIONS
+  'reflect.knowledge.view_cards': 'Карточки',
+  'reflect.knowledge.view_graph': 'Граф связей',
+  'reflect.knowledge.export_md': 'Экспорт MD',
+  'reflect.knowledge.toast_exported_md': 'База знаний экспортирована в Markdown',
+  'reflect.knowledge.graph_hint': 'Интерактивный 2D-граф заметок. Связи формируются по общим тегам и категориям.',
+  'reflect.knowledge.graph_connections': 'Связи',
+  'reflect.journal.export_md': 'Экспорт MD',
+  'reflect.journal.toast_exported_md': 'Дневник экспортирован в Markdown',
+
+  // CYCLING GARAGE
+  'cycling.bike.label': 'Велосипед',
+  'cycling.bike.all': 'Все велосипеды',
+  'cycling.bike.road': 'Шоссейный',
+  'cycling.bike.gravel': 'Грэвел',
+  'cycling.bike.mtb': 'Горный (MTB)',
+  'cycling.bike.commuter': 'Городской',
+  'cycling.bike.custom_placeholder': 'Модель или название велосипеда',
+  'cycling.dashboard.garage': 'Гараж велосипедов',
+  'cycling.dashboard.rides_count': 'заездов',
+
+  // FINANCE BUDGETS & GOALS
+  'finance.budget.title': 'Месячные бюджеты',
+  'finance.budget.spent': 'Потрачено',
+  'finance.budget.limit': 'Лимит',
+  'finance.budget.over_budget': 'Превышение',
+  'finance.budget.goals_title': 'Цели накопления',
+  'finance.budget.goal_target': 'Цель',
+  'finance.budget.add_goal': 'Добавить цель',
+  'finance.budget.goal_name': 'Название цели',
+  'finance.budget.goal_saved': 'Накоплено',
+  'finance.budget.no_goals': 'Пока нет активных целей накопления',
+
+  // TASKS & EISENHOWER MATRIX
+  'tasks.title': 'Задачи & Матрица Эйзенхауэра',
+  'tasks.subtitle': 'Интеллектуальная приоритизация по срочности и важности',
+  'tasks.action_add': 'Новая задача',
+  'tasks.modal_create_title': 'Создать задачу',
+  'tasks.modal_edit_title': 'Редактировать задачу',
+  'tasks.field_title': 'Название задачи',
+  'tasks.field_desc': 'Описание / Заметки',
+  'tasks.field_urgency': 'Срочность (0-100%)',
+  'tasks.field_emotion': 'Важность / Эмоциональный вес (0-100%)',
+  'tasks.field_deadline': 'Дедлайн',
+  'tasks.field_tags': 'Теги (через запятую)',
+  'tasks.matrix_q1': 'Сделать срочно (Срочно и Важно)',
+  'tasks.matrix_q2': 'Запланировать (Важно, но Не срочно)',
+  'tasks.matrix_q3': 'Делегировать / Быстро (Срочно, но Не важно)',
+  'tasks.matrix_q4': 'Отложить / Бэклог (Не срочно и Не важно)',
+  'tasks.empty_quadrant': 'В этом квадранте нет задач',
+  'tasks.all_completed': 'Все задачи выполнены! Отличная работа.',
+  'tasks.toast_created': 'Задача создана',
+  'tasks.toast_updated': 'Задача обновлена',
+  'tasks.toast_deleted': 'Задача удалена',
+  'nav.tasks': 'Задачи',
 };
 
 export default ru;

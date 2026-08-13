@@ -1,5 +1,6 @@
 import type { AppData } from '../types';
 import { migrateData } from './migrations';
+import { getCurrentLanguage } from '../i18n/language';
 
 function escapeCsv(value: unknown): string {
   if (value === null || value === undefined) return '';
@@ -18,9 +19,9 @@ function arrayToCsv(headers: string[], rows: unknown[][]): string {
   return lines.join('\n');
 }
 
-function downloadCsv(content: string, filename: string): void {
-  const BOM = '\uFEFF';
-  const blob = new Blob([BOM + content], { type: 'text/csv;charset=utf-8;' });
+function downloadFile(content: string, filename: string, mimeType: string, withBom = false): void {
+  const payload = withBom ? '\uFEFF' + content : content;
+  const blob = new Blob([payload], { type: mimeType });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
@@ -31,11 +32,19 @@ function downloadCsv(content: string, filename: string): void {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
+function downloadCsv(content: string, filename: string): void {
+  downloadFile(content, filename, 'text/csv;charset=utf-8;', true);
+}
+
 export function exportTransactionsCsv(data: AppData): void {
-  const headers = ['ID', 'Тип', 'Сумма', 'Категория', 'Описание', 'Дата'];
+  const isEn = getCurrentLanguage() === 'en';
+  const headers = isEn
+    ? ['ID', 'Type', 'Amount', 'Category', 'Description', 'Date']
+    : ['ID', 'Тип', 'Сумма', 'Категория', 'Описание', 'Дата'];
+
   const rows = data.transactions.map((tx) => [
     tx.id,
-    tx.type === 'income' ? 'Доход' : 'Расход',
+    tx.type === 'income' ? (isEn ? 'Income' : 'Доход') : isEn ? 'Expense' : 'Расход',
     tx.amount,
     tx.category,
     tx.description,
@@ -48,16 +57,31 @@ export function exportTransactionsCsv(data: AppData): void {
 }
 
 export function exportRidesCsv(data: AppData): void {
-  const headers = [
-    'ID',
-    'Название',
-    'Дата',
-    'Дистанция (км)',
-    'Время (мин)',
-    'Ср. скорость',
-    'Макс. скорость',
-    'Набор высоты (м)',
-  ];
+  const isEn = getCurrentLanguage() === 'en';
+  const headers = isEn
+    ? [
+        'ID',
+        'Title',
+        'Date',
+        'Distance (km)',
+        'Duration (min)',
+        'Avg Speed (km/h)',
+        'Max Speed (km/h)',
+        'Elevation Gain (m)',
+        'Bike',
+      ]
+    : [
+        'ID',
+        'Название',
+        'Дата',
+        'Дистанция (км)',
+        'Время (мин)',
+        'Ср. скорость',
+        'Макс. скорость',
+        'Набор высоты (м)',
+        'Велосипед',
+      ];
+
   const rows = data.rides.map((r) => [
     r.id,
     r.title,
@@ -67,22 +91,37 @@ export function exportRidesCsv(data: AppData): void {
     r.avgSpeedKmh,
     r.maxSpeedKmh,
     r.elevationGainM,
+    r.bikeName || (isEn ? 'Default' : 'Основной'),
   ]);
   downloadCsv(arrayToCsv(headers, rows), `rides_${new Date().toISOString().slice(0, 10)}.csv`);
 }
 
 export function exportPeopleCsv(data: AppData): void {
-  const headers = [
-    'ID',
-    'Имя',
-    'Круг',
-    'Архетип',
-    'Статус',
-    'Энергия',
-    'Резонанс',
-    'Взаимность',
-    'Последний контакт',
-  ];
+  const isEn = getCurrentLanguage() === 'en';
+  const headers = isEn
+    ? [
+        'ID',
+        'Name',
+        'Depth',
+        'Archetype',
+        'Status',
+        'Energy',
+        'Resonance',
+        'Reciprocity',
+        'Last Contact',
+      ]
+    : [
+        'ID',
+        'Имя',
+        'Круг',
+        'Архетип',
+        'Статус',
+        'Энергия',
+        'Резонанс',
+        'Взаимность',
+        'Последний контакт',
+      ];
+
   const rows = data.people.map((p) => [
     p.id,
     p.name,
@@ -95,6 +134,54 @@ export function exportPeopleCsv(data: AppData): void {
     p.lastContactISO,
   ]);
   downloadCsv(arrayToCsv(headers, rows), `people_${new Date().toISOString().slice(0, 10)}.csv`);
+}
+
+export function exportJournalMarkdown(data: AppData): void {
+  const isEn = getCurrentLanguage() === 'en';
+  let md = `# ${isEn ? 'LifeOS Journal Export' : 'Экспорт дневника LifeOS'}\n\n`;
+  md += `> ${isEn ? 'Generated on' : 'Дата выгрузки'}: ${new Date().toLocaleDateString()}\n\n---\n\n`;
+
+  const sorted = [...data.journal].sort(
+    (a, b) => new Date(b.dateISO).getTime() - new Date(a.dateISO).getTime()
+  );
+
+  sorted.forEach((entry) => {
+    md += `## ${entry.title}\n\n`;
+    md += `**${isEn ? 'Date' : 'Дата'}**: ${entry.dateISO} | **${isEn ? 'Mood' : 'Настроение'}**: ${entry.mood}%\n`;
+    if (entry.tags && entry.tags.length > 0) {
+      md += `**${isEn ? 'Tags' : 'Теги'}**: ${entry.tags.map((t) => `#${t}`).join(' ')}\n`;
+    }
+    md += `\n${entry.content}\n\n---\n\n`;
+  });
+
+  downloadFile(
+    md,
+    `lifeos_journal_${new Date().toISOString().slice(0, 10)}.md`,
+    'text/markdown;charset=utf-8;'
+  );
+}
+
+export function exportKnowledgeMarkdown(data: AppData): void {
+  const isEn = getCurrentLanguage() === 'en';
+  let md = `# ${isEn ? 'LifeOS Knowledge Base (Zettelkasten)' : 'База знаний LifeOS (Zettelkasten)'}\n\n`;
+  md += `> ${isEn ? 'Generated on' : 'Дата выгрузки'}: ${new Date().toLocaleDateString()}\n\n---\n\n`;
+
+  data.knowledge.forEach((item) => {
+    md += `## ${item.title}\n\n`;
+    md += `**${isEn ? 'Category' : 'Категория'}**: ${item.category}\n`;
+    if (item.source) md += `**${isEn ? 'Source' : 'Источник'}**: ${item.source}\n`;
+    if (item.url) md += `**URL**: [${item.url}](${item.url})\n`;
+    if (item.tags && item.tags.length > 0) {
+      md += `**${isEn ? 'Tags' : 'Теги'}**: ${item.tags.map((t) => `#${t}`).join(' ')}\n`;
+    }
+    md += `\n${item.content}\n\n---\n\n`;
+  });
+
+  downloadFile(
+    md,
+    `lifeos_knowledge_${new Date().toISOString().slice(0, 10)}.md`,
+    'text/markdown;charset=utf-8;'
+  );
 }
 
 export function exportBackup(data: AppData): void {

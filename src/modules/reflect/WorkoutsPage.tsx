@@ -1,28 +1,47 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useMemo } from 'react';
 import { useData } from '../../context/DataContext';
 import { useApp } from '../../context/AppContext';
 import { type WorkoutRecord } from '../../types';
 import { Plus, Dumbbell, Flame, Clock, Edit2, Trash2, Activity } from 'lucide-react';
 import { StatCard, EmptyState, ConfirmDialog, DataTable } from '../../ui';
 import { formatDate, formatDuration, uid, nowISO, todayISO } from '../../cognitive/helpers';
-import { useCrudEntity } from '../../hooks/useCrudEntity';
+import { useCrudModal } from '../../hooks/useCrudModal';
 import { useI18n } from '../../i18n';
 import WorkoutModal from './WorkoutModal';
 
 export default function WorkoutsPage() {
-  const { data, dispatch } = useData();
-  const { addToast } = useApp();
+  const { data } = useData();
   const { t } = useI18n();
-  const {
-    editing: editingWorkout,
-    deleting: workoutToDelete,
-    openAdd,
-    openEdit,
-    openDelete,
-    closeAll,
-  } = useCrudEntity<WorkoutRecord>();
 
-  const [isOpen, setIsOpen] = useState(false);
+  const {
+    isOpen,
+    editingItem: editingWorkout,
+    isDeleteOpen,
+    openAdd: handleAddNew,
+    openEdit: handleEdit,
+    openDelete: handleDeleteTrigger,
+    handleSave: handleSaveWorkout,
+    confirmDelete,
+    closeAll,
+  } = useCrudModal<WorkoutRecord>({
+    entity: 'workouts',
+    toastKeys: {
+      created: 'reflect.workout.toast_created',
+      updated: 'reflect.workout.toast_updated',
+      deleted: 'reflect.workout.toast_deleted',
+    },
+    createDefaults: (workoutData) => ({
+      id: `work_${uid()}`,
+      type: workoutData?.type || 'gym',
+      dateISO: workoutData?.dateISO || todayISO(),
+      durationMin: workoutData?.durationMin || 45,
+      intensity: workoutData?.intensity || 3,
+      description: workoutData?.description || '',
+      calories: workoutData?.calories ?? null,
+      createdAt: nowISO(),
+      updatedAt: nowISO(),
+    }),
+  });
 
   const sortedWorkouts = useMemo(() => {
     return [...data.workouts].sort(
@@ -41,67 +60,6 @@ export default function WorkoutsPage() {
 
     return { total, duration, calories, avgIntensity };
   }, [data.workouts]);
-
-  const handleAddNew = () => {
-    openAdd();
-    setIsOpen(true);
-  };
-
-  const handleEdit = (workout: WorkoutRecord) => {
-    openEdit(workout);
-    setIsOpen(true);
-  };
-
-  const handleSaveWorkout = useCallback(
-    (workoutData: Partial<WorkoutRecord>) => {
-      if (editingWorkout) {
-        dispatch({
-          type: 'UPDATE_ENTITY',
-          entity: 'workouts',
-          id: editingWorkout.id,
-          payload: workoutData,
-        });
-        addToast(t('reflect.workout.toast_updated'), 'success');
-      } else {
-        const newWorkout: WorkoutRecord = {
-          id: `work_${uid()}`,
-          type: workoutData.type || 'gym',
-          dateISO: workoutData.dateISO || todayISO(),
-          durationMin: workoutData.durationMin || 45,
-          intensity: workoutData.intensity || 3,
-          description: workoutData.description || '',
-          calories: workoutData.calories ?? null,
-          createdAt: nowISO(),
-          updatedAt: nowISO(),
-        };
-        dispatch({
-          type: 'ADD_ENTITY',
-          entity: 'workouts',
-          payload: newWorkout,
-        });
-        addToast(t('reflect.workout.toast_created'), 'success');
-      }
-      setIsOpen(false);
-      closeAll();
-    },
-    [editingWorkout, dispatch, addToast, closeAll, t]
-  );
-
-  const handleDeleteTrigger = (id: string) => {
-    openDelete({ id } as WorkoutRecord);
-  };
-
-  const confirmDelete = useCallback(() => {
-    if (workoutToDelete) {
-      dispatch({
-        type: 'DELETE_ENTITY',
-        entity: 'workouts',
-        id: workoutToDelete.id,
-      });
-      addToast(t('reflect.workout.toast_deleted'), 'warning');
-    }
-    closeAll();
-  }, [workoutToDelete, dispatch, addToast, closeAll, t]);
 
   const translateWorkoutType = (type: WorkoutRecord['type']): string => {
     switch (type) {
@@ -309,17 +267,14 @@ export default function WorkoutsPage() {
         <WorkoutModal
           isOpen={isOpen}
           workout={editingWorkout}
-          onClose={() => {
-            setIsOpen(false);
-            closeAll();
-          }}
+          onClose={closeAll}
           onSave={handleSaveWorkout}
         />
       )}
 
-      {workoutToDelete && (
+      {isDeleteOpen && (
         <ConfirmDialog
-          isOpen={!!workoutToDelete}
+          isOpen={isDeleteOpen}
           onConfirm={confirmDelete}
           onCancel={closeAll}
           title={t('reflect.workout.confirm_delete_title')}

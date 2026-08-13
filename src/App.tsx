@@ -11,6 +11,7 @@ import { exportBackup } from './storage/backup';
 
 // Lazy load module components
 const HubPage = lazy(() => import('./modules/hub/HubPage'));
+const TasksPage = lazy(() => import('./modules/hub/TasksPage'));
 const SocialModule = lazy(() => import('./modules/social/SocialModule'));
 const FinanceModule = lazy(() => import('./modules/finance/FinanceModule'));
 const CyclingModule = lazy(() => import('./modules/cycling/CyclingModule'));
@@ -85,6 +86,14 @@ function AppInner() {
               element={
                 <ErrorBoundary key={location.pathname}>
                   <HubPage />
+                </ErrorBoundary>
+              }
+            />
+            <Route
+              path="/tasks"
+              element={
+                <ErrorBoundary key={location.pathname}>
+                  <TasksPage />
                 </ErrorBoundary>
               }
             />

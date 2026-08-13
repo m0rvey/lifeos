@@ -24,6 +24,7 @@ export default function RideModal({ isOpen, onClose, ride, routes, onSave }: Rid
   const [avgHrBpm, setAvgHrBpm] = useState<number | ''>(ride?.avgHrBpm ?? '');
   const [description, setDescription] = useState(ride?.description || '');
   const [routeId, setRouteId] = useState<string | ''>(ride?.routeId || '');
+  const [bikeName, setBikeName] = useState(ride?.bikeName || '');
   const [error, setError] = useState('');
 
   const handleSubmit = (e: FormEvent) => {
@@ -53,6 +54,7 @@ export default function RideModal({ isOpen, onClose, ride, routes, onSave }: Rid
       avgHrBpm: avgHrBpm === '' ? null : Number(avgHrBpm),
       description: description.trim(),
       routeId: routeId === '' ? null : routeId,
+      bikeName: bikeName.trim() || null,
     });
   };
 
@@ -154,6 +156,24 @@ export default function RideModal({ isOpen, onClose, ride, routes, onSave }: Rid
               onChange={(e) => setAvgHrBpm(e.target.value === '' ? '' : parseInt(e.target.value))}
               style={{ width: '100%' }}
             />
+          </FormField>
+
+        <div className="form-row-2">
+          <FormField label={t('cycling.bike.label')}>
+            <input
+              type="text"
+              list="bike-suggestions"
+              value={bikeName}
+              onChange={(e) => setBikeName(e.target.value)}
+              placeholder={t('cycling.bike.custom_placeholder')}
+              style={{ width: '100%' }}
+            />
+            <datalist id="bike-suggestions">
+              <option value={t('cycling.bike.road')} />
+              <option value={t('cycling.bike.gravel')} />
+              <option value={t('cycling.bike.mtb')} />
+              <option value={t('cycling.bike.commuter')} />
+            </datalist>
           </FormField>
 
           <FormField label={t('cycling.rides.fieldRoute')}>
