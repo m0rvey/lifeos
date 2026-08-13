@@ -18,9 +18,6 @@ import type {
 } from '../types';
 import { AppDataSchema } from '../validation';
 import { getDefaultData } from './defaults';
-import { safeSaveItem } from './atomic';
-
-const STORAGE_KEY = 'lifeos_platform_v1';
 
 // Translators
 function mapDepth(val: unknown): Depth {

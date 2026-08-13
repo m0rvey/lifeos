@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useEffect, type MouseEvent } from 'react';
+import { useState, useMemo, useRef, type MouseEvent } from 'react';
 import { type KnowledgeItem } from '../../types';
 import { useI18n } from '../../i18n';
 import { ZoomIn, ZoomOut, RotateCcw, ExternalLink, Edit2 } from 'lucide-react';
@@ -76,13 +76,10 @@ export default function KnowledgeGraph({ items, onSelectItem }: KnowledgeGraphPr
     return { edges: edgeList, nodeMap: map };
   }, [items]);
 
-  // Generate initial physics simulation / layout coordinates
-  const [nodes, setNodes] = useState<GraphNode[]>([]);
-
-  useEffect(() => {
+  // Generate layout coordinates and relaxation using useMemo
+  const nodes: GraphNode[] = useMemo(() => {
     if (items.length === 0) {
-      setNodes([]);
-      return;
+      return [];
     }
 
     const width = 800;
@@ -160,7 +157,7 @@ export default function KnowledgeGraph({ items, onSelectItem }: KnowledgeGraphPr
       }
     }
 
-    setNodes(initialNodes);
+    return initialNodes;
   }, [items, edges]);
 
   // Connected node IDs for highlighted state

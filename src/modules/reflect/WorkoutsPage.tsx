@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { useData } from '../../context/DataContext';
-import { useApp } from '../../context/AppContext';
 import { type WorkoutRecord } from '../../types';
 import { Plus, Dumbbell, Flame, Clock, Edit2, Trash2, Activity } from 'lucide-react';
 import { StatCard, EmptyState, ConfirmDialog, DataTable } from '../../ui';
