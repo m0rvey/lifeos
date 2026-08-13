@@ -429,6 +429,7 @@ export default function KnowledgePage() {
           />
         )}
       </div>
+      )}
 
       {isOpen && (
         <KnowledgeModal

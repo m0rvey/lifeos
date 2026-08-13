@@ -36,16 +36,21 @@ export default function BalanceChart({ transactions }: BalanceChartProps) {
   const points = useMemo(() => {
     if (chartData.length === 0) return [];
 
-    const balances = chartData.map((d) => d.balance);
-    const maxVal = Math.max(...balances, 1);
-    const minVal = Math.min(...balances, 0);
+    let minVal = 0;
+    let maxVal = 1;
+    for (let i = 0; i < chartData.length; i++) {
+      const b = chartData[i].balance;
+      if (b < minVal) minVal = b;
+      if (b > maxVal) maxVal = b;
+    }
     const valRange = maxVal - minVal || 1;
 
     const chartWidth = width - padding * 2;
     const chartHeight = height - padding * 2;
+    const countMinusOne = Math.max(1, chartData.length - 1);
 
     return chartData.map((d, index) => {
-      const x = padding + (index / (chartData.length - 1 || 1)) * chartWidth;
+      const x = padding + (index / countMinusOne) * chartWidth;
       // Invert Y axis: high balance at the top (padding)
       const y = padding + chartHeight - ((d.balance - minVal) / valRange) * chartHeight;
       return { x, y, balance: d.balance, date: d.date };

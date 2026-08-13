@@ -137,7 +137,7 @@ export default function RideModal({ isOpen, onClose, ride, routes, onSave }: Rid
           </FormField>
         </div>
 
-        <div className="form-row-3">
+        <div className="form-row-2">
           <FormField label={t('cycling.rides.fieldPower')}>
             <input
               type="number"
@@ -157,6 +157,7 @@ export default function RideModal({ isOpen, onClose, ride, routes, onSave }: Rid
               style={{ width: '100%' }}
             />
           </FormField>
+        </div>
 
         <div className="form-row-2">
           <FormField label={t('cycling.bike.label')}>

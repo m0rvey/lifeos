@@ -127,10 +127,13 @@ export function useUndoRedo() {
   const ctx = useContext(UndoContext);
   const dispatch = useContext(DataDispatchContext);
   if (!ctx || !dispatch) throw new Error('useUndoRedo must be used within DataProvider');
-  return {
-    canUndo: ctx.canUndo,
-    canRedo: ctx.canRedo,
-    undo: () => dispatch({ type: 'UNDO' }),
-    redo: () => dispatch({ type: 'REDO' }),
-  };
+  return useMemo(
+    () => ({
+      canUndo: ctx.canUndo,
+      canRedo: ctx.canRedo,
+      undo: () => dispatch({ type: 'UNDO' }),
+      redo: () => dispatch({ type: 'REDO' }),
+    }),
+    [ctx.canUndo, ctx.canRedo, dispatch]
+  );
 }

@@ -106,47 +106,58 @@ export default function KnowledgeGraph({ items, onSelectItem }: KnowledgeGraphPr
       };
     });
 
-    // Run simple relaxation iterations
+    const nodeMap = new Map<string, GraphNode>();
+    initialNodes.forEach((n) => nodeMap.set(n.id, n));
+
+    // Run relaxation iterations with O(1) node lookup
     for (let iter = 0; iter < 40; iter++) {
       // Repulsion between nodes
       for (let i = 0; i < initialNodes.length; i++) {
+        const ni = initialNodes[i];
         for (let j = i + 1; j < initialNodes.length; j++) {
-          const dx = initialNodes[j].x - initialNodes[i].x;
-          const dy = initialNodes[j].y - initialNodes[i].y;
-          const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-          const minDist = initialNodes[i].radius + initialNodes[j].radius + 35;
-          if (dist < minDist) {
+          const nj = initialNodes[j];
+          const dx = nj.x - ni.x;
+          const dy = nj.y - ni.y;
+          const distSq = dx * dx + dy * dy;
+          const minDist = ni.radius + nj.radius + 35;
+          const minDistSq = minDist * minDist;
+          if (distSq < minDistSq && distSq > 0.0001) {
+            const dist = Math.sqrt(distSq);
             const force = ((minDist - dist) / dist) * 0.4;
-            initialNodes[i].x -= dx * force;
-            initialNodes[i].y -= dy * force;
-            initialNodes[j].x += dx * force;
-            initialNodes[j].y += dy * force;
+            ni.x -= dx * force;
+            ni.y -= dy * force;
+            nj.x += dx * force;
+            nj.y += dy * force;
           }
         }
       }
 
       // Edge spring attraction
-      edges.forEach((edge) => {
-        const sourceNode = initialNodes.find((n) => n.id === edge.source);
-        const targetNode = initialNodes.find((n) => n.id === edge.target);
+      for (let e = 0; e < edges.length; e++) {
+        const edge = edges[e];
+        const sourceNode = nodeMap.get(edge.source);
+        const targetNode = nodeMap.get(edge.target);
         if (sourceNode && targetNode) {
           const dx = targetNode.x - sourceNode.x;
           const dy = targetNode.y - sourceNode.y;
           const dist = Math.sqrt(dx * dx + dy * dy) || 1;
           const desiredDist = edge.sharedTags.length > 0 ? 90 : 160;
           const force = (dist - desiredDist) * 0.03;
-          sourceNode.x += (dx / dist) * force;
-          sourceNode.y += (dy / dist) * force;
-          targetNode.x -= (dx / dist) * force;
-          targetNode.y -= (dy / dist) * force;
+          const fx = (dx / dist) * force;
+          const fy = (dy / dist) * force;
+          sourceNode.x += fx;
+          sourceNode.y += fy;
+          targetNode.x -= fx;
+          targetNode.y -= fy;
         }
-      });
+      }
 
       // Gravity towards center
-      initialNodes.forEach((node) => {
+      for (let i = 0; i < initialNodes.length; i++) {
+        const node = initialNodes[i];
         node.x += (centerX - node.x) * 0.02;
         node.y += (centerY - node.y) * 0.02;
-      });
+      }
     }
 
     setNodes(initialNodes);

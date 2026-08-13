@@ -34,10 +34,10 @@ function highlightMatches(text: string, query: string): string {
 function search(query: string, data: ReturnType<typeof useData>['data']): SearchResult[] {
   if (!query.trim()) return [];
   const q = query.toLowerCase();
-
   const results: SearchResult[] = [];
 
   for (const entry of data.journal) {
+    if (results.length >= 20) break;
     if (entry.title.toLowerCase().includes(q) || entry.content.toLowerCase().includes(q)) {
       results.push({
         id: entry.id,
@@ -51,6 +51,7 @@ function search(query: string, data: ReturnType<typeof useData>['data']): Search
   }
 
   for (const item of data.knowledge) {
+    if (results.length >= 20) break;
     if (
       item.title.toLowerCase().includes(q) ||
       item.content.toLowerCase().includes(q) ||
@@ -68,6 +69,7 @@ function search(query: string, data: ReturnType<typeof useData>['data']): Search
   }
 
   for (const thought of data.thoughts) {
+    if (results.length >= 20) break;
     if (
       thought.content.toLowerCase().includes(q) ||
       thought.tags.some((t) => t.toLowerCase().includes(q))
@@ -84,6 +86,7 @@ function search(query: string, data: ReturnType<typeof useData>['data']): Search
   }
 
   for (const person of data.people) {
+    if (results.length >= 20) break;
     if (person.name.toLowerCase().includes(q) || person.notes.toLowerCase().includes(q)) {
       results.push({
         id: person.id,
@@ -97,6 +100,7 @@ function search(query: string, data: ReturnType<typeof useData>['data']): Search
   }
 
   for (const task of data.tasks) {
+    if (results.length >= 20) break;
     if (
       task.title.toLowerCase().includes(q) ||
       (task.description && task.description.toLowerCase().includes(q))
@@ -109,12 +113,12 @@ function search(query: string, data: ReturnType<typeof useData>['data']): Search
           highlightMatches(task.description || '', q) ||
           (task.isCompleted ? 'Completed' : 'Pending'),
         module: 'hub',
-        url: '/hub',
+        url: '/tasks',
       });
     }
   }
 
-  return results.slice(0, 20);
+  return results;
 }
 
 export function useGlobalSearch(query: string): SearchResult[] {
