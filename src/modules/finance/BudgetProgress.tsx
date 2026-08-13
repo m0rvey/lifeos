@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { type Transaction } from '../../types';
 import { useI18n } from '../../i18n';
 import { formatCurrency } from '../../cognitive/helpers';
-import { Target, Plus, Trash2, Edit2, AlertCircle } from 'lucide-react';
+import { Target, Plus, Trash2, Edit2 } from 'lucide-react';
 import { Modal, FormField } from '../../ui';
 
 interface BudgetGoal {
