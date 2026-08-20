@@ -27,13 +27,14 @@ export function calculateFatigue(data: AppData): number {
   const pendingTasks = data.tasks ? data.tasks.filter((t) => !t.isCompleted) : [];
   fatigue += Math.min(25, pendingTasks.length * 5);
 
-  // 2. Schedule blocks in the last 3 days
+  // 2. Schedule blocks in the last 3 days (strictly bounded by today)
+  const todayStr = todayISO();
   const threeDaysAgo = new Date();
   threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
   const threeDaysAgoISO = threeDaysAgo.toISOString().slice(0, 10);
 
   const scheduleBlocks = data.schedule ? data.schedule : [];
-  const recentBlocks = scheduleBlocks.filter((s) => s.dateISO >= threeDaysAgoISO);
+  const recentBlocks = scheduleBlocks.filter((s) => s.dateISO >= threeDaysAgoISO && s.dateISO <= todayStr);
 
   recentBlocks.forEach((block) => {
     if (block.isCompleted) {
@@ -45,13 +46,13 @@ export function calculateFatigue(data: AppData): number {
     }
   });
 
-  // 3. Workouts/rides in the last 3 days
+  // 3. Workouts/rides in the last 3 days (strictly bounded by today)
   const workouts = data.workouts ? data.workouts : [];
-  const recentWorkouts = workouts.filter((w) => w.dateISO >= threeDaysAgoISO);
+  const recentWorkouts = workouts.filter((w) => w.dateISO >= threeDaysAgoISO && w.dateISO <= todayStr);
   fatigue += recentWorkouts.length * 8;
 
   const rides = data.rides ? data.rides : [];
-  const recentRides = rides.filter((r) => r.dateISO >= threeDaysAgoISO);
+  const recentRides = rides.filter((r) => r.dateISO >= threeDaysAgoISO && r.dateISO <= todayStr);
   fatigue += recentRides.length * 8;
 
   return Math.max(5, Math.min(95, Math.round(fatigue)));

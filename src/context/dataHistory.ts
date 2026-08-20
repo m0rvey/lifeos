@@ -66,13 +66,16 @@ function inverseAction(action: HistoryAction): HistoryAction {
         previousFields: action.newFields,
         newFields: action.previousFields,
       };
-    case 'ADD_ENTITY':
+    case 'ADD_ENTITY': {
+      const payloadObj = (action.payload && typeof action.payload === 'object' ? action.payload : {}) as Record<string, unknown>;
+      const id = typeof payloadObj.id === 'string' && payloadObj.id ? payloadObj.id : '';
       return {
         type: 'DELETE_ENTITY',
         entity: action.entity,
-        id: (action.payload as { id: string }).id,
+        id,
         previousState: action.payload,
       };
+    }
     case 'DELETE_ENTITY':
       return {
         type: 'ADD_ENTITY',
@@ -99,6 +102,11 @@ function applyHistoryAction(state: AppData, action: HistoryAction): AppData {
     case 'ADD_ENTITY': {
       const arr = state[action.entity];
       if (Array.isArray(arr)) {
+        const payloadObj = (action.payload && typeof action.payload === 'object' ? action.payload : {}) as Record<string, unknown>;
+        const id = payloadObj.id;
+        if (id && arr.some((item) => item && typeof item === 'object' && 'id' in item && item.id === id)) {
+          return state;
+        }
         return { ...state, [action.entity]: [...arr, action.payload] };
       }
       return state;
@@ -205,8 +213,13 @@ export function dataReducer(state: HistoryState, action: DataAction): HistorySta
         case 'ADD_ENTITY': {
           const arr = present[action.entity];
           if (Array.isArray(arr)) {
-            newPresent = { ...present, [action.entity]: [...arr, action.payload] };
-            historyAction = { type: 'ADD_ENTITY', entity: action.entity, payload: action.payload };
+            const payloadObj = (action.payload && typeof action.payload === 'object' ? action.payload : {}) as Record<string, unknown>;
+            const entityId = typeof payloadObj.id === 'string' && payloadObj.id
+              ? payloadObj.id
+              : `ent_${Math.random().toString(36).slice(2, 9)}`;
+            const sanitizedPayload = { ...payloadObj, id: entityId };
+            newPresent = { ...present, [action.entity]: [...arr, sanitizedPayload] };
+            historyAction = { type: 'ADD_ENTITY', entity: action.entity, payload: sanitizedPayload };
           }
           break;
         }

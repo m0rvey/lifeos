@@ -17,8 +17,14 @@ export function safeSaveItem(key: string, value: string): void {
     // Overwrite original key directly
     localStorage.setItem(key, value);
   } catch (err) {
-    console.error(`[Storage] Atomic write failed for key "${key}":`, err);
-    throw err;
+    // If temp key write failed due to quota or storage limit, attempt direct save
+    try {
+      localStorage.removeItem(tempKey);
+      localStorage.setItem(key, value);
+    } catch (directErr) {
+      console.error(`[Storage] Atomic write failed for key "${key}":`, directErr);
+      throw directErr;
+    }
   } finally {
     try {
       localStorage.removeItem(tempKey);
