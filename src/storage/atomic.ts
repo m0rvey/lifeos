@@ -16,7 +16,7 @@ export function safeSaveItem(key: string, value: string): void {
 
     // Overwrite original key directly
     localStorage.setItem(key, value);
-  } catch (err) {
+  } catch {
     // If temp key write failed due to quota or storage limit, attempt direct save
     try {
       localStorage.removeItem(tempKey);
